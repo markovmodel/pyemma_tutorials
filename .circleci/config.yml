@@ -17,9 +17,9 @@ jobs:
       - run: 
         - name: conda_config
         - command: |
-          conda config --add channels conda-forge
-          conda config --set always_yes true
-          conda config --set quiet true
+            conda config --add channels conda-forge
+            conda config --set always_yes true
+            conda config --set quiet true
       - run: conda update conda
       - run: conda env create -f environment.yml
       - run: conda install -n pyemma_tutorial nbval
