@@ -1,4 +1,4 @@
-# pyemma_tutorial_paper
+# pyemma_tutorials
 
 https://livecomsjournal.github.io/authors/tutorials/
 
