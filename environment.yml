@@ -1,0 +1,8 @@
+name: pyemma_tutorial
+channels:
+  - conda-forge
+dependencies:
+  - pyemma
+  - notebooks
+  - jupyter_contrib_nbextensions
+
