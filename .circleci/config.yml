@@ -14,9 +14,14 @@ jobs:
 
     steps:
       - checkout
-      - run: conda config --add channels conda-forge; conda config --set always_yes true --set quiet true
+      - run: 
+        - name: conda_config
+        - command: |
+          conda config --add channels conda-forge
+          conda config --set always_yes true
+          conda config --set quiet true
       - run: conda update conda
       - run: conda env create -f environment.yml
       - run: conda install -n pyemma_tutorial nbval
-      - run: source activate pyemma_tutorial && pytest --nbval -v notebooks/ 
+      - run: source activate pyemma_tutorial && which py.test && py.test --nbval -v notebooks/ 
 
