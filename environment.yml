@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - pyemma
+  - mdshare
   - notebook
   - jupyter_contrib_nbextensions
 
