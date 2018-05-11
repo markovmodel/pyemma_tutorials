@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: continuumio/miniconda3
+    environment:
+      PYTHONHASHSEED: 0
+      OMP_NUM_THREADS: 1
+      PYEMMA_NJOBS: 1
+
+    steps:
+      - checkout
+      - run: 
+          name: conda_config
+          command: |
+            conda config --add channels conda-forge
+            conda config --set always_yes true
+            conda config --set quiet true
+      - run: conda update conda
+      - run: conda env create -f environment.yml
+      - run: conda install -n pyemma_tutorial nbval
+      - run: . activate pyemma_tutorial && which py.test && py.test --nbval -v notebooks/ 
+
