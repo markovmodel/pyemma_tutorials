@@ -5,6 +5,6 @@ dependencies:
   - pyemma
   - mdshare
   - notebook
-  - ipywidgets
+  - nglview 
   - jupyter_contrib_nbextensions
 
