@@ -5,3 +5,8 @@
 https://livecomsjournal.github.io/authors/tutorials/
 
 
+### Installation:
+We recommended to install the PyEMMA tutorials with conda. The following command will create a new environment that comes with all the dependencies of the tutorial. 
+`conda env create -f environment.yml`
+
+
