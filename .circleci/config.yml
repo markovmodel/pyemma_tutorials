@@ -19,7 +19,7 @@ jobs:
       - run: conda update conda
       - run: conda env create -f environment.yml
       - run: conda install -n pyemma_tutorial nbval
-      - run: . activate pyemma_tutorial && mkdir ~/junit && py.test --nbval -v --junit-xml=$HOME/junit/ notebooks/ 
+      - run: . activate pyemma_tutorial && mkdir ~/junit && py.test --nbval -v --junit-xml=$HOME/junit/test.xml notebooks/ 
       - store_test_results:
           path: ~/junit
 
