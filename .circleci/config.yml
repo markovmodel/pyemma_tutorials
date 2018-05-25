@@ -19,5 +19,8 @@ jobs:
       - run: conda update conda
       - run: conda env create -f environment.yml
       - run: conda install -n pyemma_tutorial nbval
-      - run: . activate pyemma_tutorial && which py.test && py.test --nbval -v notebooks/ 
+      - run: | 
+          name: run_test
+          command: . activate pyemma_tutorial && which py.test && py.test --nbval -v notebooks/ 
+          parallelism: 4
 
