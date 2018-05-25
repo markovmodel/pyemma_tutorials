@@ -7,7 +7,7 @@ jobs:
       PYTHONHASHSEED: 0
       OMP_NUM_THREADS: 1
       PYEMMA_NJOBS: 1
-
+    parallelism: 4
     steps:
       - checkout
       - run: 
@@ -19,8 +19,5 @@ jobs:
       - run: conda update conda
       - run: conda env create -f environment.yml
       - run: conda install -n pyemma_tutorial nbval
-      - run: | 
-          name: run_test
-          command: . activate pyemma_tutorial && which py.test && py.test --nbval -v notebooks/ 
-          parallelism: 4
+      - run: activate pyemma_tutorial && which py.test && py.test --nbval -v notebooks/ 
 
