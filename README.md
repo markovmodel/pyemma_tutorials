@@ -21,7 +21,7 @@ git clone https://github.com/markovmodel/pyemma_tutorials.git
 An internet connection will be needed during the execution of the tutorial notebooks, because we obtain simulation data to analyze. You can pre-fetch this data in case you want to run it offline like this:
 
 ```bash
-cd pyemma_tutorials
+cd pyemma_tutorials/notebooks
 mkdir data; cd data
-mdshare fetch *
+mdshare fetch * # THIS DOES NOT WORK, YET
 ```
