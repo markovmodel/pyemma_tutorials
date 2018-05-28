@@ -23,5 +23,6 @@ An internet connection will be needed during the execution of the tutorial noteb
 ```bash
 cd pyemma_tutorials/notebooks
 mkdir data; cd data
-mdshare fetch * # THIS DOES NOT WORK, YET
+python -c "import mdshare as md; [md.fetch(f) for f in md.search('*')]"
 ```
+
