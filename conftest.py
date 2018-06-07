@@ -4,8 +4,8 @@ def pytest_collection_modifyitems(session, config, items):
     for i in items:
         m = i.cell['metadata']
         excercise_2_cell = m.get('solution2', False)
-        if excercise_2_cell:
-           i.Item
+        skip = m.get('skip', False)
+        if excercise_2_cell or skip:
            i.add_marker(pytest.mark.skip('solution stub')) 
 
     circle_node_total, circle_node_index = read_circleci_env_variables()
