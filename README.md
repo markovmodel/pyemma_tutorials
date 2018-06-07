@@ -1,6 +1,6 @@
 # pyemma_tutorials
 
-[![CircleCI branch](https://img.shields.io/circleci/project/github/markovmodel/pyemma_tutorials/master.svg)](https://github.com/markovmodel/pyemma_tutorials)
+[![CircleCI](https://circleci.com/gh/markovmodel/pyemma_tutorials.svg?style=svg)](https://circleci.com/gh/markovmodel/pyemma_tutorials)
 
 
 ### Installation
