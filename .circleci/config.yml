@@ -7,7 +7,7 @@ jobs:
       PYTHONHASHSEED: 0
       OMP_NUM_THREADS: 1
       PYEMMA_NJOBS: 1
-    parallelism: 3
+    parallelism: 4
     steps:
       - checkout
       - run: 
