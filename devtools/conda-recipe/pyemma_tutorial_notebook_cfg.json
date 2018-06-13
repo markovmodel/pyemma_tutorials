@@ -1,0 +1,12 @@
+{
+  "load_extensions": {
+    "jupyter-matplotlib/extension": true,
+    "jupyter-js-widgets/extension": true,
+    "nbextensions_configurator/config_menu/main": true,
+    "contrib_nbextensions_help_item/main": true,
+    "nglview-js-widgets/extension": true,
+    "nglview_main": false,
+    "exercise2/main": true,
+    "toc2/main": true
+  }
+}
