@@ -3,7 +3,7 @@ import pytest, os, hashlib
 def pytest_collection_modifyitems(session, config, items):
     for i in items:
         m = i.cell['metadata']
-        excercise_2_cell = m.get('solution2', False)
+        excercise_2_cell = m.get('solution2_first', False)
         skip = m.get('skip', False)
         if excercise_2_cell or skip:
            i.add_marker(pytest.mark.skip('solution stub')) 
