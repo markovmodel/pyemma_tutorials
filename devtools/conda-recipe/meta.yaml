@@ -1,6 +1,3 @@
-{% set notebook_dest = os.path.join(PREFIX, "pyemma_tutorials/") %}
-
-
 package:
   name: pyemma_tutorials
   version: dev
@@ -11,33 +8,32 @@ source:
 
 build:
   requirements:
-    - python
-  script: ls -alh ; pwd ; python copy_files.py {{ notebook_dest }}
+    - pip
+  #script: ls ; pip install . ; ls {{ PREFIX }}
+  script: python setup.py install
 
-#outputs:
-#  - name: nb
-#    files:
-#      - notebooks/*.ipynb
   entry_points:
-# from notebook.notebookapp import main
-    - pyemma_tutorial = {{ notebook_dest }}
+    - pyemma_tutorial = pyemma_tutorials:main
+
   osx_is_app: True
   noarch: python
+  always_include_files:
+    - pyemma_tutorial_notebooks/*
 
-requirements:
+
+#requirements:
   # TODO: pin version
-  run:
-    - pyemma
-    - mdshare
-    - notebook
-    - nglview
-    - jupyter_contrib_nbextensions
+  #run:
+  #  - pyemma
+  #  - mdshare
+   # - notebook
+   # - nglview
+   # - jupyter_contrib_nbextensions
 
-
-# TODO: entry points which start the notebook server with our config.
 
 test:
-  requires:
-    - nbval
+  #requires:
+  #  - nbval
 
-  commands: py.test --nbval -v --junit-xml=$HOME/junit/test.xml {{ notebook_dest }}
+  commands: pwd; where py.test; py.test --nbval -v --junit-xml=$HOME/junit/test.xml {{ PREFIX + '/pyemma_tutorial_notebooks'}}
+  #`python -c "import pyemma_tutorials as p; print(p.notebook_location)"`

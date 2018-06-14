@@ -1,0 +1,2 @@
+recursive-include notebooks *.ipynb
+prune notebooks/.ipynb_checkpoints
