@@ -1,2 +1,2 @@
-recursive-include notebooks *.ipynb
-prune notebooks/.ipynb_checkpoints
+recursive-include pyemma_tutorials/notebooks *.ipynb
+prune pyemma_tutorials/notebooks/.ipynb_checkpoints

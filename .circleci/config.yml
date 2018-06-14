@@ -10,16 +10,14 @@ jobs:
     parallelism: 2
     steps:
       - checkout
-      - run: 
+      - run:
           name: conda_config
           command: |
             conda config --add channels conda-forge
             conda config --set always_yes true
             conda config --set quiet true
-      - run: conda update conda
-      - run: conda env create -f environment.yml
-      - run: conda install -n pyemma_tutorial nbval
-      - run: . activate pyemma_tutorial && mkdir ~/junit && py.test --nbval -v --junit-xml=$HOME/junit/test.xml notebooks/ 
+      - run: conda install conda-build
+      - run: . activate pyemma_tutorial && mkdir ~/junit && py.test --nbval -v --junit-xml=$HOME/junit/test.xml notebooks/
       - store_test_results:
           path: ~/junit
 

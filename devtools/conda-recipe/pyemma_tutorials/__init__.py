@@ -14,6 +14,6 @@ def notebook_location():
 def main():
     from notebook.notebookapp import main as main_
     # main eats, argv list and kwargs
-    argv = sys.argv + [os.getenv('PREFIX')]
+    argv = sys.argv + [notebook_location()]
     kw = dict()
     main_(argv=argv, **kw)

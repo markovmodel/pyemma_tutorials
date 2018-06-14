@@ -7,23 +7,20 @@ source:
    - path: ./
 
 build:
-  requirements:
-    - pip
-  #script: ls ; pip install . ; ls {{ PREFIX }}
-  script: python setup.py install
-
+  script: python -m pip install --no-deps --ignore-installed . -v
   entry_points:
-    - pyemma_tutorial = pyemma_tutorials:main
+    - pyemma_tutorials = pyemma_tutorials:main
 
   osx_is_app: True
   noarch: python
-  always_include_files:
-    - pyemma_tutorial_notebooks/*
 
 
-#requirements:
+requirements:
+  build:
+    - pip
   # TODO: pin version
-  #run:
+  run:
+    - python
   #  - pyemma
   #  - mdshare
    # - notebook
@@ -32,8 +29,7 @@ build:
 
 
 test:
-  #requires:
-  #  - nbval
+  requires:
+    - nbval
 
-  commands: pwd; where py.test; py.test --nbval -v --junit-xml=$HOME/junit/test.xml {{ PREFIX + '/pyemma_tutorial_notebooks'}}
-  #`python -c "import pyemma_tutorials as p; print(p.notebook_location)"`
+  commands: py.test --nbval -v --junit-xml=/tmp/junit/test.xml --pyargs pyemma_tutorials
