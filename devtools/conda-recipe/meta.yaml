@@ -18,17 +18,17 @@ build:
 requirements:
   build:
     - pip
-  # TODO: pin version
   run:
-    - python
-  #  - pyemma
-  #  - mdshare
-   # - notebook
-   # - nglview
-   # - jupyter_contrib_nbextensions
-
+    - pyemma
+    - mdshare
+    - notebook
+    - nglview
+    - jupyter_contrib_nbextensions
+    - nbexamples
 
 test:
+  source_files:
+    - conftest.py
   requires:
     - nbval
 

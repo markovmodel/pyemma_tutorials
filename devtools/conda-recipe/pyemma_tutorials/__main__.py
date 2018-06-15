@@ -1,10 +1,9 @@
 import os
-import sys
+import pkg_resources
+
 
 def notebook_location():
-    import pkg_resources
     d = pkg_resources.resource_filename('pyemma_tutorials', 'notebooks')
-    print(d)
     assert os.path.isdir(d)
     return d
 
@@ -12,11 +11,10 @@ def notebook_location():
 def main():
     from notebook.notebookapp import main as main_
     # main eats, argv list and kwargs
-    notebook_cfg = ''
-    argv = ['--config=%s' % notebook_cfg, notebook_location()]
-    kw = dict()
-    print('argv:', argv, '\tkw:', kw)
-    main_(argv=argv, **kw)
+    notebook_cfg = pkg_resources.resource_filename('pyemma_tutorials', 'jupyter_notebook_config.py')
+    assert os.path.exists(notebook_cfg)
+    argv = ['--config=%s' % notebook_cfg, ]
+    main_(argv=argv)
 
 
 if __name__ == '__main__':

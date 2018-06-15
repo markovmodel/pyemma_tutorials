@@ -18,7 +18,6 @@
 #------------------------------------------------------------------------------
 # JupyterApp(Application) configuration
 #------------------------------------------------------------------------------
-c = get_config()
 ## Base class for Jupyter applications
 
 ## Answer yes to any prompts.
@@ -113,7 +112,7 @@ c.NotebookApp.allow_origin = 'localhost'
 #c.NotebookApp.cookie_secret_file = ''
 
 ## The default URL to redirect to from `/`
-#c.NotebookApp.default_url = '/tree'
+c.NotebookApp.default_url = '/tree#examples'
 
 ## Disable cross-site-request-forgery protection
 #
@@ -171,7 +170,7 @@ c.NotebookApp.allow_origin = 'localhost'
 #c.NotebookApp.iopub_msg_rate_limit = 1000
 
 ## The IP address the notebook server will listen on.
-#c.NotebookApp.ip = 'localhost'
+c.NotebookApp.ip = 'localhost'
 
 ## Supply extra arguments that will be passed to Jinja environment.
 #c.NotebookApp.jinja_environment_options = {}
@@ -208,10 +207,17 @@ c.NotebookApp.allow_origin = 'localhost'
 ## Dict of Python modules to load as notebook server extensions.Entry values can
 #  be used to enable and disable the loading ofthe extensions. The extensions
 #  will be loaded in alphabetical order.
-#c.NotebookApp.nbserver_extensions = {}
+# notebook examples enables us to have an unmodified copy of the tutorials in the pkg dir and create a working copy
+c.NotebookApp.nbserver_extensions = {'nbexamples.handlers': True}
+import pyemma_tutorials
+c.Examples.reviewed_example_dir = pyemma_tutorials.notebook_location()
+c.Examples.unreviewed_example_dir = ''
 
 ## The directory to use for notebooks and kernels.
-#c.NotebookApp.notebook_dir = ''
+import os
+run_dir = os.path.expanduser('~/pyemma_tutorials')
+os.makedirs(run_dir, exist_ok=True)
+c.NotebookApp.notebook_dir = run_dir
 
 ## Whether to open in a browser after starting. The specific browser used is
 #  platform dependent and determined by the python standard library `webbrowser`
@@ -385,7 +391,7 @@ c.NotebookApp.allow_origin = 'localhost'
 #  the arguments that the kernel understands. In particular, this means that the
 #  kernel does not receive the option --debug if it given on the Jupyter command
 #  line.
-c.KernelManager.kernel_cmd = ['python3']
+#c.KernelManager.kernel_cmd = ['python3']
 
 ## Time to wait for a kernel to terminate before killing it, in seconds.
 #c.KernelManager.shutdown_wait_time = 5.0

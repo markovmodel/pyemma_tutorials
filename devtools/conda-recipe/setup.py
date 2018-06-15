@@ -19,7 +19,9 @@ metadata=dict(
     version=0,
     data_files=[('etc/jupyter/nbconfig/notebook.d/', ['pyemma_tutorial_notebook_cfg.json'])],
     packages=['pyemma_tutorials'],
-    package_data={'pyemma_tutorials': ['notebooks/*']},
+    package_data={'pyemma_tutorials': ['notebooks/*',
+                                       'jupyter_notebook_config.py',
+                                       ]},
     include_package_data=True,
     zip_safe=False,
 )
