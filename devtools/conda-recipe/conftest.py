@@ -10,13 +10,15 @@ def pytest_collection_modifyitems(session, config, items):
 
     circle_node_total, circle_node_index = read_circleci_env_variables()
     deselected = []
-    # round robbin
-    parents = tuple(set(item.parent for item in items))
+    # round robbin:
+    # first group by parent, then skip by ci node index
+    from collections import defaultdict
+    by_parents = defaultdict(list)
     for index, item in enumerate(items):
-        item_hash = parents.index(item.parent)
-        if (item_hash % circle_node_total) != circle_node_index:
-            deselected.append(item)
-            items.remove(item)
+        by_parents[item.parent].append(item)
+    for i, p in enumerate(by_parents.keys()):
+        if i % circle_node_total != circle_node_index:
+            deselected.extend(by_parents[p])
     config.hook.pytest_deselected(items=deselected)
 
 
