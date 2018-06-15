@@ -1,6 +1,6 @@
 package:
   name: pyemma_tutorials
-  version: dev
+  version: 0.2
 
 source:
    - path: ../..

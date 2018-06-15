@@ -1,18 +1,16 @@
 import os
 
 from setuptools import setup
-from glob import glob
 
-if False: #not os.getenv('CONDA_BUILD', False):
+if not os.getenv('CONDA_BUILD', False):
     raise NotImplementedError('this setup script is only ment to be used within conda-build')
 else:
-    print('moved notebooks into pkg')
     import shutil
     try:
         shutil.copytree('notebooks', os.path.join('pyemma_tutorials', 'notebooks'))
+        print('moved notebooks into pkg')
     except OSError:
         pass
-    #os.rename('notebooks', os.path.join('pyemma_tutorials', 'notebooks'))
 
 metadata=dict(
     name='pyemma_tutorials',
