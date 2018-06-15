@@ -7,7 +7,7 @@ jobs:
       PYTHONHASHSEED: 0
       OMP_NUM_THREADS: 1
       PYEMMA_NJOBS: 1
-    parallelism: 2
+    parallelism: 4
     steps:
       - checkout
       - run:
@@ -17,7 +17,7 @@ jobs:
             conda config --set always_yes true
             conda config --set quiet true
       - run: conda install conda-build
-      - run: . activate pyemma_tutorial && mkdir ~/junit && py.test --nbval -v --junit-xml=$HOME/junit/test.xml notebooks/
+      - run: conda build .
       - store_test_results:
           path: ~/junit
 
