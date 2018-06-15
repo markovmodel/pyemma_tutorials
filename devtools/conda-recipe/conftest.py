@@ -19,6 +19,8 @@ def pytest_collection_modifyitems(session, config, items):
     for i, p in enumerate(by_parents.keys()):
         if i % circle_node_total != circle_node_index:
             deselected.extend(by_parents[p])
+    for d in deselected:
+        items.remove(d)
     config.hook.pytest_deselected(items=deselected)
 
 
