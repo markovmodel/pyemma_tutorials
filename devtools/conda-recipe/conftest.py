@@ -6,18 +6,22 @@ def pytest_collection_modifyitems(session, config, items):
         excercise_2_cell = m.get('solution2_first', False)
         skip = m.get('skip', False)
         if excercise_2_cell or skip:
-           i.add_marker(pytest.mark.skip('solution stub')) 
+           i.add_marker(pytest.mark.skip('solution stub'))
 
     circle_node_total, circle_node_index = read_circleci_env_variables()
     deselected = []
-    for index, item in enumerate(list(items)):
-        item_location = str(item.parent).encode() #':'.join(map(str, item.parent)).encode()
-        item_hash = int(hashlib.sha1(item_location).hexdigest(), 16)
-        if (item_hash % circle_node_total) != circle_node_index:
-            deselected.append(item)
-            items.remove(item)
+    # round robbin:
+    # first group by parent, then skip by ci node index
+    from collections import defaultdict
+    by_parents = defaultdict(list)
+    for index, item in enumerate(items):
+        by_parents[item.parent].append(item)
+    for i, p in enumerate(by_parents.keys()):
+        if i % circle_node_total != circle_node_index:
+            deselected.extend(by_parents[p])
+    for d in deselected:
+        items.remove(d)
     config.hook.pytest_deselected(items=deselected)
-
 
 
 class CircleCIError(Exception):
@@ -32,7 +36,7 @@ def read_circleci_env_variables():
     if circle_node_index >= circle_node_total:
         raise CircleCIError("CIRCLE_NODE_INDEX={} >= CIRCLE_NODE_TOTAL={}, should be less".format(circle_node_index, circle_node_total))
 
-    return (circle_node_total, circle_node_index)
+    return circle_node_total, circle_node_index
 
 
 def pytest_report_header(config):

@@ -1,0 +1,35 @@
+package:
+  name: pyemma_tutorials
+  version: 0.2
+
+source:
+   - path: ../..
+   - path: ./
+
+build:
+  script: python -m pip install --no-deps --ignore-installed . -v
+  entry_points:
+    - pyemma_tutorials = pyemma_tutorials:main
+
+  osx_is_app: True
+  noarch: python
+
+
+requirements:
+  build:
+    - pip
+  run:
+    - pyemma
+    - mdshare
+    - notebook
+    - nglview
+    - jupyter_contrib_nbextensions
+    - nbexamples
+
+test:
+  source_files:
+    - conftest.py
+  requires:
+    - nbval
+
+  commands: py.test --nbval -v --junit-xml=/tmp/junit/test.xml --pyargs pyemma_tutorials
