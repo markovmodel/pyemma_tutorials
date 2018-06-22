@@ -1,10 +1,9 @@
 package:
   name: pyemma_tutorials
-  version: 0.2
+  version: dev
 
 source:
    - path: ../..
-   - path: ./
 
 build:
   script: python -m pip install --no-deps --ignore-installed . -v
@@ -32,4 +31,4 @@ test:
   requires:
     - nbval
 
-  commands: py.test --nbval -v --junit-xml=/tmp/junit/test.xml --pyargs pyemma_tutorials
+  commands: mkdir ~/junit; py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials
