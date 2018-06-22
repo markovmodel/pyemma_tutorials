@@ -1,10 +1,9 @@
 package:
   name: pyemma_tutorials
-  version: 0.2
+  version: dev
 
 source:
    - path: ../..
-   - path: ./
 
 build:
   script: python -m pip install --no-deps --ignore-installed . -v
