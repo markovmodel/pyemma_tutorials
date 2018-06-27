@@ -16,7 +16,8 @@ The notebokks after that provide a more in-depth introduciton to special feature
 
 5. hidden Markov state models (HMMs)
 6. computing observables
-7. common pitfalls with bad data
+7. VAMP-based feature selection
+8. common pitfalls with bad data
 
 Please note that this is a work in progress and we value any kind of feedback that helps us improving this tutorial.
 
