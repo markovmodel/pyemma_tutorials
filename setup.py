@@ -2,15 +2,17 @@ import os
 
 from setuptools import setup
 
-if not os.getenv('CONDA_BUILD', False):
-    raise NotImplementedError('this setup script is only ment to be used within conda-build')
-else:
+
+def copy_notebooks():
     import shutil
+    dest = os.path.join('pyemma_tutorials', 'notebooks')
     try:
-        shutil.copytree('notebooks', os.path.join('pyemma_tutorials', 'notebooks'))
+        shutil.rmtree(dest, ignore_errors=True)
+        shutil.copytree('notebooks', dest)
         print('moved notebooks into pkg')
     except OSError:
         pass
+
 
 metadata=dict(
     name='pyemma_tutorials',
@@ -21,8 +23,17 @@ metadata=dict(
                                        'jupyter_notebook_config.py',
                                        ]},
     include_package_data=True,
+    entry_points={'console_scripts': ['pyemma_tutorials = pyemma_tutorials:main'],},
+    install_requires=['pyemma',
+                      'mdshare',
+                      'nbexamples',
+                      'nglview',
+                      'notebook',
+                      'jupyter_contrib_nbextensions',
+    ],
     zip_safe=False,
 )
 
 if __name__ == '__main__':
+    copy_notebooks()
     setup(**metadata)
