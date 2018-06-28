@@ -1,4 +1,5 @@
 import os
+import versioneer
 
 from setuptools import setup
 
@@ -16,7 +17,8 @@ def copy_notebooks():
 
 metadata=dict(
     name='pyemma_tutorials',
-    version=0,
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     data_files=[('etc/jupyter/nbconfig/notebook.d/', ['pyemma_tutorial_notebook_cfg.json'])],
     packages=['pyemma_tutorials'],
     package_data={'pyemma_tutorials': ['notebooks/*',
