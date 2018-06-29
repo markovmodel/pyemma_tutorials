@@ -8,7 +8,7 @@ source:
 build:
   script: python -m pip install --no-deps --ignore-installed . -v
   entry_points:
-    - pyemma_tutorials = pyemma_tutorials:main
+    - pyemma_tutorials = pyemma_tutorials.cli:main
 
   osx_is_app: True
   noarch: python
@@ -26,9 +26,13 @@ requirements:
     - nbexamples
 
 test:
+  imports:
+    - pyemma_tutorials
+  commands:
+    - which pyemma_tutorials  # [osx or linux]
   source_files:
     - conftest.py
   requires:
     - nbval
 
-  commands: mkdir ~/junit; py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials
+  commands: mkdir ~/junit || py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials
