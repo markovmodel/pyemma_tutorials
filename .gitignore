@@ -1,3 +1,6 @@
+#copied stuff
+pyemma_tutorials/notebooks/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

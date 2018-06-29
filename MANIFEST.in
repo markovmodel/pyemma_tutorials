@@ -2,6 +2,7 @@ recursive-include pyemma_tutorials/notebooks *.ipynb
 prune pyemma_tutorials/notebooks/.ipynb_checkpoints
 include versioneer.py
 include pyemma_tutorials/_version.py
+include pyemma_tutorials/jupyter_notebook_config.json
 
 include LICENSE
 
