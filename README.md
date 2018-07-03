@@ -71,3 +71,15 @@ or if you have installed the package directly
 ``` bash
 conda remove pyemma_tutorials
 ```
+
+### Troubleshooting
+
+* No molecular structure is displayed:
+  This can be caused by the leftovers of pip installations of NGLView. Please search your home directory for the following:
+  ``` bash
+  rm -rf ~/.local/share/jupyter/nbextensions/nglview-js-widgets/  # if you have it
+  # try to find in `$HOME/Library/Jupyter` too
+  ```
+  More details can be found here:
+  - https://github.com/arose/nglview/issues/696#issuecomment-332850270
+  - https://github.com/arose/nglview/issues/718#issuecomment-346041897
