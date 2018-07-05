@@ -7,6 +7,7 @@ jobs:
       PYTHONHASHSEED: 0
       OMP_NUM_THREADS: 1
       PYEMMA_NJOBS: 1
+      NBVAL_OUTPUT: /root/nbval
     parallelism: 4
     steps:
       - checkout
@@ -17,7 +18,12 @@ jobs:
             conda config --set always_yes true
             conda config --set quiet true
       - run: conda install conda-build
-      - run: conda build .
+      - run: mkdir $NBVAL_OUTPUT
+      - run:
+          name: build_test
+          command: conda build . || true
+          no_output_timeout: 20m
       - store_test_results:
           path: ~/junit
-
+      - store_artifacts:
+          path: /root/nbval #$NBVAL_OUTPUT

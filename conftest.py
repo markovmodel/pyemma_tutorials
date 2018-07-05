@@ -1,4 +1,8 @@
-import pytest, os, hashlib
+import pytest
+import os
+
+all_notebooks = None
+
 
 def pytest_collection_modifyitems(session, config, items):
     for i in items:
@@ -16,6 +20,11 @@ def pytest_collection_modifyitems(session, config, items):
     by_parents = defaultdict(list)
     for index, item in enumerate(items):
         by_parents[item.parent].append(item)
+
+    # store notebooks for later access
+    global all_notebooks
+    all_notebooks = [(x.name, x.nb) for x in by_parents.keys()]
+
     for i, p in enumerate(by_parents.keys()):
         if i % circle_node_total != circle_node_index:
             deselected.extend(by_parents[p])
@@ -44,3 +53,24 @@ def pytest_report_header(config):
     circle_node_total, circle_node_index = read_circleci_env_variables()
     return "CircleCI total nodes: {}, this node index: {}".format(circle_node_total, circle_node_index)
 
+
+def pytest_sessionfinish(session, exitstatus):
+    """ we store all notebooks in variable 'all_notebooks' to a given path and convert them to html """
+    import nbformat as nbf
+    import tempfile
+    out_dir = os.getenv('NBVAL_OUTPUT', tempfile.mkdtemp(prefix='pyemma_tut_test_output'))
+    print('write html output to', os.path.abspath(out_dir))
+    out_files = []
+    assert all_notebooks is not None
+    for name, nb in all_notebooks:
+        out_file = os.path.join(out_dir, os.path.basename(name))
+        with open(out_file, 'x') as fh:
+            nbf.write(nb, fh)
+        out_files.append(out_file)
+
+    import subprocess
+    subprocess.check_output(['jupyter', 'nbconvert', '--to=html', ' '.join(out_files)])
+
+    # delete source output notebooks
+    #for f in out_files:
+    #    os.unlink(f)

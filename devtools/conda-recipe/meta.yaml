@@ -7,6 +7,8 @@ source:
 
 build:
   script: python -m pip install --no-deps --ignore-installed . -v
+  script_env:
+    - NBVAL_OUTPUT
   entry_points:
     - pyemma_tutorials = pyemma_tutorials.cli:main
 
@@ -34,5 +36,6 @@ test:
     - conftest.py
   requires:
     - nbval
+    - nbconvert
 
-  commands: mkdir ~/junit || py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials
+  commands: mkdir ~/junit; py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials
