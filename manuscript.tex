@@ -1,0 +1,145 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% LIVECOMS ARTICLE TEMPLATE FOR BEST PRACTICES GUIDE
+%%% ADAPTED FROM ELIFE ARTICLE TEMPLATE (8/10/2017)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PREAMBLE
+\documentclass[9pt,tutorial,lineno,onehalfspacing]{livecoms}
+% Use the 'onehalfspacing' option for 1.5 line spacing
+% Use the 'doublespacing' option for 2.0 line spacing
+% Use the 'lineno' option for adding line numbers.
+% The 'bestpractices' option for indicates that this is a best practices guide.
+% Omit the bestpractices option to remove the marking as a LiveCoMS paper.
+% Please note that these options may affect formatting.
+
+\usepackage{lipsum} % Required to insert dummy text
+\usepackage[version=4]{mhchem}
+\usepackage{siunitx}
+\DeclareSIUnit\Molar{M}
+\usepackage[italic]{mathastext}
+\graphicspath{{figures/}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% IMPORTANT USER CONFIGURATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\versionnumber}{0.1}
+\newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ARTICLE SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Learning PyEMMA : v\versionnumber}
+
+\author[1\authfn{1}*]{AUTH0}
+\author[1\authfn{1}*]{AUTH1}
+\author[1*]{AUTH2}
+\affil[1]{AFFILIATION}
+
+\corr{auth0@email}{A0}
+\corr{auth1@email}{A1}
+\corr{auth2@email}{A2}
+
+\contrib[\authfn{1}]{These authors contributed equally to this work}
+
+\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ARTICLE START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frontmatter}
+\maketitle
+
+\begin{abstract}
+This tutorial provides an introduction to the PyEMMA project. Using Jupyter notebooks and accompanying screencasts, we will guide you through the basic functionality as well as the more common advanced mechanisms. Short exercises to self check your learning progress and a notebook on troubleshooting complete this basic introduction.
+\end{abstract}
+
+\end{frontmatter}
+
+\section{Introduction}
+
+PyEMMA~\cite{pyemma} (http://emma-project.org) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models; the package is written in Python (\url{http://python.org}) with heavy usage of numpy~\cite{numpy} and compatible to scikit-learn~\cite{sklearn} package.
+
+\subsection{Scope}
+
+In this tutorial, we assume familiarity with the theory behind the MSM approach and focus solely on usage of PyEMMA. In the first four sessions/notebooks, we introduce the basic components of the PyEMMA analysis pipeline, i.e., data I/O and featurization, dimension reduction and discretization; MSM estimation and validation, and MSM coase graining and analysis. In three further sessions/notebooks we introduce special topics, i.e., use of hidden MSMs, working with expectations and observables, and finding good features using the VAMP score approach. In the eigths and last session/notebook, we show common problems with data and how PyEMMA reacts to these specific situations.
+
+\section{Prerequisites}
+
+
+\subsection{Background knowledge}
+
+MSM introduction~\cite{msm-brooke}, MSM theory~\cite{msm-jhp,msm-book}, TICA~\cite{tica,tica3,tica2}.
+
+\subsection{Software/system requirements}
+
+
+
+\section{Content and links}
+
+This tutorial guides you through the elementary pipeline of buildiung, estimating, validating, and analysing MSMs (notebook 00). The individual steps are explained on simple systems in specialised notebooks (01-08).
+
+Here we show briefly the form a standard MSM pipeline:
+
+data-i/o + featurisation (number of features or system parameters)
+
+dimension reduction and discretization (features plot, free energy or density fot tics[0,1]?)
+
+estimation and validation (its, ck)
+
+pcca + flux
+
+Then we discuss common problems with realistic dataset and show how to spot them.
+
+All notebooks are available on \githubrepository where you also might find additional materials and instalation instructions.
+
+
+\section{Author Contributions}
+%%%%%%%%%%%%%%%%
+% This section mustt describe the actual contributions of
+% author. Since this is an electronic-only journal, there is
+% no length limit when you describe the authors' contributions,
+% so we recommend describing what they actually did rather than
+% simply categorizing them in a small number of
+% predefined roles as might be done in other journals.
+%
+% See the policies ``Policies on Authorship'' section of https://livecoms.github.io
+% for more information on deciding on authorship and author order.
+%%%%%%%%%%%%%%%%
+For a more detailed description of author contributions, see the GitHub issue tracking and changelog at \githubrepository.
+
+\section{Other Contributions}
+%%%%%%%%%%%%%%%
+% You should include all people who have filed issues that were
+% accepted into the paper, or that upon discussion altered what was in the paper.
+% Multiple significant contributions might mean that the contributor
+% should be moved to authorship at the discretion of the a
+%
+% See the policies ``Policies on Authorship'' section of https://livecoms.github.io for
+% more information on deciding on authorship and author order.
+%%%%%%%%%%%%%%%
+For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository.
+
+\section{Potentially Conflicting Interests}
+%%%%%%%
+%Declare any potentially competing interests, financial or otherwise
+%%%%%%%
+
+\section{Funding Information}
+%%%%%%%
+% Authors should acknowledge funding sources here. Reference specific grants.
+%%%%%%%
+
+\bibliography{literature}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% APPENDICES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\appendix
+
+
+\end{document}
