@@ -1,7 +1,7 @@
 import pytest
 import os
 
-all_notebooks = None
+executed_notebooks = None
 
 
 def pytest_collection_modifyitems(session, config, items):
@@ -10,27 +10,31 @@ def pytest_collection_modifyitems(session, config, items):
         excercise_2_cell = m.get('solution2_first', False)
         skip = m.get('skip', False)
         if excercise_2_cell or skip:
-           i.add_marker(pytest.mark.skip('solution stub'))
+            i.add_marker(pytest.mark.skip('solution stub'))
 
     circle_node_total, circle_node_index = read_circleci_env_variables()
-    deselected = []
-    # round robbin:
-    # first group by parent, then skip by ci node index
+    # store notebooks for later access
+    global executed_notebooks
     from collections import defaultdict
     by_parents = defaultdict(list)
     for index, item in enumerate(items):
         by_parents[item.parent].append(item)
 
-    # store notebooks for later access
-    global all_notebooks
-    all_notebooks = [(x.name, x.nb) for x in by_parents.keys()]
+    if circle_node_total == 1:
+        executed_notebooks = by_parents.keys()
+    else:
+        deselected = []
+        # round robbin: by notebook file and ci node index
+        for i, p in enumerate(by_parents.keys()):
+            if i % circle_node_total != circle_node_index:
+                deselected.extend(by_parents[p])
+        for d in deselected:
+            items.remove(d)
 
-    for i, p in enumerate(by_parents.keys()):
-        if i % circle_node_total != circle_node_index:
-            deselected.extend(by_parents[p])
-    for d in deselected:
-        items.remove(d)
-    config.hook.pytest_deselected(items=deselected)
+
+        executed_notebooks = [(nb.name, nb.nb) for nb in
+                              set(x.parent for x in set(items) - set(deselected))]
+        config.hook.pytest_deselected(items=deselected)
 
 
 class CircleCIError(Exception):
@@ -55,21 +59,23 @@ def pytest_report_header(config):
 
 
 def pytest_sessionfinish(session, exitstatus):
-    """ we store all notebooks in variable 'all_notebooks' to a given path and convert them to html """
+    """ we store all notebooks in variable 'executed_notebooks' to a given path and convert them to html """
     import nbformat as nbf
     import tempfile
     out_dir = os.getenv('NBVAL_OUTPUT', tempfile.mkdtemp(prefix='pyemma_tut_test_output'))
     print('write html output to', os.path.abspath(out_dir))
     out_files = []
-    assert all_notebooks is not None
-    for name, nb in all_notebooks:
+    assert executed_notebooks is not None
+    for name, nb in executed_notebooks:
         out_file = os.path.join(out_dir, os.path.basename(name))
         with open(out_file, 'x') as fh:
             nbf.write(nb, fh)
         out_files.append(out_file)
 
     import subprocess
-    subprocess.check_output(['jupyter', 'nbconvert', '--to=html', ' '.join(out_files)])
+    cmd = ['jupyter', 'nbconvert', '--to=html', ' '.join(out_files)]
+    print('converting via cmd:', cmd)
+    subprocess.check_output(cmd)
 
     # delete source output notebooks
     #for f in out_files:
