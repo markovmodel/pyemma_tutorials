@@ -23,7 +23,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\versionnumber}{0.1}
+\newcommand{\versionnumber}{0.1} % TODO: can we extract this number from a git tag?
 \newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,17 +32,18 @@
 \title{Learning PyEMMA : v\versionnumber}
 
 \author[1\authfn{1}*]{AUTH0}
-\author[1\authfn{1}*]{AUTH1}
+\author[1\authfn{1}*]{Martin K. Scherer}
 \author[1*]{AUTH2}
 \affil[1]{AFFILIATION}
 
 \corr{auth0@email}{A0}
-\corr{auth1@email}{A1}
+\corr{m.scherer@fu-berlin.de}{A1}
 \corr{auth2@email}{A2}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
 
-\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
+\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, 
+please visit the GitHub repository and participate via the issue tracker.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE START
@@ -54,18 +55,25 @@
 \maketitle
 
 \begin{abstract}
-This tutorial provides an introduction to the PyEMMA project. Using Jupyter notebooks and accompanying screencasts, we will guide you through the basic functionality as well as the more common advanced mechanisms. Short exercises to self check your learning progress and a notebook on troubleshooting complete this basic introduction.
+This tutorial provides an introduction to the PyEMMA project. Using Jupyter notebooks and accompanying screencasts, 
+we will guide you through the basic functionality as well as the more common advanced mechanisms. 
+Short exercises to self check your learning progress and a notebook on troubleshooting complete this basic introduction.
 \end{abstract}
 
 \end{frontmatter}
 
 \section{Introduction}
 
-PyEMMA~\cite{pyemma} (http://emma-project.org) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models; the package is written in Python (\url{http://python.org}) with heavy usage of numpy~\cite{numpy} and compatible to scikit-learn~\cite{sklearn} package.
+PyEMMA~\cite{pyemma} (http://emma-project.org) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models;
+the package is written in Python (\url{http://python.org}) with heavy usage of NumPy~\cite{numpy} and compatible to scikit-learn~\cite{sklearn} package.
 
 \subsection{Scope}
 
-In this tutorial, we assume familiarity with the theory behind the MSM approach and focus solely on usage of PyEMMA. In the first four sessions/notebooks, we introduce the basic components of the PyEMMA analysis pipeline, i.e., data I/O and featurization, dimension reduction and discretization; MSM estimation and validation, and MSM coase graining and analysis. In three further sessions/notebooks we introduce special topics, i.e., use of hidden MSMs, working with expectations and observables, and finding good features using the VAMP score approach. In the eigths and last session/notebook, we show common problems with data and how PyEMMA reacts to these specific situations.
+In this tutorial, we assume familiarity with the theory behind the MSM approach and focus solely on usage of PyEMMA. 
+In the first four sessions/notebooks, we introduce the basic components of the PyEMMA analysis pipeline, i.e., data I/O and featurization, dimension reduction and discretization; 
+MSM estimation and validation, and MSM coarse graining and analysis. In three further sessions/notebooks we introduce special topics, i.e., 
+use of hidden MSMs, working with expectations and observables, and finding good features using the VAMP score approach.
+In the eigths and last session/notebook, we show common problems with data and how PyEMMA reacts to these specific situations.
 
 \section{Prerequisites}
 
@@ -76,17 +84,35 @@ MSM introduction~\cite{msm-brooke}, MSM theory~\cite{msm-jhp,msm-book}, TICA~\ci
 
 \subsection{Software/system requirements}
 
+We utilize Jupyter notebooks to show code examples along with figures and interactive widgets to display molecules.
+The user can install all needed packages with only one command, if he or she uses the conda command provided by the Anaconda Python stack.
+We rely on Anaconda, because it resolves and installs dependencies and provides pre-compiled versions of hard to build packages like SciPy.
+The installation will contain a launcher command to start the Jupyter notebook server
+as well as the notebook files. The data for the demonstrated test systems is downloaded upon the first usage and is cached for future invocations of the tutorial.
+The underlying software stack for running the tutorial importantly consists out of:
+\begin{itemize}
+ \item NumPy - number crunching
+ \item SciPy - linear algebra, sparse computations
+ \item Matplotlib - Visualization
+ \item \textbf{PyEMMA} - MSM/HMM estimation, analysis, validation and visualization
+ \item mdtraj - reading MD simulation data, calculate observables from MD
+\end{itemize}
+
+The software is currently supported for Python versions 3.5 and 3.6 on the operating systems Linux, OSX and Windows.
+
+If one does not want to use Anaconda, he or she can also perform a manual installation via the pip installer or use the Binder to look and execute the tutorials online in any browser.
 
 
 \section{Content and links}
 
-This tutorial guides you through the elementary pipeline of buildiung, estimating, validating, and analysing MSMs (notebook 00). The individual steps are explained on simple systems in specialised notebooks (01-08).
+This tutorial guides you through the elementary pipeline of building, estimating, validating, and analyzing MSMs (notebook 00). 
+The individual steps are explained on simple systems in specialized notebooks (01-08).
 
 Here we show briefly the form a standard MSM pipeline:
 
-data-i/o + featurisation (number of features or system parameters)
+data-i/o + featurization (number of features or system parameters)
 
-dimension reduction and discretization (features plot, free energy or density fot tics[0,1]?)
+dimension reduction and discretization (features plot, free energy or density for tics[0,1]?)
 
 estimation and validation (its, ck)
 
@@ -94,7 +120,7 @@ pcca + flux
 
 Then we discuss common problems with realistic dataset and show how to spot them.
 
-All notebooks are available on \githubrepository where you also might find additional materials and instalation instructions.
+All notebooks are available on \githubrepository where you also might find additional materials and installation instructions.
 
 
 \section{Author Contributions}
