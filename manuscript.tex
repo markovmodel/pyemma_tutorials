@@ -29,20 +29,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Learning PyEMMA : v\versionnumber}
+\title{First steps with PyEMMA : v\versionnumber}
 
-\author[1\authfn{1}*]{AUTH0}
+\author[1\authfn{1}*]{Christoph Wehmeyer}
 \author[1\authfn{1}*]{Martin K. Scherer}
-\author[1*]{AUTH2}
-\affil[1]{AFFILIATION}
+\author[1*]{Tim Hempel}
+\author[1*]{Simon Olsson}
+\author[1*]{Frank Noé}
+\affil[1]{Department of Mathematics and Computer Science, Freie Universität Berlin, Arnimallee 6, 14195 Berlin, Germany}
 
-\corr{auth0@email}{A0}
-\corr{m.scherer@fu-berlin.de}{A1}
-\corr{auth2@email}{A2}
+\corr{christoph.wehmeyer@fu-berlin.de}{CW}
+\corr{m.scherer@fu-berlin.de}{MS}
+\corr{tim.hempel@fu-berlin.de}{TH}
+\corr{simon.olsson@fu-berlin.de}{SO}
+\corr{frank.noe@fu-berlin.de}{FN}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
 
-\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, 
+\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository{}; to provide feedback, suggestions, or help improve it, 
 please visit the GitHub repository and participate via the issue tracker.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,25 +59,18 @@ please visit the GitHub repository and participate via the issue tracker.}
 \maketitle
 
 \begin{abstract}
-This tutorial provides an introduction to the PyEMMA project. Using Jupyter notebooks and accompanying screencasts, 
-we will guide you through the basic functionality as well as the more common advanced mechanisms. 
-Short exercises to self check your learning progress and a notebook on troubleshooting complete this basic introduction.
+This tutorial provides an introduction to the PyEMMA project. Using Jupyter notebooks, we will guide you through the basic functionality as well as the more common advanced mechanisms. Short exercises to self check your learning progress and a notebook on troubleshooting complete this basic introduction.
 \end{abstract}
 
 \end{frontmatter}
 
 \section{Introduction}
 
-PyEMMA~\cite{pyemma} (http://emma-project.org) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models;
-the package is written in Python (\url{http://python.org}) with heavy usage of NumPy~\cite{numpy} and compatible to scikit-learn~\cite{sklearn} package.
+PyEMMA~\cite{pyemma} (http://emma-project.org) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models; the package is written in Python (\url{http://python.org}) with heavy usage of NumPy~\cite{numpy} and compatible to scikit-learn~\cite{sklearn} package.
 
 \subsection{Scope}
 
-In this tutorial, we assume familiarity with the theory behind the MSM approach and focus solely on usage of PyEMMA. 
-In the first four sessions/notebooks, we introduce the basic components of the PyEMMA analysis pipeline, i.e., data I/O and featurization, dimension reduction and discretization; 
-MSM estimation and validation, and MSM coarse graining and analysis. In three further sessions/notebooks we introduce special topics, i.e., 
-use of hidden MSMs, working with expectations and observables, and finding good features using the VAMP score approach.
-In the eigths and last session/notebook, we show common problems with data and how PyEMMA reacts to these specific situations.
+In this tutorial, we assume familiarity with the theory behind the MSM approach and focus solely on usage of PyEMMA. In the first four sessions/notebooks, we introduce the basic components of the PyEMMA analysis pipeline, i.e., data I/O and featurization, dimension reduction and discretization; MSM estimation and validation, and MSM coarse graining and analysis. In three further sessions/notebooks we introduce special topics, i.e., use of hidden MSMs, working with expectations and observables, and finding good features using the VAMP score approach. In the eigths and last session/notebook, we show common problems with data and how PyEMMA reacts to these specific situations.
 
 \section{Prerequisites}
 
@@ -84,12 +81,7 @@ MSM introduction~\cite{msm-brooke}, MSM theory~\cite{msm-jhp,msm-book}, TICA~\ci
 
 \subsection{Software/system requirements}
 
-We utilize Jupyter notebooks to show code examples along with figures and interactive widgets to display molecules.
-The user can install all needed packages with only one command, if he or she uses the conda command provided by the Anaconda Python stack.
-We rely on Anaconda, because it resolves and installs dependencies and provides pre-compiled versions of hard to build packages like SciPy.
-The installation will contain a launcher command to start the Jupyter notebook server
-as well as the notebook files. The data for the demonstrated test systems is downloaded upon the first usage and is cached for future invocations of the tutorial.
-The underlying software stack for running the tutorial importantly consists out of:
+We utilize Jupyter notebooks to show code examples along with figures and interactive widgets to display molecules. The user can install all needed packages with only one command, if he or she uses the conda command provided by the Anaconda Python stack. We rely on Anaconda, because it resolves and installs dependencies and provides pre-compiled versions of hard to build packages like SciPy. The installation will contain a launcher command to start the Jupyter notebook server as well as the notebook files. The data for the demonstrated test systems is downloaded upon the first usage and is cached for future invocations of the tutorial. The underlying software stack for running the tutorial importantly consists out of:
 \begin{itemize}
  \item NumPy - number crunching
  \item SciPy - linear algebra, sparse computations
@@ -105,10 +97,20 @@ If one does not want to use Anaconda, he or she can also perform a manual instal
 
 \section{Content and links}
 
-This tutorial guides you through the elementary pipeline of building, estimating, validating, and analyzing MSMs (notebook 00). 
-The individual steps are explained on simple systems in specialized notebooks (01-08).
+This tutorial guides you through the elementary pipeline of building, estimating, validating, and analyzing MSMs (notebook 00). The individual steps are explained on simple systems in specialized notebooks (01-08).
 
 Here we show briefly the form a standard MSM pipeline:
+
+\begin{figure}
+\includegraphics{figure_1}
+\caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: (a) The VAMP2 score indicates which of the tested featurization contains the most kinetic variance. (b) The first two independent components of a TICA projection at lag time $\tau=0.5$ ns show rare transition events. (c) Projection of the sample distribution and 200 $k$-means cluster centers onto the first two independent TICA components. (d) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for estimating an MSM; the shaded areas indicate $95\%$ confidence intervals.}
+\label{fig:io-to-its}
+\end{figure}
+
+Figure~\ref{fig:io-to-its}
+
+
+
 
 data-i/o + featurization (number of features or system parameters)
 
@@ -116,11 +118,19 @@ dimension reduction and discretization (features plot, free energy or density fo
 
 estimation and validation (its, ck)
 
+\begin{figure}
+\includegraphics{figure_2}
+\caption{A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns accurately predicts the kinetic behavior on longer timescales; the shaded areas indicate $95\%$ confidence intervals.}
+\label{fig:ck}
+\end{figure}
+
+Figure~\ref{fig:ck}
+
 pcca + flux
 
 Then we discuss common problems with realistic dataset and show how to spot them.
 
-All notebooks are available on \githubrepository where you also might find additional materials and installation instructions.
+All notebooks are available on \githubrepository{} where you also might find additional materials and installation instructions.
 
 
 \section{Author Contributions}
@@ -135,7 +145,7 @@ All notebooks are available on \githubrepository where you also might find addit
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io
 % for more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%%
-For a more detailed description of author contributions, see the GitHub issue tracking and changelog at \githubrepository.
+For a more detailed description of author contributions, see the GitHub issue tracking and changelog at \githubrepository{}.
 
 \section{Other Contributions}
 %%%%%%%%%%%%%%%
@@ -147,7 +157,7 @@ For a more detailed description of author contributions, see the GitHub issue tr
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io for
 % more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%
-For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository.
+For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository{}.
 
 \section{Potentially Conflicting Interests}
 %%%%%%%
