@@ -1,10 +1,21 @@
+from glob import glob
+
 import pytest
 import os
 
 executed_notebooks = None
 
-from collections import defaultdict
+notebook_groups = [
+    (glob('notebooks/*msm-estimation*.ipynb')[0],
+     glob('notebooks/*msm-analysis*.ipynb')[0],
+     glob('notebooks/*pcca-tpt*.ipynb')[0],
+     ),
+]
 
+assert notebook_groups
+
+
+from collections import defaultdict
 timings = defaultdict(int)
 
 def pytest_runtest_logreport(report):
@@ -38,6 +49,18 @@ def pytest_collection_modifyitems(session, config, items):
     if circle_node_total == 1:
         executed_notebooks = [(nb.name, nb.nb) for nb in  by_parents.keys()]
     else:
+        # merge grouped parents
+        for n in notebook_groups:
+            items_to_group = []
+            keys_to_merge = []
+            for p in by_parents:
+                if p.name in n:
+                    items_to_group.extend(by_parents[p])
+                    keys_to_merge.append(p)
+            for k in keys_to_merge:
+                del by_parents[k]
+            by_parents[tuple(keys_to_merge)] = items_to_group
+
         deselected = []
         # round robbin: by notebook file and ci node index
         for i, p in enumerate(by_parents.keys()):
@@ -45,15 +68,9 @@ def pytest_collection_modifyitems(session, config, items):
                 deselected.extend(by_parents[p])
         for d in deselected:
             items.remove(d)
-
-
         executed_notebooks = [(nb.name, nb.nb) for nb in
                               set(x.parent for x in set(items) - set(deselected))]
         config.hook.pytest_deselected(items=deselected)
-
-
-class CircleCIError(Exception):
-    """Raised for problems running the CirleCI py.test plugin"""
 
 
 def read_circleci_env_variables():
@@ -62,7 +79,7 @@ def read_circleci_env_variables():
     circle_node_index = int(os.environ.get("CIRCLE_NODE_INDEX", "0").strip() or "0")
 
     if circle_node_index >= circle_node_total:
-        raise CircleCIError("CIRCLE_NODE_INDEX={} >= CIRCLE_NODE_TOTAL={}, should be less".format(circle_node_index, circle_node_total))
+        raise RuntimeError("CIRCLE_NODE_INDEX={} >= CIRCLE_NODE_TOTAL={}, should be less".format(circle_node_index, circle_node_total))
 
     return circle_node_total, circle_node_index
 
