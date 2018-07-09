@@ -42,22 +42,22 @@ def pytest_collection_modifyitems(session, config, items):
     circle_node_total, circle_node_index = read_circleci_env_variables()
     # store notebooks for later access
     global executed_notebooks
-    from collections import defaultdict
     by_parents = defaultdict(list)
     for index, item in enumerate(items):
         by_parents[item.parent].append(item)
 
     if circle_node_total == 1:
-        executed_notebooks = [(nb.name, nb.nb) for nb in  by_parents.keys()]
+        executed_notebooks = [(nb.name, nb.nb) for nb in by_parents.keys()]
     else:
         # merge grouped parents
         for n in notebook_groups:
             items_to_group = []
             keys_to_merge = []
             for p in by_parents:
-                if p.name in n:
-                    items_to_group.extend(by_parents[p])
-                    keys_to_merge.append(p)
+                for nb in n:
+                    if nb in p.name:
+                       items_to_group.extend(by_parents[p])
+                       keys_to_merge.append(p)
             for k in keys_to_merge:
                 del by_parents[k]
             by_parents[tuple(keys_to_merge)] = items_to_group
@@ -71,6 +71,7 @@ def pytest_collection_modifyitems(session, config, items):
             items.remove(d)
         executed_notebooks = [(nb.name, nb.nb) for nb in
                               set(x.parent for x in set(items) - set(deselected))]
+	print('will execute:', executed_notebooks)
         config.hook.pytest_deselected(items=deselected)
 
 
