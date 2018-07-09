@@ -3,6 +3,21 @@ import os
 
 executed_notebooks = None
 
+from collections import defaultdict
+
+timings = defaultdict(int)
+
+def pytest_runtest_logreport(report):
+    if report.when == "call":
+        key = report.location[0]
+        timings[key] += report.duration
+
+def pytest_terminal_summary(terminalreporter, exitstatus):
+    from operator import itemgetter
+    s = sorted(timings.items(), key=lambda x: x[1])
+    for nb, total in s:
+        terminalreporter.write_line('%s took %.1f seconds' % (nb, total))
+
 
 def pytest_collection_modifyitems(session, config, items):
     for i in items:
