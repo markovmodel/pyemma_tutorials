@@ -97,6 +97,8 @@ If one does not want to use Anaconda, he or she can also perform a manual instal
 
 \section{Content and links}
 
+
+
 This tutorial guides you through the elementary pipeline of building, estimating, validating, and analyzing MSMs (notebook 00). The individual steps are explained on simple systems in specialized notebooks (01-08).
 
 Here we show briefly the form a standard MSM pipeline:
@@ -120,13 +122,21 @@ estimation and validation (its, ck)
 
 \begin{figure}
 \includegraphics{figure_2}
-\caption{A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns accurately predicts the kinetic behavior on longer timescales; the shaded areas indicate $95\%$ confidence intervals.}
+\caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: a Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales; the shaded areas indicate $95\%$ confidence intervals.}
 \label{fig:ck}
 \end{figure}
 
 Figure~\ref{fig:ck}
 
 pcca + flux
+
+\begin{figure}
+\includegraphics{figure_3}
+\caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: (a) The reweighted free energy surface in the projection of the first two independent components exhibits five minima which (b) PCCA++ identifies as four metastable states. (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state (0) and the two most probable states (2, 3), whereas (d) the commitor $1\to2$ indicates that the most probable state 3 acts as a transition state for transitions between states 1 and 2.}
+\label{fig:msm-analysis}
+\end{figure}
+
+Figure~\ref{fig:msm-analysis}
 
 Then we discuss common problems with realistic dataset and show how to spot them.
 
@@ -145,7 +155,7 @@ All notebooks are available on \githubrepository{} where you also might find add
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io
 % for more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%%
-For a more detailed description of author contributions, see the GitHub issue tracking and changelog at \githubrepository{}.
+For a more detailed description of author contributions, see the GitHub issue tracking and changelog at\\\githubrepository{}.
 
 \section{Other Contributions}
 %%%%%%%%%%%%%%%
