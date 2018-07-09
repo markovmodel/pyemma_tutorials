@@ -21,7 +21,7 @@ jobs:
       - run: mkdir $NBVAL_OUTPUT
       - run:
           name: build_test
-          command: conda build . || true
+          command: conda build .
           no_output_timeout: 20m
       - store_test_results:
           path: ~/junit
