@@ -6,15 +6,13 @@ import os
 executed_notebooks = None
 
 notebook_groups = [
-    (glob('notebooks/*msm-estimation*.ipynb')[0],
-     glob('notebooks/*msm-analysis*.ipynb')[0],
-     glob('notebooks/*pcca-tpt*.ipynb')[0],
+    (('msm-estimation'),
+     ('msm-analysis'),
+     ('pcca-tpt'),
      ),
 ]
 
-assert notebook_groups
-
-
+### execution timing ##########################################################
 from collections import defaultdict
 timings = defaultdict(int)
 
@@ -29,7 +27,10 @@ def pytest_terminal_summary(terminalreporter, exitstatus):
     for nb, total in s:
         terminalreporter.write_line('%s took %.1f seconds' % (nb, total))
 
+###############################################################################
 
+
+#### Circle CI parallel execution #############################################
 def pytest_collection_modifyitems(session, config, items):
     for i in items:
         m = i.cell['metadata']
@@ -88,6 +89,8 @@ def pytest_report_header(config):
     """Add CircleCI information to report"""
     circle_node_total, circle_node_index = read_circleci_env_variables()
     return "CircleCI total nodes: {}, this node index: {}".format(circle_node_total, circle_node_index)
+
+###############################################################################
 
 
 def pytest_sessionfinish(session, exitstatus):
