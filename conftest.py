@@ -6,16 +6,15 @@ import os
 executed_notebooks = None
 
 notebook_groups = [
-    (('msm-estimation'),
-     ('msm-analysis'),
-     ('pcca-tpt'),
+    ('msm-estimation',
+     'msm-analysis',
+     'pcca-tpt',
      ),
 ]
 
 ### execution timing ##########################################################
 from collections import defaultdict
 timings = defaultdict(int)
-
 
 def pytest_runtest_logreport(report):
     if report.when == "call":
@@ -24,7 +23,7 @@ def pytest_runtest_logreport(report):
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus):
-    from operator import itemgetter
+    terminalreporter.section('Notebook timings')
     s = sorted(timings.items(), key=lambda x: x[1])
     for nb, total in s:
         terminalreporter.write_line('%s took %.1f seconds' % (nb, total))
@@ -73,7 +72,7 @@ def pytest_collection_modifyitems(session, config, items):
             items.remove(d)
         executed_notebooks = [(nb.name, nb.nb) for nb in
                               set(x.parent for x in set(items) - set(deselected))]
-        print('will execute:', executed_notebooks)
+        print('Notebooks to execute:', [x[0] for x in executed_notebooks])
         config.hook.pytest_deselected(items=deselected)
 
 
@@ -115,7 +114,9 @@ def pytest_sessionfinish(session, exitstatus):
         out_files.append(out_file)
 
     import subprocess
-    cmd = ['jupyter', 'nbconvert', '--to=html'] + out_files
+    import sys
+    
+    cmd = [sys.executable, '-m', 'jupyter', 'nbconvert', '--to=html'] + out_files
     print('converting via cmd:', cmd)
     subprocess.check_output(cmd)
 

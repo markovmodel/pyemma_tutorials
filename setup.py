@@ -7,9 +7,13 @@ from setuptools import setup
 def copy_notebooks():
     import shutil
     dest = os.path.join('pyemma_tutorials', 'notebooks')
+    ignored_patterns = ('data', '*.xtc', '*.pyemma', '*.pdb', '*.dcd')
+    import fnmatch
+    def ignore(src, fn):
+        return any(fnmatch.fnmatch(fn, p) for p in ignored_patterns)
     try:
         shutil.rmtree(dest, ignore_errors=True)
-        shutil.copytree('notebooks', dest)
+        shutil.copytree('notebooks', dest, ignore=ignore)
         print('moved notebooks into pkg')
     except OSError:
         pass
