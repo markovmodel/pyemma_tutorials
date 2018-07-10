@@ -3,7 +3,7 @@ from glob import glob
 import pytest
 import os
 
-executed_notebooks = None
+executed_notebooks = set()
 
 notebook_groups = [
     ('msm-estimation',
@@ -15,6 +15,7 @@ notebook_groups = [
 ### execution timing ##########################################################
 from collections import defaultdict
 timings = defaultdict(int)
+
 
 def pytest_runtest_logreport(report):
     if report.when == "call":
@@ -41,15 +42,11 @@ def pytest_collection_modifyitems(session, config, items):
             i.add_marker(pytest.mark.skip('solution stub'))
 
     circle_node_total, circle_node_index = read_circleci_env_variables()
-    # store notebooks for later access
-    global executed_notebooks
-    by_parents = defaultdict(list)
-    for index, item in enumerate(items):
-        by_parents[item.parent].append(item)
+    if circle_node_total > 1:
+        by_parents = defaultdict(list)
+        for index, item in enumerate(items):
+            by_parents[item.parent].append(item)
 
-    if circle_node_total == 1:
-        executed_notebooks = [(nb.name, nb.nb) for nb in by_parents.keys()]
-    else:
         # merge grouped parents
         for n in notebook_groups:
             items_to_group = []
@@ -70,7 +67,7 @@ def pytest_collection_modifyitems(session, config, items):
                 deselected.extend(by_parents[p])
         for d in deselected:
             items.remove(d)
-        executed_notebooks = [(nb.name, nb.nb) for nb in
+        executed_notebooks = [nb.name for nb in
                               set(x.parent for x in set(items) - set(deselected))]
         print('Notebooks to execute:', [x[0] for x in executed_notebooks])
         config.hook.pytest_deselected(items=deselected)
@@ -98,6 +95,10 @@ def pytest_report_header(config):
 ###############################################################################
 
 
+def pytest_runtest_protocol(item, nextitem):
+    executed_notebooks.add(item.parent)
+
+
 def pytest_sessionfinish(session, exitstatus):
     """ we store all notebooks in variable 'executed_notebooks' to a given path and convert them to html """
     import nbformat as nbf
@@ -106,17 +107,18 @@ def pytest_sessionfinish(session, exitstatus):
         prefix='pyemma_tut_test_output'))
     print('write html output to', os.path.abspath(out_dir))
     out_files = []
-    assert executed_notebooks is not None
-    for name, nb in executed_notebooks:
-        out_file = os.path.join(out_dir, os.path.basename(name))
+    assert executed_notebooks
+    for ipynbfile in executed_notebooks:
+        out_file = os.path.join(out_dir, os.path.basename(ipynbfile.name))
         with open(out_file, 'x') as fh:
-            nbf.write(nb, fh)
+            nbf.write(ipynbfile.nb, fh)
         out_files.append(out_file)
 
     import subprocess
     import sys
-    
-    cmd = [sys.executable, '-m', 'jupyter', 'nbconvert', '--to=html'] + out_files
+
+    cmd = [sys.executable, '-m', 'jupyter',
+           'nbconvert', '--to=html'] + out_files
     print('converting via cmd:', cmd)
     subprocess.check_output(cmd)
 
