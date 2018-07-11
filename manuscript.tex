@@ -105,7 +105,7 @@ Here we show briefly the form a standard MSM pipeline:
 
 \begin{figure}
 \includegraphics{figure_1}
-\caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: (a) The VAMP2 score indicates which of the tested featurization contains the most kinetic variance. (b) The first two independent components of a TICA projection at lag time $\tau=0.5$ ns show rare transition events. (c) Projection of the sample distribution and 200 $k$-means cluster centers onto the first two independent TICA components. (d) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for estimating an MSM; the shaded areas indicate $95\%$ confidence intervals.}
+\caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: (a) The studied pentapeptide. (b) The VAMP2 score indicates which of the tested featurization contains the most kinetic variance. (c) The first two independent components of a TICA projection at lag time $\tau=0.5$ ns show rare transition events. (d) Projection of the sample distribution and 200 $k$-means cluster centers onto the first two independent TICA components. (e) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for estimating an MSM; the shaded areas indicate $95\%$ confidence intervals. (f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales; the shaded areas indicate $95\%$ confidence intervals.}
 \label{fig:io-to-its}
 \end{figure}
 
@@ -120,18 +120,10 @@ dimension reduction and discretization (features plot, free energy or density fo
 
 estimation and validation (its, ck)
 
-\begin{figure}
-\includegraphics{figure_2}
-\caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: a Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales; the shaded areas indicate $95\%$ confidence intervals.}
-\label{fig:ck}
-\end{figure}
-
-Figure~\ref{fig:ck}
-
 pcca + flux
 
 \begin{figure}
-\includegraphics{figure_3}
+\includegraphics{figure_2}
 \caption{Exemplary analysis of a pentapeptide's backbone conformational dynamics: (a) The reweighted free energy surface in the projection of the first two independent components exhibits five minima which (b) PCCA++ identifies as four metastable states. (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state (0) and the two most probable states (2, 3), whereas (d) the commitor $1\to2$ indicates that the most probable state 3 acts as a transition state for transitions between states 1 and 2.}
 \label{fig:msm-analysis}
 \end{figure}
