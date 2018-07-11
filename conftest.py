@@ -91,12 +91,15 @@ def pytest_report_header(config):
     circle_node_total, circle_node_index = read_circleci_env_variables()
     return "CircleCI total nodes: {}, this node index: {}".format(circle_node_total, circle_node_index)
 
+###############################################################################
+
 cells_per_notebook = defaultdict(list)
+
+
 def pytest_runtest_call(item):
     cells_per_notebook[item.parent].append(item)
 
-###############################################################################
-@pytest.hookimpl(hookwrapper=True)
+
 def pytest_sessionfinish(session, exitstatus):
     """ we store all notebooks in variable 'executed_notebooks' to a given path and convert them to html """
     import nbformat as nbf
@@ -130,5 +133,3 @@ def pytest_sessionfinish(session, exitstatus):
     # delete source output notebooks
     for f in out_files:
         os.unlink(f)
-
-    return exitstatus
