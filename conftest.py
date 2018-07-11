@@ -1,9 +1,6 @@
-from glob import glob
-
 import pytest
 import os
 
-executed_notebooks = set()
 
 notebook_groups = [
     ('msm-estimation',
@@ -30,16 +27,18 @@ def pytest_terminal_summary(terminalreporter, exitstatus):
         terminalreporter.write_line('%s took %.1f seconds' % (nb, total))
 
 ###############################################################################
-
+def cell_skipped(cell_metadata):
+    excercise_2_cell = cell_metadata.get('solution2_first', False)
+    skip = cell_metadata.get('skip', False)
+    if excercise_2_cell or skip:
+        return True
+    return False
 
 #### Circle CI parallel execution #############################################
 def pytest_collection_modifyitems(session, config, items):
     for i in items:
-        m = i.cell['metadata']
-        excercise_2_cell = m.get('solution2_first', False)
-        skip = m.get('skip', False)
-        if excercise_2_cell or skip:
-            i.add_marker(pytest.mark.skip('solution stub'))
+        if cell_skipped(i.cell['metadata']):
+            i.add_marker(pytest.mark.skip('solution stub or metadata["skip"]=True'))
 
     circle_node_total, circle_node_index = read_circleci_env_variables()
     if circle_node_total > 1:
@@ -69,7 +68,7 @@ def pytest_collection_modifyitems(session, config, items):
             items.remove(d)
         executed_notebooks = [nb.name for nb in
                               set(x.parent for x in set(items) - set(deselected))]
-        print('Notebooks to execute:', [x[0] for x in executed_notebooks])
+        print('Notebooks to execute:', executed_notebooks)
         config.hook.pytest_deselected(items=deselected)
 
 
@@ -92,13 +91,12 @@ def pytest_report_header(config):
     circle_node_total, circle_node_index = read_circleci_env_variables()
     return "CircleCI total nodes: {}, this node index: {}".format(circle_node_total, circle_node_index)
 
+cells_per_notebook = defaultdict(list)
+def pytest_runtest_call(item):
+    cells_per_notebook[item.parent].append(item)
+
 ###############################################################################
-
-
-def pytest_runtest_protocol(item, nextitem):
-    executed_notebooks.add(item.parent)
-
-
+@pytest.hookimpl(hookwrapper=True)
 def pytest_sessionfinish(session, exitstatus):
     """ we store all notebooks in variable 'executed_notebooks' to a given path and convert them to html """
     import nbformat as nbf
@@ -107,9 +105,16 @@ def pytest_sessionfinish(session, exitstatus):
         prefix='pyemma_tut_test_output'))
     print('write html output to', os.path.abspath(out_dir))
     out_files = []
-    assert executed_notebooks
-    for ipynbfile in executed_notebooks:
+    ipynbfiles = set(i.parent for i in session.items)
+    for ipynbfile in ipynbfiles:
         out_file = os.path.join(out_dir, os.path.basename(ipynbfile.name))
+        # map output cells
+        cells_with_output = filter(lambda c: hasattr(c, 'outputs'), ipynbfile.nb.cells)
+        cells_with_output_not_skipped = filter(lambda c: not cell_skipped(c.metadata), cells_with_output)
+        for cell, ipynbcell in zip(cells_with_output_not_skipped, cells_per_notebook[ipynbfile]):
+            assert hasattr(cell, 'outputs')
+            cell.outputs = ipynbcell.test_outputs
+
         with open(out_file, 'x') as fh:
             nbf.write(ipynbfile.nb, fh)
         out_files.append(out_file)
@@ -123,5 +128,7 @@ def pytest_sessionfinish(session, exitstatus):
     subprocess.check_output(cmd)
 
     # delete source output notebooks
-    # for f in out_files:
-    #    os.unlink(f)
+    for f in out_files:
+        os.unlink(f)
+
+    return exitstatus
