@@ -38,4 +38,4 @@ test:
     - nbval
     - nbconvert
 
-  commands: mkdir ~/junit; py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials
+  commands: mkdir ~/junit; py.test --nbval -v --junit-xml=$HOME/junit/test.xml --pyargs pyemma_tutorials --durations=30
