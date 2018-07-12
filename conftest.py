@@ -12,6 +12,14 @@ notebook_groups = [
      ),
 ]
 
+@pytest.fixture(scope='session')
+def no_progress_bars():
+    """ disables progress bars during testing """
+    import pyemma
+    pyemma.config.show_progress_bars = False
+    yield
+
+
 ### execution timing ##########################################################
 from collections import defaultdict
 timings = defaultdict(int)
