@@ -6,23 +6,26 @@
 
 [PyEMMA](http://pyemma.org) (EMMA = Emma's Markov Model Algorithms) is an open source Python/C package for analysis of extensive molecular dynamics (MD) simulations.
 
-The notebooks in this tutorial guide through the necessary steps to analyze simulation data and provide exercises (and solutions). In detail the first four notebooks introduce to most common steps of a PyEMMA analysis pipeline:
+### Content
 
-<img src="https://ftp.imp.fu-berlin.de/pub/cmb-data/pentapeptide-320.png" width="973" height="521" />
+The first [notebook 📓](notebooks/00-pentapeptide-showcase.ipynb) in this tutorial guides through the basic analysis workflow using real MD data of a pentapeptide:
 
-1. extracting features and loading data
-2. dimension reduction and discretization
-3. Markov state model (MSM) estimation and validation
-4. MSM coarse graining and analysis
+<img src="https://ftp.imp.fu-berlin.de/pub/cmb-data/pentapeptide-320.png" width="320" height="171" />
 
-The notebooks after that provide a more in-depth introduciton to special features of MSMs/PyEMMA:
+We keep the details minimal throughout the showcase but point to the more specialized notebooks which allow you to go in-depth on selected topics.
 
-5. hidden Markov state models (HMMs)
-6. computing observables
-7. VAMP-based feature selection
-8. common pitfalls with bad data
+In detail, the remining eight notebooks revisit all aspects shown in the showcase, provide additional details and variants, and contain exercises (and solutions) to self-check your learning progress:
 
-Please note that this is a work in progress and we value any kind of feedback that helps us improving this tutorial.
+1. Data-I/O and featurization [➜ 📓](notebooks/01-data-io-and-featurisation.ipynb)
+2. Dimension reduction and discretization [➜ 📓](notebooks/02-dimension-reduction-and-discretisation.ipynb)
+3. MSM estimation and validation [➜ 📓](notebooks/03-msm-estimation-and-validation.ipynb)
+4. MSM analysis [➜ 📓](notebooks/04-msm-analysis.ipynb)
+5. PCCA and TPT analysis [➜ 📓](notebooks/05-pcca-tpt.ipynb)
+6. Hidden Markov state models (HMMs) [➜ 📓](notebooks/06-hidden-markov-state-models.ipynb)
+7. Expectations and Observables [➜ 📓](notebooks/07-expectations-and-observables.ipynb)
+8. Common problems & bad data situations [➜ 📓](notebooks/08-common-problems.ipynb)
+
+**Please note that this is a work in progress and we value any kind of feedback that helps us improving this tutorial.**
 
 ### Installation
 We recommended to install the PyEMMA tutorials with conda. The following command will create a new environment that comes with all the dependencies of the tutorial.
@@ -33,7 +36,7 @@ https://conda.io/miniconda.html
 
 After installing miniconda, you can install the tutorial either via
 
-```bash
+``` bash
 conda create -n pyemma_tutorials -c conda-forge pyemma_tutorials
 ```
 
@@ -50,16 +53,14 @@ pip install git+https://github.com/markovmodel/pyemma_tutorials
 ```
 
 ### Usage
-Now we have a fresh conda environment containing the notebooks and the software to run them. We can now just activate the environment
-and run the notebook server by invoking:
+Now we have a fresh conda environment containing the notebooks and the software to run them. We can now just activate the environment and run the notebook server by invoking:
 
-```bash
+``` bash
 conda activate pyemma_tutorials  # skip this, if you have installed in your root environment or used pip to install.
 pyemma_tutorials
 ```
 
-The last command will start the notebook server and your browser should pop up pointing to a list of notebooks. You can choose either to preview or to create your
-own copy of the notebook. The latter will create a copy of the chosen notebook in your home directory, so your changes will not be lost after shutting down the notebook server.
+The last command will start the notebook server and your browser should pop up pointing to a list of notebooks. You can choose either to preview or to create your own copy of the notebook. The latter will create a copy of the chosen notebook in your home directory, so your changes will not be lost after shutting down the notebook server.
 
 ### Deinstallation
 
