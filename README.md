@@ -8,8 +8,7 @@
 
 The notebooks in this tutorial guide through the necessary steps to analyze simulation data and provide exercises (and solutions). In detail the first four notebooks introduce to most common steps of a PyEMMA analysis pipeline:
 
-![alt text](https://ftp.imp.fu-berlin.de/pub/cmb-data/pentapeptide-320.png)
-
+<img src="https://ftp.imp.fu-berlin.de/pub/cmb-data/pentapeptide-320.png" width="973" height="521" />
 
 1. extracting features and loading data
 2. dimension reduction and discretization
