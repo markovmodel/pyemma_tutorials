@@ -112,10 +112,9 @@ def pytest_sessionfinish(session, exitstatus):
     for ipynbfile in ipynbfiles:
         out_file = os.path.join(out_dir, os.path.basename(ipynbfile.name))
         # map output cells
-        cells_with_output = filter(lambda c: hasattr(c, 'outputs'), ipynbfile.nb.cells)
-        cells_with_output_not_skipped = filter(lambda c: not cell_skipped(c.metadata), cells_with_output)
-        for cell, ipynbcell in zip(cells_with_output_not_skipped, cells_per_notebook[ipynbfile]):
-            assert hasattr(cell, 'outputs')
+        cells_with_non_skipped_output = (c for c in ipynbfile.nb.cells if hasattr(c, 'outputs') and not cell_skipped(c.metadata))
+        for cell, ipynbcell in zip(cells_with_non_skipped_output, cells_per_notebook[ipynbfile]):
+            print(cell, ipynbcell)
             cell.outputs = ipynbcell.test_outputs
 
         with open(out_file, 'x') as fh:
