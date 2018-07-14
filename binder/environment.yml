@@ -1,0 +1,7 @@
+# this file is used by mybinder.org
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pyemma_tutorials 
+
