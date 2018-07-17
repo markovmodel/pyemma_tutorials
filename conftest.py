@@ -6,8 +6,7 @@ import os
 executed_notebooks = set()
 
 notebook_groups = [
-    ('msm-estimation',
-     'msm-analysis',
+     ('msm-analysis',
      'pcca-tpt',
      ),
 ]
