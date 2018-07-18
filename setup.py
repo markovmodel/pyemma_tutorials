@@ -21,6 +21,7 @@ metadata=dict(
     cmdclass=versioneer.get_cmdclass(),
     packages=['pyemma_tutorials'],
     package_data={'pyemma_tutorials': ['notebooks/*',
+                                       'notebooks/static/*',
                                        'jupyter_notebook_config.py',
                                        'jupyter_notebook_config.json',
                                        ]},
