@@ -65,40 +65,47 @@ This tutorial provides an introduction to the PyEMMA project. Using Jupyter note
 
 \section{Introduction}
 
-PyEMMA~\cite{pyemma} (http://emma-project.org) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models; the package is written in Python (\url{http://python.org}) with heavy usage of NumPy~\cite{numpy} and compatible to scikit-learn~\cite{sklearn} package.
+PyEMMA~\cite{pyemma} (\url{http://emma-project.org}) is a framework for the analysis of molecular dynamics (MD) simulations using Markov state models\cite{schuette-msm,singhal-msm-naming} (MSMs). The package is written in Python (\url{http://python.org}), relies heavily on NumPy/SciPy~\cite{numpy,scipy}, and is compatible with the scikit-learn~\cite{sklearn} framework for machine learning.
 
 \subsection{Scope}
 
-In this tutorial, we assume familiarity with the theory behind the MSM approach and focus solely on usage of PyEMMA. In the first four sessions/notebooks, we introduce the basic components of the PyEMMA analysis pipeline, i.e., data I/O and featurization, dimension reduction and discretization; MSM estimation and validation, and MSM coarse graining and analysis. In three further sessions/notebooks we introduce special topics, i.e., use of hidden MSMs, working with expectations and observables, and finding good features using the VAMP score approach. In the eigths and last session/notebook, we show common problems with data and how PyEMMA reacts to these specific situations.
+In this tutorial, we assume the reader's familiarity with the basic theory behind the MSM approach (see Sec.~\ref{sec:background}) and focus on usage of PyEMMA. Nevertheless will we mention important theoretical concepts throughout the tutorial.
+
+The tutorial is divided into lessons on specific topics, each accompanied by a Jupyter~\cite{jupyter} notebook containing code, instructions, and exercises. The lessons start with a showcase of the PyEMMA workflow and follow up with in-depth lessons on specific topics.
 
 \section{Prerequisites}
 
+In the following, we summarize the recommended theoretical background knowlegde of Markov state modeling for this tutorial as well as the software requirements to work through the lessons.
 
 \subsection{Background knowledge}
+\label{sec:background}
 
-MSM introduction~\cite{msm-brooke}, MSM theory~\cite{msm-jhp,msm-book}, TICA~\cite{tica,tica3,tica2}.
+For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a comprehensive overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the mathematical theory. 
+
+In addition to the literature on theory and application of MArkov state modeling~\cite{msm-book,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks}, we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt}, hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial}, and variational techniques~\cite{noe-vac,vamp-preprint,gmrq}, as these topics play important roles within the standard MSM workflow.
 
 \subsection{Software/system requirements}
 
-We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules. The user can install all needed packages with only one command, if he or she uses the conda command provided by the Anaconda Python stack. We rely on Anaconda, because it resolves and installs dependencies and provides pre-compiled versions of hard to build packages like SciPy. The installation will contain a launcher command to start the Jupyter notebook server as well as the notebook files. The data for the demonstrated test systems is downloaded upon the first usage and is cached for future invocations of the tutorial. The underlying software stack for running the tutorial importantly consists out of:
+We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules. The user can install all needed packages with only one command if they use the \texttt{conda} command provided by the Anaconda Python stack (\url{https://anaconda.com}). We rely on Anaconda, because it resolves and installs dependencies, and provides pre-compiled versions of hard to build packages like SciPy.
+
+The installation will contain a launcher command to start the Jupyter notebook server as well as the notebook files. The data for the demonstrated test systems is downloaded upon the first use and is cached for future invocations of the tutorial.
+
+The underlying software stack for running the tutorial importantly consists of:
 \begin{itemize}
- \item NumPy - number crunching
- \item SciPy - linear algebra, sparse computations
- \item Matplotlib - Visualization
- \item \textbf{PyEMMA} - MSM/HMM estimation, analysis, validation and visualization
- \item mdtraj - reading MD simulation data, calculate observables from MD
+\item NumPy -- number crunching~\cite{numpy}
+\item SciPy -- linear algebra, sparse computations~\cite{scipy}
+\item Matplotlib -- Visualization~\cite{matplotlib}
+\item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization~\cite{pyemma}
+\item mdtraj -- reading MD simulation data, calculate observables from MD~\cite{mdtraj}
 \end{itemize}
 
-The software is currently supported for Python versions 3.5 and 3.6 on the operating systems Linux, OSX and Windows.
+The software is currently supported for Python versions $3.5$ and $3.6$ on the operating systems Linux, OSX, and Windows.
 
-If one does not want to use Anaconda, he or she can also perform a manual installation via the pip installer or use the Binder to look and execute the tutorials online in any browser.
-
+If one does not want to use Anaconda, they can also perform a manual installation via the pip installer or use the Binder service to view and run the tutorials online in any browser.
 
 \section{Content and links}
 
-% This tutorial guides you through the elementary pipeline of building, estimating, validating, and analyzing MSMs (notebook 00, \url{https://git.io/fNkjJ}). The individual steps are explained on simple systems in specialized notebooks (01-08).
-
-This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA. The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow. The eight subsequent notebooks (01--08) provide in-depth lessons on specific topics from the workflow, an introduction to hidden Markov state models (HMMs), and guidelines how to deal with common problems during an MSM estimation.
+This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA. The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow. The eight subsequent notebooks (01--08) provide in-depth lessons on specific topics from the workflow, an introduction to HMMs, and guidelines how to deal with common problems during an MSM estimation.
 
 \subsection{The PyEMMA workflow}
 
@@ -203,7 +210,7 @@ For a more detailed description of author contributions, see the GitHub issue tr
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io for
 % more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%
-We are grateful to Brooke Husic for her thorough review of the notebooks in this tutorial as well as Camilla Ventura Santos and the entire computational molecular biology group for valuable discussion and feedback.
+We are grateful to Brooke E. Husic for her thorough review of the notebooks in this tutorial as well as Camilla Ventura Santos and the entire computational molecular biology group for valuable discussion and feedback.
 
 For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository{}.
 
