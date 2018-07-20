@@ -10,7 +10,7 @@
 
 The first [notebook 📓](notebooks/00-pentapeptide-showcase.ipynb) in this tutorial guides through the basic analysis workflow using real MD data of a pentapeptide:
 
-<img src="https://ftp.imp.fu-berlin.de/pub/cmb-data/pentapeptide-320.png" width="320" height="171" />
+<img src="notebooks/static/pentapeptide-structure.png" width="320" height="171" />
 
 We keep the details minimal throughout the showcase but point to the more specialized notebooks which allow you to go in-depth on selected topics.
 
