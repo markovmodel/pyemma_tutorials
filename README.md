@@ -21,8 +21,8 @@ In detail, the remaining eight notebooks revisit all aspects shown in the showca
 3. MSM estimation and validation [➜ 📓](notebooks/03-msm-estimation-and-validation.ipynb)
 4. MSM analysis [➜ 📓](notebooks/04-msm-analysis.ipynb)
 5. PCCA and TPT analysis [➜ 📓](notebooks/05-pcca-tpt.ipynb)
-6. Hidden Markov state models (HMMs) [➜ 📓](notebooks/06-hidden-markov-state-models.ipynb)
-7. Expectations and observables [➜ 📓](notebooks/07-expectations-and-observables.ipynb)
+6. Expectations and observables [➜ 📓](notebooks/06-expectations-and-observables.ipynb)
+7. Hidden Markov state models (HMMs) [➜ 📓](notebooks/07-hidden-markov-state-models.ipynb)
 8. Common problems & bad data situations [➜ 📓](notebooks/08-common-problems.ipynb)
 
 **Please note that this is a work in progress and we value any kind of feedback that helps us improving this tutorial.**
