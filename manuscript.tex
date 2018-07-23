@@ -94,6 +94,12 @@ hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-
 
 \subsection{Software/system requirements}
 
+\begin{figure}
+\includegraphics[width=0.48\textwidth]{figures/workflowchart.pdf}
+\caption{The PyEMMA workflow: The MD trajectories are processed and discretized (first row). A Markov model is estimated from the resulting discrete trajectories and validated (middle row). By iterating between data processing and MSM estimation / validation, a valid model is obtained that can be analyzed (last row).}
+\label{fig:workflowchart}
+\end{figure}
+
 We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules.
 The user can install all necessary packages in one step using the \texttt{conda} command provided by the Anaconda Python stack (\url{https://anaconda.com}).
 We rely on Anaconda, because it resolves and installs dependencies, and provides pre-compiled versions of hard to build packages like SciPy.
