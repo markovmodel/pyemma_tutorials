@@ -143,20 +143,20 @@ with $T$ being the MSM's transition matrix. PyEMMA automatically estimates a new
 
 \begin{figure}
 \includegraphics{figure_2}
-\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which (b) PCCA++ identifies as four metastable states. (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_0$) and the two most probable states ($\mathcal{S}_2$, $\mathcal{S}_3$), whereas (d) the commitor $\mathcal{S}_1\to\mathcal{S}_2$ indicates that the most probable state $\mathcal{S}_3$ acts as a transition state for transitions between states $\mathcal{S}_1$ and $\mathcal{S}_2$. (e) The Trp-1 SASA shows high variance for all macrostates except $\mathcal{S}_0$ in which the Trp-1 shows the lowest exposure to the solvent. (f) The Trp-1 SASA auto-correlation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the non-equilibrium condition $\mathcal{S}_0$ (bottom). (g) Super-imposed cartoon representations of $100$ molecular conformations sampled from each of the four macrostates show that the backbone appears to obstruct the Trp-1 exposure to the solvent in $\mathcal{S}_{(0,1)}$ but less so in $\mathcal{S}_{(2,3)}$.}
+\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which (b) PCCA++ identifies as four metastable states. (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the two most probable states ($\mathcal{S}_3$, $\mathcal{S}_4$), whereas (d) the commitor $\mathcal{S}_2\to\mathcal{S}_3$ indicates that the most probable state $\mathcal{S}_4$ acts as a transition state for transitions between states $\mathcal{S}_2$ and $\mathcal{S}_3$. (e) The Trp-1 SASA shows high variance for all macrostates except $\mathcal{S}_1$ in which the Trp-1 shows the lowest exposure to the solvent. (f) The Trp-1 SASA auto-correlation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the non-equilibrium condition $\mathcal{S}_1$ (bottom). (g) Super-imposed cartoon representations of $200$ molecular conformations sampled from each of the four macrostates show that the backbone appears to obstruct the Trp-1 exposure to the solvent in $\mathcal{S}_{(1,2)}$ but less so in $\mathcal{S}_{(3,4)}$.}
 \label{fig:msm-analysis}
 \end{figure}
 
 We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model. An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted based on the MSM stationary distribution.
 
-A fuzzy spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into four metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=0,\dots,3$, for which we then approximate the absolute probabilities and free energies
+A fuzzy spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into four metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,4$, for which we then approximate the absolute probabilities and free energies
 \[ \begin{array}{ccc}
 \textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
 \hline
-\mathcal{S}_0 & 0.004 & 5.565 \\
-\mathcal{S}_1 & 0.013 & 4.314 \\
-\mathcal{S}_2 & 0.021 & 3.864 \\
-\mathcal{S}_3 & 0.962 & 0.039
+\mathcal{S}_1 & 0.004 & 5.565 \\
+\mathcal{S}_2 & 0.013 & 4.314 \\
+\mathcal{S}_3 & 0.021 & 3.864 \\
+\mathcal{S}_4 & 0.962 & 0.039
 \end{array}\]
 using the relation
 \begin{equation}
@@ -165,24 +165,24 @@ G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln\left(\sum\limits_{j\in \mathca
 \end{equation}
 where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
 
-To understand which slow process occur, we refer to the (right) eigenvectors of the MSM as they contain information about what configurational changes are happening on which timescales. The first right eigenvector corresponds to the stationary process and is constant $1$. The second right eigenvector, however, corresponds to the slowest process. Its minimal and maximal components indicate the microstates between which the process shifts probability. The relaxation timescale of this exchange process is exactly the corresponding implied timescale. In the projection onto the first two TICA components, we identify the slowest process as a probability shift between macrostate $\mathcal{S}_0$ and the rest of the system, with macrostates $\mathcal{S}_2$ and $\mathcal{S}_3$ in particular (Fig.~\ref{fig:msm-analysis}c).
+To understand which slow process occur, we refer to the (right) eigenvectors of the MSM as they contain information about what configurational changes are happening on which timescales. The first right eigenvector corresponds to the stationary process and is constant $1$. The second right eigenvector, however, corresponds to the slowest process. Its minimal and maximal components indicate the microstates between which the process shifts probability. The relaxation timescale of this exchange process is exactly the corresponding implied timescale. In the projection onto the first two TICA components, we identify the slowest process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system, with macrostates $\mathcal{S}_3$ and $\mathcal{S}_4$ in particular (Fig.~\ref{fig:msm-analysis}c).
 
-The mean first passage times (MFPTs) out and into the macrostate $\mathcal{S}_0$ compute to
+The mean first passage times (MFPTs) out and into the macrostate $\mathcal{S}_1$ compute to
 \[ \begin{array}{crcr}
 \textrm{direction} & \textrm{mean / ns} && \textrm{std / ns} \\
 \hline
-\mathcal{S}_0 \to \mathcal{S}_{(1,2,3)} & 8.9 & \pm & 1.8 \\
-\mathcal{S}_{(1,2,3)} \to \mathcal{S}_0 & 2487.5 & \pm &  504.7
+\mathcal{S}_1 \to \mathcal{S}_{(2,3,4)} & 8.9 & \pm & 1.8 \\
+\mathcal{S}_{(2,3,4)} \to \mathcal{S}_1 & 2487.5 & \pm &  504.7
 \end{array}\]
 using the Bayesian MSM.
 
-As an example for TPT, we compute the flux between macrostates $\mathcal{S}_1$ and $\mathcal{S}_2$ (Fig.~\ref{fig:msm-analysis}d). The committor projection onto the first two TICA components shows that it is constant within the metastable states defined above. Transition regions (macrostate $\mathcal{S}_3$) can be identified by committor values $\approx \frac{1}{2}$.
+As an example for TPT, we compute the flux between macrostates $\mathcal{S}_2$ and $\mathcal{S}_3$ (Fig.~\ref{fig:msm-analysis}d). The committor projection onto the first two TICA components shows that it is constant within the metastable states defined above. Transition regions (macrostate $\mathcal{S}_4$) can be identified by committor values $\approx \frac{1}{2}$.
 
 To illustrate how to connect an MSM analysis with experiments, we compute the Trp-1 solvent accessible surface area (SASA) using the mdtraj~\cite{mdtraj} package. The SASA is a reasonable approximation for the instantaneous tryptophan flourescence signal. The auto correlation function (ACF) of this signal can be measured in spectroscopy experiments.
 
-In the projection onto the first two TICA components, we observe a high variance of the SASA in all macrostates except $\mathcal{S}_0$ (Fig.~\ref{fig:msm-analysis}e). This indicates that Trp-1 has only a low solvent exposure in this macrostate. The ACF itself yields a weak signal (Fig.~\ref{fig:msm-analysis}f, top panel). If, however, we prepare the system in macrostate $\mathcal{S}_0$ (non-equilibrium condition), the relaxation towards equilibrium yields a much stronger signal (Fig.~\ref{fig:msm-analysis}f, bottom panel).
+In the projection onto the first two TICA components, we observe a high variance of the SASA in all macrostates except $\mathcal{S}_1$ (Fig.~\ref{fig:msm-analysis}e). This indicates that Trp-1 has only a low solvent exposure in this macrostate. The ACF itself yields a weak signal (Fig.~\ref{fig:msm-analysis}f, top panel). If, however, we prepare the system in macrostate $\mathcal{S}_1$ (non-equilibrium condition), the relaxation towards equilibrium yields a much stronger signal (Fig.~\ref{fig:msm-analysis}f, bottom panel).
 
-Finally, we sample $100$ super-imposed molecular conformations from each of the $4$ macrostates (Fig.~\ref{fig:msm-analysis}g). We observe that, in macrostates $\mathcal{S}_0$ and $\mathcal{S}_1$, the backbone appears to often be in close proximity to the Trp-1 (shown in red), thus effectively limiting Trp-1 exposure to the solvent. In the (more probable) macrostates $\mathcal{S}_2$ and $\mathcal{S}_3$, the Trp-1 appears to be much more exposed.
+Finally, we sample $200$ super-imposed molecular conformations from each of the $4$ macrostates (Fig.~\ref{fig:msm-analysis}g). We observe that, in macrostates $\mathcal{S}_1$ and $\mathcal{S}_2$, the backbone appears to often be in close proximity to the Trp-1 (shown in red), thus effectively limiting Trp-1 exposure to the solvent. In the (more probable) macrostates $\mathcal{S}_3$ and $\mathcal{S}_4$, the Trp-1 appears to be much more exposed.
 
 \subsection{Summary}
 
