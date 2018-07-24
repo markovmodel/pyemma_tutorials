@@ -131,7 +131,8 @@ Alternatively, one can use the Binder service to view and run the tutorials onli
 \section{Content and links}
 
 This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA.
-The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow.
+The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow. 
+The figure that will be displayed in the following are created there and can be easily reproduced.
 The goal of this introductory notebook (00) is to provide the user with the typical steps required to obtain a validated MSM analysis of protein or peptide simulation data.
 The seven subsequent notebooks (01--07) provide in-depth lessons on specific topics, and the last notebook (08) contains guidelines on how to deal with common problems during an MSM estimation.
 
@@ -163,7 +164,7 @@ we analyze the backbone conformation dynamics of a pentapeptide (Trp-Leu-Ala-Leu
 (d) the time series of the first two ICs show rare transition events.
 (e) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for MSM estimation.
 (f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales.
-In (e) and (f), the shaded areas indicate $95\%$ confidence intervals.}
+In (e) and (f), the shaded areas indicate $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
 \label{fig:io-to-ck}
 \end{figure}
 
@@ -193,7 +194,7 @@ The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process
 t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}
 \end{equation}
 with $\tau$ being the lag time.
-In this validation test, we look for ITS convergence and choose $\tau$ accordingly, i.e., within a range where the ITS are approximately invariant; the uncertainty of the implied timescales is quantified based upon Markov models sampled according to a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling}.
+In this validation test, we look for ITS convergence and choose $\tau$ accordingly, i.e., within a range where the ITS are approximately invariant; the uncertainty of the implied timescales is quantified based upon Markov models sampled according to a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
 In our example, we find the three slowest ITS to converge quickly and to be constant within a $95\%$ confidence interval for lag times above $0.5$ ns (Fig.~\ref{fig:io-to-ck}e).
 We can further see a converged fourth process (cyan line); however, this process decays for lag times above $2.5$ ns and thus might not be well resolved in the final model.
 
@@ -230,7 +231,7 @@ We note that our MSM estimator results in a model that adheres to detailed balan
 We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model.
 An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted based on the MSM stationary distribution.
 
-A fuzzy spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into four metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,4$, for which we then approximate the absolute probabilities and relative free energies (defined up to an additive constant)
+A fuzzy spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into four metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,4$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
 \[ \begin{array}{ccc}
 \textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
 \hline
