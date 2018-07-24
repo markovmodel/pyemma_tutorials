@@ -190,8 +190,7 @@ Finally, we estimate a (Bayesian) MSM at a the lag time $\tau=0.5$ ns and valida
 T(k \tau) = T^k(\tau)
 \end{equation}
 with $T$ being the MSM transition matrix.
-In practice, we utilize a coarse-grained approximation of $T$ for this test, obtained from PCCA++~\cite{pcca++}.
-To perform this test, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$.
+To perform this test, we first choose a number of metatstable states appropriate for our system. Then, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$.
 As we have identified three slow relaxation timescales in the ITS test,
 we perform the CK test on the four metastable states whose kinetics involves these three relaxation timescales.
 The CK test shows indeed that our model estimated at lag time tau predicts the kinetic behavior on longer timescales accurately (Fig.~\ref{fig:io-to-ck}f).
