@@ -34,8 +34,8 @@
 \author[1\authfn{1}*]{Christoph Wehmeyer}
 \author[1\authfn{1}]{Martin K. Scherer}
 \author[1\authfn{1}]{Tim Hempel}
-\author[1]{Simon Olsson}
 \author[2]{Brooke E. Husic}
+\author[1]{Simon Olsson}
 \author[1*]{Frank Noé}
 \affil[1]{Department of Mathematics and Computer Science, Freie Universität Berlin, Arnimallee 6, 14195 Berlin, Germany}
 \affil[2]{Department of Chemistry, Stanford University, Stanford, California 94305, USA}
@@ -157,13 +157,13 @@ we analyze the backbone conformation dynamics of a pentapeptide (Trp-Leu-Ala-Leu
 
 \begin{figure}
 \includegraphics{figure_2}
-\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a) The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation.
+\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a) The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{humphrey1996vmd}.
 (b) The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
-(c) The  sample density projected of the onto the first two independent components of a TICA transformation at lag time $\tau=0.5$ ns shows multiple density maxima and
-(d) the time series of the first two independent components show rare transition events.
-(e) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for estimating an MSM;
-the shaded areas indicate $95\%$ confidence intervals. (f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales;
-the shaded areas indicate $95\%$ confidence intervals.}
+(c) The  sample density projected of the onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$ ns shows multiple density maxima and
+(d) the time series of the first two ICs show rare transition events.
+(e) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for MSM estimation.
+(f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales.
+In (e) and (f), the shaded areas indicate $95\%$ confidence intervals.}
 \label{fig:io-to-ck}
 \end{figure}
 
@@ -210,6 +210,7 @@ To perform this test, we first choose a number of metastable states appropriate 
 As we have identified three slow relaxation timescales in the ITS test,
 we perform the CK test on the four metastable states whose kinetics involves these three relaxation timescales.
 The CK test shows indeed that our model estimated at lag time tau predicts the kinetic behavior on longer timescales accurately (Fig.~\ref{fig:io-to-ck}f).
+We note that our MSM estimator results in a model that adheres to detailed balance.
 
 \subsection{Analyzing the MSM}
 
@@ -248,6 +249,7 @@ where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstat
 In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM as they contain information about what configurational changes are happening on which timescales.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue $1$.
 The second right eigenvector, however, corresponds to the slowest process.
+The eigenvector components are real because of the detailed balance constraint enforced during MSM estimation.
 Its minimal and maximal components indicate the microstates between which the process shifts probability.
 The relaxation timescale of this exchange process is exactly the corresponding implied timescale.
 In the projection onto the first two TICA components, we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system, with macrostates $\mathcal{S}_3$ and $\mathcal{S}_4$ in particular (Fig.~\ref{fig:msm-analysis}c).
