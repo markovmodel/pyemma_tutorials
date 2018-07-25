@@ -34,17 +34,17 @@
 \author[1\authfn{1}*]{Christoph Wehmeyer}
 \author[1\authfn{1}]{Martin K. Scherer}
 \author[1\authfn{1}]{Tim Hempel}
-\author[1]{Simon Olsson}
 \author[2]{Brooke E. Husic}
+\author[1]{Simon Olsson}
 \author[1*]{Frank Noé}
 \affil[1]{Department of Mathematics and Computer Science, Freie Universität Berlin, Arnimallee 6, 14195 Berlin, Germany}
-\affil[2]{Department of Chemistry, Stanford University, Stanford, California 94305, USA}
+\affil[2]{Department of Chemistry, Stanford University, 333 Campus Drive, Stanford, California 94305, USA}
 
 \corr{christoph.wehmeyer@fu-berlin.de}{CW}
 %\corr{m.scherer@fu-berlin.de}{MKS}
 %\corr{tim.hempel@fu-berlin.de}{TH}
 %\corr{simon.olsson@fu-berlin.de}{SO}
-%\corr{brookehusic@gmail.com}{BEH}
+%\corr{bhusic@stanford.edu}{BEH}
 \corr{frank.noe@fu-berlin.de}{FN}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
@@ -113,11 +113,14 @@ The data for the demonstrated test systems is downloaded upon the first use and 
 
 The underlying software stack for running the tutorial importantly consists of:
 \begin{itemize}
-\item NumPy -- vectorized operations on multi-dimensional arrays~\cite{numpy}
-\item SciPy -- linear algebra, sparse computations~\cite{scipy}
-\item Matplotlib -- Visualization~\cite{matplotlib}
-\item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization~\cite{pyemma}
-\item mdtraj -- reading MD simulation data, calculate observables from MD~\cite{mdtraj}
+% \item NumPy -- vectorized operations on multi-dimensional arrays~\cite{numpy}
+% \item SciPy -- linear algebra, sparse computations~\cite{scipy}
+% \item Matplotlib -- Visualization~\cite{matplotlib}
+\item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
+\item mdshare -- A downloader for MD data from a public server
+\item notebook -- The Jupyter notebook tool used for running the tutorials~\cite{jupyter}, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
+\item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nguyen2017nglview}
+% \item mdtraj -- reading MD simulation data, calculate observables from MD~\cite{mdtraj}
 \end{itemize}
 
 The software is currently supported for Python versions $3.5$ and $3.6$ on the operating systems Linux, OSX, and Windows.
@@ -128,33 +131,40 @@ Alternatively, one can use the Binder service to view and run the tutorials onli
 \section{Content and links}
 
 This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA.
-The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow.
+The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow. 
+The figure that will be displayed in the following are created there and can be easily reproduced.
 The goal of this introductory notebook (00) is to provide the user with the typical steps required to obtain a validated MSM analysis of protein or peptide simulation data.
-The eight subsequent notebooks (01--08) provide in-depth lessons on specific topics, an introduction to HMMs, and guidelines how to deal with common problems during an MSM estimation.
+The seven subsequent notebooks (01--07) provide in-depth lessons on specific topics, and the last notebook (08) contains guidelines on how to deal with common problems during an MSM estimation.
 
 \subsection{The PyEMMA workflow}
 
-In short, the workflow consists of extracting molecular features from the raw data (01) which we transform into a suitable, low-dimensional subspace and discretize (02).
-Then, we estimate a maximum likelihood or Bayesian MSM from the discrete trajectories and perform validation tests (03).
-We can then analyze the stationary and kinetic properties of the MSM (04),
-find metastable macrostates and apply transition path theory (TPT) to identify the pathways of conformation change (05),
-and compute expectation values for experimental observables (06).
+In short, the workflow consists of:
+\begin{itemize}
+	\item extracting molecular features from the raw data (01),
+	\item transforming those features into a suitable, low dimensional subspace (02),
+	\item discretizing the low-dimensional subsets into a state decomposition (02),
+	\item estimating a maximum likelihood or Bayesian MSM from the discrete trajectories and performing validation tests (03),
+	\item analyzing the stationary and kinetic properties of the MSM (04),
+	\item finding metastable macrostates and applying transition path theory (TPT) to identify the pathways of conformation change (05),
+	\item computing expectation values for experimental observables (06), and
+	\item coarse-graining the model using a hidden Markov model approach (07).
+\end{itemize}
 
 In order to guide the user through the process before going into technical details,
 the first notebook goes through the full analysis pipeline for,
 we analyze the backbone conformation dynamics of a pentapeptide (Trp-Leu-Ala-Leu-Leu, Fig.~\ref{fig:io-to-ck}a) using 25 independently simulated trajectories with implicit solvent and a trajectory saving interval of $0.1$ ns~\cite{pyemma}.
 
-\subsection{Estimation and validation}
+\subsection{Feature selection}
 
 \begin{figure}
 \includegraphics{figure_2}
-\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a) The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation.
+\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a) The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b) The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
-(c) The  sample density projected of the onto the first two independent components of a TICA transformation at lag time $\tau=0.5$ ns shows multiple density maxima and
-(d) the time series of the first two independent components show rare transition events.
-(e) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for estimating an MSM;
-the shaded areas indicate $95\%$ confidence intervals. (f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales;
-the shaded areas indicate $95\%$ confidence intervals.}
+(c) The  sample density projected of the onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$ ns shows multiple density maxima and
+(d) the time series of the first two ICs show rare transition events.
+(e) The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for MSM estimation.
+(f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of four metastable states accurately predicts the kinetic behavior on longer timescales.
+In (e) and (f), the shaded areas indicate $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
 \label{fig:io-to-ck}
 \end{figure}
 
@@ -168,9 +178,13 @@ Here we utilize the VAMP-2 score, which maximizes the kinetic variance of the es
 To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at lag time $0.5$~ns and find that backbone torsions contain more kinetic variance than the backbone's heavy atom positions or distances between them (Fig.~\ref{fig:io-to-ck}b).
 We note that recently, deep learning approaches for feature selection have been developed that may eventually replace the feature selection step~\cite{vampnet,tae,hernandez-vde}.
 
+\subsection{Dimensionality reduction}
+
 Subsequently, we perform TICA~\cite{tica,kinetic-maps} in order to reduce the dimension from the feature space to a low-dimensional space that can be discretized with higher resolution and better statistical efficiency. TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics. Here, TICA of the $\cos/\sin$-transformed backbone torsions at lag time $0.5$ ns yields a four dimensional subspace using a $95\%$ kinetic variance cutoff.
 The sample density projected onto the first two independent components (Fig.~\ref{fig:io-to-ck}c) exhibits several maxima, and a time series visualization of said components from the first trajectory (Fig.~\ref{fig:io-to-ck}d) shows discrete jumps between these density maxima.
 We thus assume that our transformed feature selection describes one or more metastable processes.
+
+\subsection{Discretization}
 
 We then proceed with a $k$-means-based discretization of the four dimensional TICA subspace using $k=75$ cluster centers and perform the first validation test, i.e., the estimation of implied timescales (ITS) $t_i$, $i=0, 1,\dots$~\cite{swope-its}
 (we note that the number of cluster centers can additionally be chosen using the VAMP score).
@@ -180,9 +194,12 @@ The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process
 t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}
 \end{equation}
 with $\tau$ being the lag time.
-In this validation test, we look for ITS convergence and choose $\tau$ accordingly, i.e., within a range where the ITS are approximately invariant; the uncertainty of the implied timescales is quantified based upon Markov models sampled according to a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling}.
+In this validation test, we look for ITS convergence and choose $\tau$ accordingly, i.e., within a range where the ITS are approximately invariant; the uncertainty of the implied timescales is quantified based upon Markov models sampled according to a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
 In our example, we find the three slowest ITS to converge quickly and to be constant within a $95\%$ confidence interval for lag times above $0.5$ ns (Fig.~\ref{fig:io-to-ck}e).
 We can further see a converged fourth process (cyan line); however, this process decays for lag times above $2.5$ ns and thus might not be well resolved in the final model.
+
+
+\subsection{MSM estimation and validation}
 
 Finally, we estimate a (Bayesian) MSM at a the lag time $\tau=0.5$ ns and validate the model using a Chapman-Kolmogorov (CK) test, which compares the right and the left side of the Chapman-Kolmogorov equation
 \begin{equation}
@@ -194,6 +211,7 @@ To perform this test, we first choose a number of metastable states appropriate 
 As we have identified three slow relaxation timescales in the ITS test,
 we perform the CK test on the four metastable states whose kinetics involves these three relaxation timescales.
 The CK test shows indeed that our model estimated at lag time tau predicts the kinetic behavior on longer timescales accurately (Fig.~\ref{fig:io-to-ck}f).
+We note that our MSM estimator results in a model that adheres to detailed balance.
 
 \subsection{Analyzing the MSM}
 
@@ -213,7 +231,7 @@ The CK test shows indeed that our model estimated at lag time tau predicts the k
 We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model.
 An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted based on the MSM stationary distribution.
 
-A fuzzy spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into four metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,4$, for which we then approximate the absolute probabilities and relative free energies (defined up to an additive constant)
+A fuzzy spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into four metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,4$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
 \[ \begin{array}{ccc}
 \textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
 \hline
@@ -232,6 +250,7 @@ where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstat
 In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM as they contain information about what configurational changes are happening on which timescales.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue $1$.
 The second right eigenvector, however, corresponds to the slowest process.
+The eigenvector components are real because of the detailed balance constraint enforced during MSM estimation.
 Its minimal and maximal components indicate the microstates between which the process shifts probability.
 The relaxation timescale of this exchange process is exactly the corresponding implied timescale.
 In the projection onto the first two TICA components, we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system, with macrostates $\mathcal{S}_3$ and $\mathcal{S}_4$ in particular (Fig.~\ref{fig:msm-analysis}c).
@@ -248,6 +267,8 @@ using the Bayesian MSM.
 TPT~\cite{weinan-tpt,metzner-msm-tpt} is method to analyze the statistics of transition pathways. The TPT version of~\cite{noe-folding-pathways} can be conveniently applied to the estimated MSM. Here, we compute the TPT flux between macrostates $\mathcal{S}_2$ and $\mathcal{S}_3$ (Fig.~\ref{fig:msm-analysis}d).
 The committor projection onto the first two TICA components shows that it is constant within the metastable states defined above.
 Transition regions (macrostate $\mathcal{S}_4$) can be identified by committor values $\approx \frac{1}{2}$.
+
+\subsection{Connecting the MSM with experimental data}
 
 To illustrate how to connect an MSM analysis with experiments, we compute the Trp-1 solvent accessible surface area (SASA) using the mdtraj~\cite{mdtraj} package.
 The SASA is a reasonable approximation for the instantaneous tryptophan florescence signal.
@@ -279,7 +300,7 @@ In this section, we have summarized how to conduct an MSM-based analysis of biom
 % for more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%%
 CW, MKS, TH, SO, and FN designed research.
-CW, MKS, TH, SO, and BHE developed and tested notebooks.
+CW, MKS, TH, BEH, and SO developed and tested notebooks.
 MKS developed the software infrastructure, test, and install environment.
 CW, MKS, TH, BEH, and FN wrote the manuscript.
 
