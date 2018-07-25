@@ -16,6 +16,8 @@ def export(in_file, out_file):
     src = re.sub(pattern=r"\{\\'\{e\}\}", repl='é', string=src)
     src = re.sub(pattern=r"\{\\'\{a\}\}", repl='á', string=src)
     src = re.sub(pattern=r'\\"\{o\}', repl='ö', string=src)
+    src = re.sub(pattern=r'\\"\{u\}', repl='ü', string=src)
+    src = re.sub(pattern='pcca\+\+', repl='pcca_plus_plus', string=src)
     cell = nbformat.v4.new_markdown_cell(src)
     nb.cells.append(cell)
 
