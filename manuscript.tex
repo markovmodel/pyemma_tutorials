@@ -77,7 +77,7 @@ The package is written in Python (\url{http://python.org}), relies heavily on Nu
 
 In this tutorial, we assume the reader's familiarity with the basic theory behind the MSM approach (see Sec.~\ref{sec:background}) and focus on usage of PyEMMA.
 Nevertheless, we will mention important theoretical concepts when appropriate throughout the tutorial.
-We also assume the reader is familiar with molecular dynamics analyses of proteins and peptides and commonly used structural components of these systems; for a review of the simulation of biomolecular macromolecules, see~\cite{dror2012biomolecular}.
+We also assume the reader is familiar with molecular dynamics analyzes of proteins and peptides and commonly used structural components of these systems; for a review of the simulation of biomolecular macromolecules, see~\cite{dror2012biomolecular}.
 
 The tutorial is divided into lessons on specific topics, each accompanied by a Jupyter~\cite{jupyter} notebook containing code, instructions, and exercises.
 The lessons start with a showcase of the PyEMMA workflow and follow up with in-depth lessons on specific topics.
@@ -150,7 +150,7 @@ In short, the workflow consists of:
 	\item coarse-graining the model using a hidden Markov model approach (07).
 \end{itemize}
 
-For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyse a data-set of the Trp-Leu-Ala-Leu-Leu pentapeptide, consisting of 25 independent MD trajectories conducted in implicit solvent with a saving interval of 0.1ns. We present the results obtained in the notebook and thereby give an example how results generated using PyEMMA can be integrated into research publications.
+For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide, consisting of 25 independent MD trajectories conducted in implicit solvent with a saving interval of 0.1~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 \subsection{Feature selection}
 
 \begin{figure}
@@ -165,9 +165,11 @@ In (e) and (f), the shaded areas indicate $95\%$ confidence intervals computed w
 \label{fig:io-to-ck}
 \end{figure}
 
-In Markov state modelling our objective is to model the slow dynamics of a molecular process. In order to approximate the slow dynamics in a statistically efficient manner, a lower dimensional representation our simulation data is necessary. However, the features (fx torsion angles, distances or contacts) which best represent is the slow dynamic modes of a given molecular system is unknown a priori~\cite{NoeClementiReview}. Fortunately, the variation principle of molecular dynamics~\cite{noe-vac,nueske-vamk} and its more general form VAMP~\cite{vamp-preprint} provides a systematic means to gauge multiple different representations of the molecular dynamics against each other. In particular, we can use the VAMP score to directly compare the ability of certain features to capture slow dynamic modes in a particular molecular system. We here use the VAMP score in a cross-validated manner to ensure we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq}.
+In Markov state modeling our objective is to model the slow dynamics of a molecular process. In order to approximate the slow dynamics in a statistically efficient manner, a lower dimensional representation of our simulation data is necessary. However, the features (e.g. torsion angles, distances or contacts) which best represent the slow dynamical modes of a given molecular system is unknown a priori~\cite{NoeClementiReview}. Fortunately, the variational principle of conformational dynamics~\cite{noe-vac,nueske-vamk} and the more general variational approach for Markov processes (VAMP)~\cite{vamp-preprint} provides a systematic means to quantitatively compare multiple representations of the dataset. In particular, we can use the VAMP score to directly compare the ability of certain features to capture slow dynamical modes in a particular molecular system.
+%Here, we use the VAMP score in a cross-validated manner to ensure we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq}.
 
 Here we utilize the VAMP-2 score, which maximizes the kinetic variance of the estimated dynamical operator~\cite{kinetic-maps}.
+We should always evaluate the score in a cross-validated manner to ensure we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
 To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at lag time $0.5$~ns and find that backbone torsions contain more kinetic variance than the backbone's heavy atom positions or distances between them (Fig.~\ref{fig:io-to-ck}b).
 We note that recently, deep learning approaches for feature selection have been developed that may eventually replace the feature selection step~\cite{vampnet,tae,hernandez-vde}.
 
@@ -178,26 +180,26 @@ The sample density projected onto the first two independent components (Fig.~\re
 We thus assume that our transformed feature selection describes one or more metastable processes.
 
 \subsection{Discretization}
-TICA gives us a reduced dimensionality of our molecular simulation data, which can greatly facilitate the definition of discrete Markov states necessary for MSM estimation. Here, we use the $k$-means algorithm to segment the four dimensional TICA into $k=75$ cluster centers. The number of cluster centers has been chosen as to optimize the VAMP score as in a manner identical to how the feature selection was carried out above.
+TICA yields a representation of our molecular simulation data with a reduced dimensionality, which can greatly facilitate the decomposition of our system into the discrete Markovian states necessary for MSM estimation. Here, we use the $k$-means algorithm to segment the four dimensional TICA into $k=75$ cluster centers. The number of cluster centers has been chosen to optimize the VAMP-2 score as in a manner identical to how the feature selection was carried out above, but is not presented in the showcase notebook.
 
 \subsection{MSM estimation and validation}
-When estimating a MSM it is critical to chose a lag-time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space. Simultaneously we want to keep $\tau$ short to conserve as much of our expensive MD data as possible. Plotting the implied timescales (ITS) as a function $\tau$ can be a helpful diagnostic when selecting the MSM lag-time~\cite{swope-its}. The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via
+When estimating a MSM it is critical to chose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space. Simultaneously we want to keep $\tau$ short to conserve as much of our MD data as possible. Plotting the implied timescales (ITS) as a function $\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}. The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via
 \begin{equation}
 \label{eq:its}
 t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}
 \end{equation}
 with $\tau$ being the lag time.
-A necessary condition for Markovian dynamics in our reduced space is the ITS being approximately constant as a function of $\tau$; accordingly, we chose the smallest possible $\tau$ which fulfils this condition within the model uncertainty. The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
-In our example, we find the four slowest ITS to converge quickly and to be constant within a $95\%$ confidence interval for lag times above $0.5$ ns (Fig.~\ref{fig:io-to-ck}e). Using this lag-time we can now estimate a (Bayesian) MSM with $\tau=0.5\mathrm{ns}$. 
+A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$; accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty. The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
+In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above $0.5$~ns (Fig.~\ref{fig:io-to-ck}e). Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5\mathrm{ns}$. 
 
 To test the validity of our MSM we perform a Chapman-Kolmogorov (CK) test. The CK test compares the right and the left side of the Chapman-Kolmogorov equation
 \begin{equation}
 \label{eq:ck}
 T(k \tau) = T^k(\tau)
 \end{equation}
-with $T$ being the MSM transition matrix. The left-hand side of the equation corresponds to a MSM estimated at lag-time $k\tau$ with $k$ being an integer larger than 1, whereas the right-hand-side of the equation is our estimated MSM to the $k^\textrm{th}$ power. Visualizing the full transition probability matrices $T$ is difficult, we therefore coarse-grain $T$ into a number of meta-stable states before performing the test. The number of meta-stable states can be identified using by identifying a large gap in the ITS plot. In our case we have multiple gaps and therefore multiple different options as to chose the number of meta-stable states. We chose 5 meta-stable states for the presentation here, as it is the largest number which only includes processes which are well above the MSM lag time.
-Given the number of meta-stable states, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$, in a coarse-grained representation.
-The CK test shows that the MSM we have estimated at lag time $\tau=0.5\,\mathrm{ns}$ indeed predicts the long-time time-scale behavior of our system (Fig.~\ref{fig:io-to-ck}f).
+with $T$ being the MSM transition matrix. The left-hand side of the equation corresponds to a MSM estimated at lag time $k\tau$ with $k$ being an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power. Visualizing the full transition probability matrix $T$ is difficult; we therefore coarse-grain $T$ into a number of metastable states before performing the test. An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot. In our case we have multiple gaps and therefore various options choose from. We chose 5 metastable states for this analysis, as it is the largest number that only includes processes which are well above the MSM lag time.
+Given the number of metastable states, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$ using a coarse-grained representation.
+The CK test shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the long-timescale behavior of our system (Fig.~\ref{fig:io-to-ck}f).
 
 \subsection{Analyzing the MSM}
 
@@ -217,14 +219,15 @@ The CK test shows that the MSM we have estimated at lag time $\tau=0.5\,\mathrm{
 We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model.
 An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted based on the MSM stationary distribution.
 
-A spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse grain the $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,4$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
+A spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse-grain the $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,5$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
 \[ \begin{array}{ccc}
 \textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
 \hline
 \mathcal{S}_1 & 0.004 & 5.565 \\
 \mathcal{S}_2 & 0.013 & 4.314 \\
 \mathcal{S}_3 & 0.021 & 3.864 \\
-\mathcal{S}_4 & 0.962 & 0.039
+\mathcal{S}_4 & 0.962 & 0.039 \\
+\mathcal{S}_5 & \text{TODO} & \text{TODO} \\
 \end{array}\]
 using the relation
 \begin{equation}
@@ -255,19 +258,28 @@ The committor projection onto the first two TICA components shows that it is con
 Transition regions (macrostate $\mathcal{S}_4$) can be identified by committor values $\approx \frac{1}{2}$.
 
 \subsection{Connecting the MSM with experimental data}
-Markov state models can also be connected to experimental data. Connecting MSM analysis to experimental data can serve both as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals. Since we have both the stationary and dynamic properties of the molecular system encoded into the transition probability matrix, we can compute observables which involve both stationary ensemble averages as well as correlation functions.  
+MSMs can also be connected to experimental observables. Connecting MSM analysis to experimental data can both serve as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals.
+Since we have both the stationary and dynamic properties of the molecular system encoded into the transition probability matrix, we can compute observables that involve both stationary ensemble averages as well as correlation functions.
 
-Here we look at florescence correlation of tryptophan residues as an example, since this is a realistic experimental observable for our penta-peptide system. In order to compute florescence correlation functions we have to have a microscopic, instantaneous value of our of the tryptophan florescence for each Markov state. These values are computed using a 'forward model'. We use the mdtraj library~\cite{mdtraj} to compute the surface accessible surface area (SASA) of Trp-1 in the penta-peptide as an approximation of the florescence signal. 
+As an example, here we look at the fluorescence correlation of the tryptophan in our system, Trp-1, since this is a realistic experimental observable for our pentapeptide system.
+In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each Markov state.
+%These values are computed using a 'forward model'.
+To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
 
-With an approximation of the florescence in each of our Markov states we can use PyEMMA to compute the florescence auto-correlation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper). Note how the computed ACF has a very small response, or signal amplitude. Using PyEMMA can we simulate the relaxation of an observable if we had we prepared our molecular system in a non-equilibrium initial condition. The experimental counter-part of such prediction could be temperature or pressure jump experiments or a stopped flow assay. To illustrate such an experiment we initialize our molecular ensemble as the meta-stable distribution of $\mathcal{S}_1$ and follow the predicted florescence signal as it relaxes to equilibrium (\ref{fig:msm-analysis}e, lower). We see that the predicted relaxation signal has a much larger amplitude, making it more likely to be experimentally measurable.
+Now that we have an approximation of the fluorescence in each of our Markovian states, we can use PyEMMA to compute the fluorescence auto-correlation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
+Note how the computed ACF has a very small response (i.e., signal amplitude).
+Using PyEMMA, we can simulate the relaxation of an observable if we had we prepared our molecular system in a non-equilibrium initial condition.
+The experimental counterpart of such prediction could be temperature or pressure jump experiments or a stopped flow assay.
+To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of $\mathcal{S}_1$ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-analysis}e, lower).
+We see that the predicted relaxation signal has a much larger amplitude for the non-equilibrium initialization, making it more likely to be experimentally measurable.
 
 \subsection{Summary}
 
-In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA. For the full analysis, please refer to the first notebook (00). All notebooks as well as detailed installation instructions are available on \githubrepository{}.
+In this section, we have summarized how to conduct a MSM-based analysis of biomolecular dynamics data using PyEMMA. For the full analysis, please refer to the first notebook (00). All notebooks as well as detailed installation instructions are available on \githubrepository{}.
 
 \section{Author Contributions}
 %%%%%%%%%%%%%%%%
-% This section mustt describe the actual contributions of
+% This section must describe the actual contributions of
 % author. Since this is an electronic-only journal, there is
 % no length limit when you describe the authors' contributions,
 % so we recommend describing what they actually did rather than
