@@ -3,6 +3,8 @@
 [![CircleCI](https://circleci.com/gh/markovmodel/pyemma_tutorials.svg?style=svg)](https://circleci.com/gh/markovmodel/pyemma_tutorials)
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/markovmodel/pyemma_tutorials/master)
 [![CCA](https://img.shields.io/github/license/markovmodel/pyemma_tutorials.svg)](http://creativecommons.org/licenses/by/4.0/)
+![Conda](https://img.shields.io/conda/dn/conda-forge/pyemma_tutorials.svg)
+![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/pyemma_tutorials.svg)
 
 This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
