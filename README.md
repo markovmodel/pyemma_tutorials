@@ -1,8 +1,10 @@
 # Introduction to Markov state modeling with the PyEMMA software
 
 [![CircleCI](https://circleci.com/gh/markovmodel/pyemma_tutorials.svg?style=svg)](https://circleci.com/gh/markovmodel/pyemma_tutorials)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/markovmodel/pyemma_tutorials/master)
+[![CCA](https://img.shields.io/github/license/markovmodel/pyemma_tutorials.svg)](http://creativecommons.org/licenses/by/4.0/)
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
 [PyEMMA](http://pyemma.org) (EMMA = Emma's Markov Model Algorithms) is an open source Python/C package for analysis of extensive molecular dynamics (MD) simulations.
 
