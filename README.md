@@ -1,4 +1,4 @@
-# pyemma_tutorials
+# Introduction to Markov state modeling with the PyEMMA software
 
 [![CircleCI](https://circleci.com/gh/markovmodel/pyemma_tutorials.svg?style=svg)](https://circleci.com/gh/markovmodel/pyemma_tutorials)
 
