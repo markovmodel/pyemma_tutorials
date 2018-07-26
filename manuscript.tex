@@ -218,7 +218,8 @@ The CK test shows that the MSM we have estimated at lag time $\tau=0.5$~ns indee
 (a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which
 (b) PCCA++ identifies as five metastable states.
 (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
-(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that the most probable state $\mathcal{S}_5$ acts as a transition state for transitions between states $\mathcal{S}_2$ and $\mathcal{S}_4$.
+(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
+% the most probable state $\mathcal{S}_5$ acts as a transition state for transitions between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
 (e) The Trp-1 SASA autocorrelation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (bottom).}
 \label{fig:msm-analysis}
 \end{figure}
@@ -263,6 +264,15 @@ using the Bayesian MSM.
 TPT~\cite{weinan-tpt,metzner-msm-tpt} is a method used to analyze the statistics of transition pathways. The TPT version of~\cite{noe-folding-pathways} can be conveniently applied to the estimated MSM. Here, we compute the TPT flux between macrostates $\mathcal{S}_2$ and $\mathcal{S}_4$ (Fig.~\ref{fig:msm-analysis}d).
 The committor projection onto the first two TICA components shows that it is constant within the metastable states defined above.
 Transition regions (macrostates $\mathcal{S}_{(1,5)}$) can be identified by committor values $\approx \frac{1}{2}$.
+
+The transition network can be additionally visualized by plotting representative structures of the five metastable states $\mathcal{S}_{(1-5)}$ according to their committor probability (Fig.~\ref{fig:tpt-network}). It is easy to see from this depiction that the dominant pahtway from $\mathcal{S}_2$ to $\mathcal{S}_4$ proceeds through $\mathcal{S}_5$.
+
+\begin{figure}
+\includegraphics{figure_4}
+\caption{Visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$:
+Metastable states $\mathcal{S}_{(1-5)}$ are represented by an ensemble of representative structures and are arranged along the horizonal axis according to their committor probabilities. The three main transition pathways starting from $\mathcal{S}_2$ and ending in $\mathcal{S}_4$ are depicted by gray arrows with thickness proportional to the transition flux. The dominant pathway proceeds through $\mathcal{S}_5$.}
+\label{fig:tpt-network}
+\end{figure}
 
 \subsection{Connecting the MSM with experimental data}
 MSMs can also be analyzed in the context of experimental observables. Connecting MSM analysis to experimental data can both serve as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals.
