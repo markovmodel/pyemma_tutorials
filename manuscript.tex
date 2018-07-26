@@ -281,7 +281,7 @@ MSMs can also be analyzed in the context of experimental observables. Connecting
 Since we have both the stationary and dynamic properties of the molecular system encoded in the MSM transition probability matrix, we can compute observables that involve both stationary ensemble averages as well as correlation functions.
 
 As an example, here we look at the fluorescence correlation of Trp-1, since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
-In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the five macrostates.
+In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the original $75$ MSM microstates.
 %These values are computed using a 'forward model'.
 To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
 Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
