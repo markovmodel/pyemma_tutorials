@@ -1,0 +1,353 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% LIVECOMS ARTICLE TEMPLATE FOR BEST PRACTICES GUIDE
+%%% ADAPTED FROM ELIFE ARTICLE TEMPLATE (8/10/2017)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PREAMBLE
+\documentclass[9pt,tutorial]{livecoms}
+% Use the 'onehalfspacing' option for 1.5 line spacing
+% Use the 'doublespacing' option for 2.0 line spacing
+% Use the 'lineno' option for adding line numbers.
+% The 'bestpractices' option for indicates that this is a best practices guide.
+% Omit the bestpractices option to remove the marking as a LiveCoMS paper.
+% Please note that these options may affect formatting.
+
+\usepackage{lipsum} % Required to insert dummy text
+\usepackage[version=4]{mhchem}
+\usepackage{siunitx}
+\DeclareSIUnit\Molar{M}
+\usepackage[italic]{mathastext}
+\graphicspath{{figures/}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% IMPORTANT USER CONFIGURATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\versionnumber}{0.1} % TODO: can we extract this number from a git tag?
+\newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ARTICLE SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Introduction to Markov state modeling with the PyEMMA software --- v\versionnumber}
+
+\author[1\authfn{1}*]{Christoph Wehmeyer}
+\author[1\authfn{1}]{Martin K. Scherer}
+\author[1\authfn{1}]{Tim Hempel}
+\author[2]{Brooke E. Husic}
+\author[1]{Simon Olsson}
+\author[1*]{Frank Noé}
+\affil[1]{Department of Mathematics and Computer Science, Freie Universität Berlin, Arnimallee 6, 14195 Berlin, Germany}
+\affil[2]{Department of Chemistry, Stanford University, 333 Campus Drive, Stanford, California 94305, USA}
+
+\corr{christoph.wehmeyer@fu-berlin.de}{CW}
+%\corr{m.scherer@fu-berlin.de}{MKS}
+%\corr{tim.hempel@fu-berlin.de}{TH}
+%\corr{simon.olsson@fu-berlin.de}{SO}
+%\corr{bhusic@stanford.edu}{BEH}
+\corr{frank.noe@fu-berlin.de}{FN}
+
+\contrib[\authfn{1}]{These authors contributed equally to this work}
+
+\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository{}; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ARTICLE START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frontmatter}
+\maketitle
+
+\begin{abstract}
+This tutorial provides an introduction to the construction of Markov models of molecular kinetics from molecular dynamics trajectory data with the PyEMMA software.
+Using tutorial notebooks, we will guide the user through the basic functionality as well as the more common advanced mechanisms.
+Short exercises to self check the learning progress and a notebook on troubleshooting complete this basic introduction.
+\end{abstract}
+
+\end{frontmatter}
+
+\section{Introduction}
+
+PyEMMA~\cite{pyemma} (\url{http://emma-project.org}) is a software for the analysis of molecular dynamics (MD) simulations using Markov state models~\cite{schuette-msm,singhal-msm-naming} (MSMs).
+The package is written in Python (\url{http://python.org}), relies heavily on NumPy/SciPy~\cite{numpy,scipy}, and is compatible with the scikit-learn~\cite{sklearn} framework for machine learning.
+
+\subsection{Scope}
+
+In this tutorial, we assume the reader's familiarity with the basic theory behind the MSM approach (see Sec.~\ref{sec:background}) and focus on usage of PyEMMA.
+Nevertheless, we will mention important theoretical concepts when appropriate throughout the tutorial.
+We also assume the reader is familiar with MD analyses of proteins and peptides and commonly used structural components of these systems (for a review of the simulation of biomolecular macromolecules, see~\cite{dror2012biomolecular}).
+
+The tutorial is divided into lessons on specific topics, each accompanied by a Jupyter~\cite{jupyter} notebook containing code, instructions, and exercises.
+The lessons start with a showcase of the PyEMMA workflow and follow up with in-depth lessons on specific topics.
+
+\section{Prerequisites}
+
+In the following, we summarize the recommended theoretical background knowledge of Markov state modeling for this tutorial.
+Then, we address the software required to work through the lessons.
+
+\subsection{Background knowledge}
+\label{sec:background}
+
+For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. 
+
+In addition to publications on theory and application of Markov state modeling~\cite{msm-book,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks},
+we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
+hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial}, and variational techniques~\cite{noe-vac,vamp-preprint,gmrq}, as these topics play important roles within the standard MSM workflow.
+
+\subsection{Software/system requirements}
+
+\begin{figure}
+\includegraphics[width=0.48\textwidth]{figure_1}
+\caption{The PyEMMA workflow: MD trajectories are processed and discretized (first row). A Markov state model is estimated from the resulting discrete trajectories and validated (middle row). By iterating between data processing and MSM estimation/validation, a dynamical model is obtained that can be analyzed (last row).}
+\label{fig:workflowchart}
+\end{figure}
+
+We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules.
+The user can install all necessary packages in one step using the \texttt{conda} command provided by the Anaconda Python stack (\url{https://anaconda.com}).
+We recommend Anaconda because it resolves and installs dependencies as well as provides pre-compiled versions of common packages.
+
+The tutorial installation contains a launcher command to start the Jupyter notebook server as well as the notebook files.
+The data for the demonstrated test systems is downloaded upon the first use and is cached for future invocations of the tutorial.
+
+The underlying software stack for running the tutorial consists of:
+\begin{itemize}
+% \item NumPy -- vectorized operations on multi-dimensional arrays~\cite{numpy}
+% \item SciPy -- linear algebra, sparse computations~\cite{scipy}
+% \item Matplotlib -- Visualization~\cite{matplotlib}
+\item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
+\item mdshare -- A downloader for MD data from a public server
+\item notebook -- The Jupyter notebook tool used for running the tutorials~\cite{jupyter}, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
+\item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nguyen2017nglview}
+% \item mdtraj -- reading MD simulation data, calculate observables from MD~\cite{mdtraj}
+\end{itemize}
+
+The tutorial software is currently supported for Python versions $3.5$ and $3.6$ on the operating systems Linux, OSX, and Windows.
+
+Should the user prefer to not use Anaconda, a manual installation via the pip installer is possible.
+Alternatively, one can use the Binder service to view and run the tutorials online in any browser.
+
+\section{Content and links}
+
+This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA.
+The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow for a small example system. 
+% The figure that will be displayed in the following are created there and can be easily reproduced.
+The goal of this introductory notebook (00) is to provide the user with the typical steps required to obtain a validated MSM analysis of protein or peptide simulation data.
+The seven subsequent notebooks (01--07) provide in-depth lessons on specific topics, and the last notebook (08) contains guidelines on how to deal with common problems during MSM estimation.
+
+\subsection{The PyEMMA workflow}
+
+In short, the workflow for a full analysis of an MD dataset might consist of,
+\begin{itemize}
+	\item extracting molecular features from the raw data (01),
+	\item transforming those features into a suitable, low dimensional subspace (02),
+	\item discretizing the low dimensional subsets into a state decomposition (02),
+	\item estimating a maximum likelihood or Bayesian MSM from the discrete trajectories and performing validation tests (03),
+	\item analyzing the stationary and kinetic properties of the MSM (04),
+	\item finding metastable macrostates and applying transition path theory (TPT) to identify the pathways of conformational change (05),
+	\item computing expectation values for experimental observables (06), and
+	\item coarse-graining the MSM using a hidden Markov model approach (07).
+\end{itemize}
+
+For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide, consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of 0.1~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
+The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
+
+\subsection{Feature selection}
+
+\begin{figure}
+\includegraphics{figure_2}
+\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
+(b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
+(c)~The sample density projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$ ns shows multiple density maxima and
+(d)~the time series of the first two ICs show rare transition events.
+(e)~The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for MSM estimation.
+(f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of five metastable states accurately predicts the kinetic behavior on longer timescales.
+In~(e) and~(f), the shaded areas indicate $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
+\label{fig:io-to-ck}
+\end{figure}
+
+In Markov state modeling our objective is to model the slow dynamics of a molecular process. In order to approximate the slow dynamics in a statistically efficient manner, a lower dimensional representation of our simulation data is necessary.
+However, the features (e.g. torsion angles, distances or contacts) which best represent the slow dynamical modes of a given molecular system are unknown a priori~\cite{NoeClementiReview}.
+Fortunately, the variational principle of conformational dynamics~\cite{noe-vac,nueske-vamk} and the more general variational approach for Markov processes (VAMP)~\cite{vamp-preprint} provide a systematic means to quantitatively compare multiple representations of the simulation data.
+In particular, we can use a scalar score obtained using VAMP to directly compare the ability of certain features to capture slow dynamical modes in a particular molecular system.
+
+Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
+We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
+To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at a lag time of $0.5$~ns and find that backbone torsions contain more kinetic variance than the backbone's heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-ck}b).
+We note that deep learning approaches for feature selection have recently been developed that may eventually replace the feature selection step~\cite{vampnet,tae,hernandez-vde}.
+
+\subsection{Dimensionality reduction}
+
+Subsequently, we perform TICA~\cite{tica,kinetic-maps} in order to reduce the dimension from the feature space, which typically contains many degrees of freedom, to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency. TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset. Here, performing TICA on the backbone torsions at lag time $0.5$ ns yields a four dimensional subspace using a $95\%$ kinetic variance cutoff (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
+The sample density projected onto the first two independent components (ICs) exhibits several maxima (Fig.~\ref{fig:io-to-ck}c).
+Discrete jumps between the maxima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-ck}d).
+ % time series visualization of these components from the first trajectory shows discrete jumps between these maxima (Fig.~\ref{fig:io-to-ck}d).
+We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
+
+\subsection{Discretization}
+TICA yields a representation of our molecular simulation data with a reduced dimensionality, which can greatly facilitate the decomposition of our system into the discrete Markovian states necessary for MSM estimation. Here, we use the $k$-means algorithm to segment the four dimensional TICA space into $k=75$ cluster centers. The number of cluster centers has been chosen to optimize the VAMP-2 score in a manner identical to how the feature selection was carried out above, which is shown in the showcase notebook (00).
+
+\subsection{MSM estimation and validation}
+When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space, but short enough to resolve the dynamics in which we are interested.
+Plotting the implied timescales (ITS) as a function of $\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}. The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via
+\begin{equation}
+\label{eq:its}
+t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
+\end{equation}
+A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$; accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty. The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
+In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above $0.5$~ns (Fig.~\ref{fig:io-to-ck}e). Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
+
+To test the validity of our MSM we perform a Chapman-Kolmogorov (CK) test. The CK test compares the right and the left side of the Chapman-Kolmogorov equation
+\begin{equation}
+\label{eq:ck}
+T(k \tau) = T^k(\tau)
+\end{equation}
+where $T$ is the MSM transition matrix. The left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
+Visualizing the full transition probability matrix $T$ is difficult; we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
+An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
+% In our case we have multiple gaps and therefore various options to choose from.
+For this analysis, we chose 5 metastable states.
+%, as it is the largest number that only includes processes which are well above the MSM lag time.
+% Given the number of metastable states, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$ using a coarse-grained representation.
+The CK test confirms that this is an appropriate choice and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the long-timescale behavior of our system within error (Fig.~\ref{fig:io-to-ck}f).
+
+\subsection{Analyzing the MSM}
+
+\begin{figure}
+\includegraphics{figure_3}
+\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone:
+(a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which
+(b) PCCA++ identifies as five metastable states.
+(c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
+(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
+% the most probable state $\mathcal{S}_5$ acts as a transition state for transitions between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
+(e) The Trp-1 SASA autocorrelation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (bottom).}
+\label{fig:msm-analysis}
+\end{figure}
+
+We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model.
+An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted by the MSM stationary distribution.
+
+A spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse-grain the $75$ $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,5$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
+\[ \begin{array}{ccc}
+\textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
+\hline
+\mathcal{S}_1 & 0.004 & 5.567 \\
+\mathcal{S}_2 & 0.014 & 4.293 \\
+\mathcal{S}_3 & 0.021 & 3.841 \\
+\mathcal{S}_4 & 0.021 & 3.875 \\
+\mathcal{S}_5 & 0.940 & 0.062 \\
+\end{array}\]
+using the relation
+\begin{equation}
+\label{eq:fe}
+G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln \sum\limits_{j\in \mathcal{S}_i} \pi_j,
+\end{equation}
+where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
+
+In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM as they contain information about what configurational changes are happening and their timescales.
+The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue $1$.
+The second right eigenvector, however, corresponds to the slowest process 
+(the eigenvector components are real because of the detailed balance constraint enforced during MSM estimation).
+The minimal and maximal components of the second right eigenvector indicate the microstates between which the process shifts probability density.
+The relaxation timescale of this exchange process is exactly the corresponding implied timescale, which can be computed from its corresponding eigenvalue using~\eqref{eq:its}.
+In the projection onto the first two TICA components, we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system, with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fig:msm-analysis}c).
+
+The mean first passage times (MFPTs) out of and into the macrostate $\mathcal{S}_1$ compute to
+\[ \begin{array}{crcr}
+\textrm{direction} & \textrm{mean / ns} && \textrm{std / ns} \\
+\hline
+\mathcal{S}_1 \to \mathcal{S}_{(2,3,4,5)} & 9.0 & \pm & 1.9 \\
+\mathcal{S}_{(2,3,4,5)} \to \mathcal{S}_1 & 2496.4 & \pm &  470.0
+\end{array}\]
+using the Bayesian MSM.
+
+TPT~\cite{weinan-tpt,metzner-msm-tpt} is a method used to analyze the statistics of transition pathways. The TPT version of~\cite{noe-folding-pathways} can be conveniently applied to the estimated MSM. Here, we compute the TPT flux between macrostates $\mathcal{S}_2$ and $\mathcal{S}_4$ (Fig.~\ref{fig:msm-analysis}d).
+The committor projection onto the first two TICA components shows that it is constant within the metastable states defined above.
+Transition regions (macrostates $\mathcal{S}_{(1,3,5)}$) can be identified by committor values $\approx \frac{1}{2}$.
+
+The transition network can be additionally visualized by plotting representative structures of the five metastable states $\mathcal{S}_{(1-5)}$ according to their committor probability (Fig.~\ref{fig:tpt-network}). It is easy to see from this depiction that the dominant pathway from $\mathcal{S}_2$ to $\mathcal{S}_4$ proceeds through $\mathcal{S}_5$.
+
+\begin{figure}
+\includegraphics{figure_4}
+\caption{Visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$:
+Metastable states $\mathcal{S}_{(1-5)}$ are represented by an ensemble of representative structures and are arranged along the horizonal axis according to their committor probabilities. The three main transition pathways starting from $\mathcal{S}_2$ and ending in $\mathcal{S}_4$ are depicted by gray arrows with thickness proportional to the transition flux. The dominant pathway proceeds through $\mathcal{S}_5$.}
+\label{fig:tpt-network}
+\end{figure}
+
+\subsection{Connecting the MSM with experimental data}
+MSMs can also be analyzed in the context of experimental observables. Connecting MSM analysis to experimental data can both serve as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals.
+Since we have both the stationary and dynamic properties of the molecular system encoded in the MSM transition probability matrix, we can compute observables that involve both stationary ensemble averages as well as correlation functions.
+
+As an example, here we look at the fluorescence correlation of Trp-1, since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
+In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the original $75$ MSM microstates.
+%These values are computed using a 'forward model'.
+To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
+Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
+Note how the computed ACF has a very small response (i.e., signal amplitude).
+
+Using PyEMMA, we can simulate the relaxation of an observable if we had prepared our molecular system in a nonequilibrium initial condition.
+The experimental counterpart of such a prediction could be a temperature or pressure jump experiment or a stopped flow assay.
+To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of $\mathcal{S}_1$ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-analysis}e, lower).
+We see that the predicted relaxation signal has a much larger amplitude for the nonequilibrium initialization, making it more likely to be experimentally measurable.
+
+\subsection{Summary}
+
+In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA. For the full analysis, please refer to the first notebook (00). All notebooks as well as detailed installation instructions are available on \githubrepository{}.
+
+\section{Author Contributions}
+%%%%%%%%%%%%%%%%
+% This section must describe the actual contributions of
+% author. Since this is an electronic-only journal, there is
+% no length limit when you describe the authors' contributions,
+% so we recommend describing what they actually did rather than
+% simply categorizing them in a small number of
+% predefined roles as might be done in other journals.
+%
+% See the policies ``Policies on Authorship'' section of https://livecoms.github.io
+% for more information on deciding on authorship and author order.
+%%%%%%%%%%%%%%%%
+CW, MKS, TH, SO, and FN designed research.
+CW, MKS, TH, BEH, and SO developed and tested notebooks.
+MKS developed the software infrastructure, test, and install environment.
+CW, MKS, TH, BEH, SO, and FN wrote the manuscript.
+
+For a more detailed description of author contributions, see the GitHub issue tracking and changelog at\\\githubrepository{}.
+
+\section{Other Contributions}
+%%%%%%%%%%%%%%%
+% You should include all people who have filed issues that were
+% accepted into the paper, or that upon discussion altered what was in the paper.
+% Multiple significant contributions might mean that the contributor
+% should be moved to authorship at the discretion of the a
+%
+% See the policies ``Policies on Authorship'' section of https://livecoms.github.io for
+% more information on deciding on authorship and author order.
+%%%%%%%%%%%%%%%
+We are grateful to Nuria Plattner for providing the pentapeptide simulation data and Camilla Ventura Santos as well as the entire computational molecular biology group for valuable discussion and feedback.
+
+For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository{}.
+
+\section{Potentially Conflicting Interests}
+%%%%%%%
+%Declare any potentially competing interests, financial or otherwise
+%%%%%%%
+The authors declare no conflicting interests.
+
+\section{Funding Information}
+%%%%%%%
+% Authors should acknowledge funding sources here. Reference specific grants.
+%%%%%%%
+TH acknowledges financial support by SFB/TRR 186. SO acknowledges a postdoctoral fellowship from the Alexander von Humboldt Foundation.
+
+\bibliography{literature}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% APPENDICES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\appendix
+
+
+\end{document}
