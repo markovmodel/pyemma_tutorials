@@ -278,7 +278,6 @@ Since we have both the stationary and dynamic properties of the molecular system
 
 As an example, here we look at the fluorescence correlation of Trp-1, since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
 In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the original $75$ MSM microstates.
-%These values are computed using a 'forward model'.
 To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
 Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
@@ -290,11 +289,17 @@ We see that the predicted relaxation signal has a much larger amplitude for the 
 
 \subsection{Summary}
 
-In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA. For the full analysis, please refer to the first notebook (00). All notebooks as well as detailed installation instructions are available on \githubrepository{}.
+In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA.
+For the full analysis, please refer to the first notebook (00).
+All notebooks as well as detailed installation instructions are available on \githubrepository{}.
 
 \subsection{Advanced Methods}
 
-While the present tutorial covers Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology. Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram} can be used to combine unbiased and biased simulations so as to probe kinetics of very rare events~\cite{trammbar}; MEMMs are implemented in PyEMMA. Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}. Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right. Implementations of some of these methods are available or is under development in the package deeptime \url{github.com/markovmodel/deeptime}. 
+While the present tutorial covers Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
+Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram} can be used to combine unbiased and biased simulations so as to probe kinetics of very rare events~\cite{trammbar}; MEMMs are implemented in PyEMMA.
+Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
+Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right.
+Implementations of some of these methods are available or is under development in the package deeptime \url{github.com/markovmodel/deeptime}. 
 
 \section{Author Contributions}
 %%%%%%%%%%%%%%%%
