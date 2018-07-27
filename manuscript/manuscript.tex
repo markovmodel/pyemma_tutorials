@@ -90,9 +90,9 @@ Then, we address the software required to work through the lessons.
 \subsection{Background knowledge}
 \label{sec:background}
 
-For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. 
+For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. Two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
-In addition to publications on theory and application of Markov state modeling~\cite{msm-book,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks},
+In addition to publications on theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks},
 we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
 hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial}, and variational techniques~\cite{noe-vac,vamp-preprint,gmrq}, as these topics play important roles within the standard MSM workflow.
 
@@ -225,7 +225,7 @@ The CK test confirms that this is an appropriate choice and shows that the MSM w
 We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model.
 An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted by the MSM stationary distribution.
 
-A spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse-grain the $75$ $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,5$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
+A spectral clustering using the PCCA++ algorithm~\cite{pcca++,Deuflhard2005-pcca,Kube2007-pcca+} allows us to coarse-grain the $75$ $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,5$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
 \[ \begin{array}{ccc}
 \textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
 \hline
@@ -291,6 +291,10 @@ We see that the predicted relaxation signal has a much larger amplitude for the 
 \subsection{Summary}
 
 In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA. For the full analysis, please refer to the first notebook (00). All notebooks as well as detailed installation instructions are available on \githubrepository{}.
+
+\subsection{Advanced Methods}
+
+While the present tutorial covers Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology. Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram} can be used to combine unbiased and biased simulations so as to probe kinetics of very rare events~\cite{trammbar}; MEMMs are implemented in PyEMMA. Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}. Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right. Implementations of some of these methods are available or is under development in the package deeptime \url{github.com/markovmodel/deeptime}. 
 
 \section{Author Contributions}
 %%%%%%%%%%%%%%%%
