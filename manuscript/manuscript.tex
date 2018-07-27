@@ -85,7 +85,7 @@ Then, we address the software required to work through the lessons.
 \subsection{Background knowledge}
 \label{sec:background}
 
-For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. Two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
+For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. Additionally, two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
 In addition to publications on theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
 we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
@@ -286,11 +286,11 @@ All notebooks as well as detailed installation instructions are available on \gi
 
 \subsection{Advanced Methods}
 
-While the present tutorial covers Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
+While the present tutorial is intended to cover Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
 Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram} can be used to combine unbiased and biased simulations so as to probe kinetics of very rare events~\cite{trammbar}; MEMMs are implemented in PyEMMA.
 Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
 Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right.
-Implementations of some of these methods are available or is under development in the package deeptime \url{github.com/markovmodel/deeptime}. 
+Implementations of some of these methods are available or are under development in the deeptime package \url{github.com/markovmodel/deeptime}. 
 
 \section{Author Contributions}
 %%%%%%%%%%%%%%%%
