@@ -11,7 +11,6 @@
 % Omit the bestpractices option to remove the marking as a LiveCoMS paper.
 % Please note that these options may affect formatting.
 
-\usepackage{lipsum} % Required to insert dummy text
 \usepackage[version=4]{mhchem}
 \usepackage{siunitx}
 \DeclareSIUnit\Molar{M}
@@ -23,7 +22,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\versionnumber}{0.3} % TODO: can we extract this number from a git tag?
+\newcommand{\versionnumber}{0.3}
 \newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,10 +40,6 @@
 \affil[2]{Department of Chemistry, Stanford University, 333 Campus Drive, Stanford, California 94305, USA}
 
 \corr{christoph.wehmeyer@fu-berlin.de}{CW}
-%\corr{m.scherer@fu-berlin.de}{MKS}
-%\corr{tim.hempel@fu-berlin.de}{TH}
-%\corr{simon.olsson@fu-berlin.de}{SO}
-%\corr{bhusic@stanford.edu}{BEH}
 \corr{frank.noe@fu-berlin.de}{FN}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
@@ -90,9 +85,9 @@ Then, we address the software required to work through the lessons.
 \subsection{Background knowledge}
 \label{sec:background}
 
-For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. 
+For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. Additionally, two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
-In addition to publications on theory and application of Markov state modeling~\cite{msm-book,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks},
+In addition to publications on theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
 we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
 hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial}, and variational techniques~\cite{noe-vac,vamp-preprint,gmrq}, as these topics play important roles within the standard MSM workflow.
 
@@ -145,7 +140,7 @@ In short, the workflow for a full analysis of an MD dataset might consist of,
 	\item coarse-graining the MSM using a hidden Markov model approach (07).
 \end{itemize}
 
-For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide, consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of $0.1$~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
+For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide (Fig.~\ref{fig:io-to-ck}a), consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of $0.1$~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
 
 \subsection{Feature selection}
@@ -178,7 +173,6 @@ We note that deep learning approaches for feature selection have recently been d
 Subsequently, we perform TICA~\cite{tica,kinetic-maps} in order to reduce the dimension from the feature space, which typically contains many degrees of freedom, to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency. TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset. Here, performing TICA on the backbone torsions at lag time $0.5$ ns yields a four dimensional subspace using a $95\%$ kinetic variance cutoff (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
 The sample density projected onto the first two independent components (ICs) exhibits several maxima (Fig.~\ref{fig:io-to-ck}c).
 Discrete jumps between the maxima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-ck}d).
- % time series visualization of these components from the first trajectory shows discrete jumps between these maxima (Fig.~\ref{fig:io-to-ck}d).
 We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
 
 \subsection{Discretization}
@@ -202,10 +196,7 @@ T(k \tau) = T^k(\tau)
 where $T$ is the MSM transition matrix. The left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
 Visualizing the full transition probability matrix $T$ is difficult; we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
 An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
-% In our case we have multiple gaps and therefore various options to choose from.
 For this analysis, we chose 5 metastable states.
-%, as it is the largest number that only includes processes which are well above the MSM lag time.
-% Given the number of metastable states, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$ using a coarse-grained representation.
 The CK test confirms that this is an appropriate choice and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the long-timescale behavior of our system within error (Fig.~\ref{fig:io-to-ck}f).
 
 \subsection{Analyzing the MSM}
@@ -216,8 +207,7 @@ The CK test confirms that this is an appropriate choice and shows that the MSM w
 (a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which
 (b) PCCA++ identifies as five metastable states.
 (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
-(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
-% the most probable state $\mathcal{S}_5$ acts as a transition state for transitions between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
+(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.
 (e) The Trp-1 SASA autocorrelation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (bottom).}
 \label{fig:msm-analysis}
 \end{figure}
@@ -225,7 +215,7 @@ The CK test confirms that this is an appropriate choice and shows that the MSM w
 We can now directly extract several thermodynamic and kinetic properties from the estimated and validated model.
 An example of the former is the free energy surface in the projection onto the first two TICA components (Fig.~\ref{fig:msm-analysis}a) reweighted by the MSM stationary distribution.
 
-A spectral clustering using the PCCA++ algorithm~\cite{pcca++} allows us to coarse-grain the $75$ $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,5$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
+A spectral clustering using the PCCA++ algorithm~\cite{pcca++,Deuflhard2005-pcca,Kube2007-pcca+} allows us to coarse-grain the $75$ $k$-means microstates into five metastable macrostates (Fig.~\ref{fig:msm-analysis}b) $\mathcal{S}_i$, $i=1,\dots,5$, for which we then approximate the stationary probabilities and relative free energies (defined up to an additive constant)
 \[ \begin{array}{ccc}
 \textrm{macrostate } \mathcal{S}_i & \pi_{\mathcal{S}_i} & G_{\mathcal{S}_i} / \textrm{k}_\textrm{B} T \\
 \hline
@@ -273,12 +263,12 @@ Metastable states $\mathcal{S}_{(1-5)}$ are represented by an ensemble of repres
 \end{figure}
 
 \subsection{Connecting the MSM with experimental data}
+
 MSMs can also be analyzed in the context of experimental observables. Connecting MSM analysis to experimental data can both serve as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals.
 Since we have both the stationary and dynamic properties of the molecular system encoded in the MSM transition probability matrix, we can compute observables that involve both stationary ensemble averages as well as correlation functions.
 
 As an example, here we look at the fluorescence correlation of Trp-1, since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
 In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the original $75$ MSM microstates.
-%These values are computed using a 'forward model'.
 To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
 Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
@@ -290,7 +280,17 @@ We see that the predicted relaxation signal has a much larger amplitude for the 
 
 \subsection{Summary}
 
-In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA. For the full analysis, please refer to the first notebook (00). All notebooks as well as detailed installation instructions are available on \githubrepository{}.
+In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA.
+For the full analysis, please refer to the first notebook (00).
+All notebooks as well as detailed installation instructions are available on \githubrepository{}.
+
+\subsection{Advanced Methods}
+
+While the present tutorial is intended to cover Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
+Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram} can be used to combine unbiased and biased simulations so as to probe kinetics of very rare events~\cite{trammbar}; MEMMs are implemented in PyEMMA.
+Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
+Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right.
+Implementations of some of these methods are available or are under development in the deeptime package \url{github.com/markovmodel/deeptime}. 
 
 \section{Author Contributions}
 %%%%%%%%%%%%%%%%
