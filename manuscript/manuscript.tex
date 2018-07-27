@@ -11,7 +11,6 @@
 % Omit the bestpractices option to remove the marking as a LiveCoMS paper.
 % Please note that these options may affect formatting.
 
-\usepackage{lipsum} % Required to insert dummy text
 \usepackage[version=4]{mhchem}
 \usepackage{siunitx}
 \DeclareSIUnit\Molar{M}
@@ -23,7 +22,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\versionnumber}{0.3} % TODO: can we extract this number from a git tag?
+\newcommand{\versionnumber}{0.3}
 \newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,10 +40,6 @@
 \affil[2]{Department of Chemistry, Stanford University, 333 Campus Drive, Stanford, California 94305, USA}
 
 \corr{christoph.wehmeyer@fu-berlin.de}{CW}
-%\corr{m.scherer@fu-berlin.de}{MKS}
-%\corr{tim.hempel@fu-berlin.de}{TH}
-%\corr{simon.olsson@fu-berlin.de}{SO}
-%\corr{bhusic@stanford.edu}{BEH}
 \corr{frank.noe@fu-berlin.de}{FN}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
@@ -178,7 +173,6 @@ We note that deep learning approaches for feature selection have recently been d
 Subsequently, we perform TICA~\cite{tica,kinetic-maps} in order to reduce the dimension from the feature space, which typically contains many degrees of freedom, to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency. TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset. Here, performing TICA on the backbone torsions at lag time $0.5$ ns yields a four dimensional subspace using a $95\%$ kinetic variance cutoff (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
 The sample density projected onto the first two independent components (ICs) exhibits several maxima (Fig.~\ref{fig:io-to-ck}c).
 Discrete jumps between the maxima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-ck}d).
- % time series visualization of these components from the first trajectory shows discrete jumps between these maxima (Fig.~\ref{fig:io-to-ck}d).
 We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
 
 \subsection{Discretization}
@@ -202,10 +196,7 @@ T(k \tau) = T^k(\tau)
 where $T$ is the MSM transition matrix. The left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
 Visualizing the full transition probability matrix $T$ is difficult; we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
 An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
-% In our case we have multiple gaps and therefore various options to choose from.
 For this analysis, we chose 5 metastable states.
-%, as it is the largest number that only includes processes which are well above the MSM lag time.
-% Given the number of metastable states, PyEMMA automatically estimates additional MSM transition matrices at lag times $k \tau$ and compares these estimates to the $k^\textrm{th}$ power of the original transition matrix $T(\tau)$ using a coarse-grained representation.
 The CK test confirms that this is an appropriate choice and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the long-timescale behavior of our system within error (Fig.~\ref{fig:io-to-ck}f).
 
 \subsection{Analyzing the MSM}
@@ -216,8 +207,7 @@ The CK test confirms that this is an appropriate choice and shows that the MSM w
 (a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which
 (b) PCCA++ identifies as five metastable states.
 (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
-(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
-% the most probable state $\mathcal{S}_5$ acts as a transition state for transitions between states $\mathcal{S}_2$ and $\mathcal{S}_4$. 
+(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.
 (e) The Trp-1 SASA autocorrelation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (bottom).}
 \label{fig:msm-analysis}
 \end{figure}
