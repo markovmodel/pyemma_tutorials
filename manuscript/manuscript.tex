@@ -23,7 +23,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\versionnumber}{0.1} % TODO: can we extract this number from a git tag?
+\newcommand{\versionnumber}{0.3} % TODO: can we extract this number from a git tag?
 \newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,26 +113,21 @@ The data for the demonstrated test systems is downloaded upon the first use and 
 
 The underlying software stack for running the tutorial consists of:
 \begin{itemize}
-% \item NumPy -- vectorized operations on multi-dimensional arrays~\cite{numpy}
-% \item SciPy -- linear algebra, sparse computations~\cite{scipy}
-% \item Matplotlib -- Visualization~\cite{matplotlib}
 \item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
 \item mdshare -- A downloader for MD data from a public server
 \item notebook -- The Jupyter notebook tool used for running the tutorials~\cite{jupyter}, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
-\item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nguyen2017nglview}
-% \item mdtraj -- reading MD simulation data, calculate observables from MD~\cite{mdtraj}
+\item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nglview}
 \end{itemize}
 
 The tutorial software is currently supported for Python versions $3.5$ and $3.6$ on the operating systems Linux, OSX, and Windows.
 
-Should the user prefer to not use Anaconda, a manual installation via the pip installer is possible.
+Should the user prefer not to use Anaconda, a manual installation via the pip installer is possible.
 Alternatively, one can use the Binder service to view and run the tutorials online in any browser.
 
 \section{Content and links}
 
 This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA.
-The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow for a small example system. 
-% The figure that will be displayed in the following are created there and can be easily reproduced.
+The first notebook (00), which we will summarize in the following, showcases the entire estimation, validation, and analysis workflow for a small example system.
 The goal of this introductory notebook (00) is to provide the user with the typical steps required to obtain a validated MSM analysis of protein or peptide simulation data.
 The seven subsequent notebooks (01--07) provide in-depth lessons on specific topics, and the last notebook (08) contains guidelines on how to deal with common problems during MSM estimation.
 
@@ -150,7 +145,7 @@ In short, the workflow for a full analysis of an MD dataset might consist of,
 	\item coarse-graining the MSM using a hidden Markov model approach (07).
 \end{itemize}
 
-For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide, consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of 0.1~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
+For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide, consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of $0.1$~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
 
 \subsection{Feature selection}
@@ -175,6 +170,7 @@ In particular, we can use a scalar score obtained using VAMP to directly compare
 Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
 To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at a lag time of $0.5$~ns and find that backbone torsions contain more kinetic variance than the backbone's heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-ck}b).
+
 We note that deep learning approaches for feature selection have recently been developed that may eventually replace the feature selection step~\cite{vampnet,tae,hernandez-vde}.
 
 \subsection{Dimensionality reduction}
