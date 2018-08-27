@@ -21,7 +21,7 @@ We keep the details minimal throughout the showcase but point to the more specia
 In detail, the remaining eight notebooks revisit all aspects shown in the showcase, provide additional details and variants, and contain exercises (and solutions) to self-check your learning progress:
 
 1. Data-I/O and featurization [➜ 📓](notebooks/01-data-io-and-featurization.ipynb)
-2. Dimension reduction and discretization [➜ 📓](notebooks/02-dimension-reduction-and-discretisation.ipynb)
+2. Dimension reduction and discretization [➜ 📓](notebooks/02-dimension-reduction-and-discretization.ipynb)
 3. MSM estimation and validation [➜ 📓](notebooks/03-msm-estimation-and-validation.ipynb)
 4. MSM analysis [➜ 📓](notebooks/04-msm-analysis.ipynb)
 5. PCCA and TPT analysis [➜ 📓](notebooks/05-pcca-tpt.ipynb)
