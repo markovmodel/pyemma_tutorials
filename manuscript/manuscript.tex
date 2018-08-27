@@ -207,8 +207,7 @@ The CK test confirms that this is an appropriate choice and shows that the MSM w
 (a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which
 (b) PCCA++ identifies as five metastable states.
 (c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
-(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.
-(e) The Trp-1 SASA autocorrelation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (bottom).}
+(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.}
 \label{fig:msm-analysis}
 \end{figure}
 
@@ -264,18 +263,24 @@ Metastable states $\mathcal{S}_{(1-5)}$ are represented by an ensemble of repres
 
 \subsection{Connecting the MSM with experimental data}
 
+\begin{figure}
+\includegraphics{figure_5}
+\caption{The Trp-1 SASA autocorrelation function yields a weak signal (a) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (b). The solid/orange lines denote the maximum likelihood MSM result; the dashed/blue lines and the the shaded areas indicate sample means and $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
+\label{fig:msm-exp-obs}
+\end{figure}
+
 MSMs can also be analyzed in the context of experimental observables. Connecting MSM analysis to experimental data can both serve as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals.
 Since we have both the stationary and dynamic properties of the molecular system encoded in the MSM transition probability matrix, we can compute observables that involve both stationary ensemble averages as well as correlation functions.
 
 As an example, here we look at the fluorescence correlation of Trp-1, since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
 In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the original $75$ MSM microstates.
 To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
-Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
+Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-exp-obs}a).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
 
 Using PyEMMA, we can simulate the relaxation of an observable if we had prepared our molecular system in a nonequilibrium initial condition.
 The experimental counterpart of such a prediction could be a temperature or pressure jump experiment or a stopped flow assay.
-To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of $\mathcal{S}_1$ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-analysis}e, lower).
+To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of $\mathcal{S}_1$ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-exp-obs}b).
 We see that the predicted relaxation signal has a much larger amplitude for the nonequilibrium initialization, making it more likely to be experimentally measurable.
 
 \subsection{Summary}
