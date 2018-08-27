@@ -110,14 +110,15 @@ The underlying software stack for running the tutorial consists of:
 \begin{itemize}
 \item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
 \item mdshare -- A downloader for MD data from a public server
-\item notebook -- The Jupyter notebook tool used for running the tutorials~\cite{jupyter}, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
+\item notebook -- The Jupyter~\cite{jupyter} notebook tool used for running the tutorials, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
+\item matplotlib -- A plotting library~\cite{matplotlib}
 \item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nglview}
 \end{itemize}
 
 The tutorial software is currently supported for Python versions $3.5$ and $3.6$ on the operating systems Linux, OSX, and Windows.
 
 Should the user prefer not to use Anaconda, a manual installation via the pip installer is possible.
-Alternatively, one can use the Binder service to view and run the tutorials online in any browser.
+Alternatively, one can use the Binder service (\url{https://mybinder.org}) to view and run the tutorials online in any browser.
 
 \section{Content and links}
 
@@ -128,7 +129,7 @@ The seven subsequent notebooks (01--07) provide in-depth lessons on specific top
 
 \subsection{The PyEMMA workflow}
 
-In short, the workflow for a full analysis of an MD dataset might consist of,
+In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an MD dataset might consist of,
 \begin{itemize}
 	\item extracting molecular features from the raw data (01),
 	\item transforming those features into a suitable, low dimensional subspace (02),
@@ -147,7 +148,7 @@ The figures that will be displayed in the following are created in the showcase 
 
 \begin{figure}
 \includegraphics{figure_2}
-\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
 (c)~The sample density projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$ ns shows multiple density maxima and
 (d)~the time series of the first two ICs show rare transition events.
@@ -203,12 +204,11 @@ The CK test confirms that this is an appropriate choice and shows that the MSM w
 
 \begin{figure}
 \includegraphics{figure_3}
-\caption{Exemplary analysis of the conformational dynamics of a pentapeptide backbone:
-(a) The reweighted free energy surface projected onto the first two independent components exhibits five minima which
-(b) PCCA++ identifies as five metastable states.
-(c) The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
-(d) the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.
-(e) The Trp-1 SASA autocorrelation function yields a weak signal (top) which, however, can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$ (bottom).}
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
+(a)~The reweighted free energy surface projected onto the first two independent components exhibits five minima which
+(b)~PCCA++ identifies as five metastable states.
+(c)~The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states, in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
+(d)~the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.}
 \label{fig:msm-analysis}
 \end{figure}
 
@@ -257,12 +257,19 @@ The transition network can be additionally visualized by plotting representative
 
 \begin{figure}
 \includegraphics{figure_4}
-\caption{Visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$:
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
+visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$.
 Metastable states $\mathcal{S}_{(1-5)}$ are represented by an ensemble of representative structures and are arranged along the horizonal axis according to their committor probabilities. The three main transition pathways starting from $\mathcal{S}_2$ and ending in $\mathcal{S}_4$ are depicted by gray arrows with thickness proportional to the transition flux. The dominant pathway proceeds through $\mathcal{S}_5$.}
 \label{fig:tpt-network}
 \end{figure}
 
 \subsection{Connecting the MSM with experimental data}
+
+\begin{figure}
+\includegraphics{figure_5}
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone: (a)~the Trp-1 SASA autocorrelation function yields a weak signal which, however, (b)~can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$. The solid/orange lines denote the maximum likelihood MSM result; the dashed/blue lines and the the shaded areas indicate sample means and $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
+\label{fig:msm-exp-obs}
+\end{figure}
 
 MSMs can also be analyzed in the context of experimental observables. Connecting MSM analysis to experimental data can both serve as an accuracy test of our MSM as well as provide a mechanistic interpretation of observed experimental signals.
 Since we have both the stationary and dynamic properties of the molecular system encoded in the MSM transition probability matrix, we can compute observables that involve both stationary ensemble averages as well as correlation functions.
@@ -270,12 +277,12 @@ Since we have both the stationary and dynamic properties of the molecular system
 As an example, here we look at the fluorescence correlation of Trp-1, since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
 In order to compute the fluorescence correlation functions we require a microscopic, instantaneous value of the tryptophan fluorescence for each of the original $75$ MSM microstates.
 To approximate the fluorescence signal in our pentapeptide system, we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
-Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-analysis}e, upper).
+Now that we have an approximation of the fluorescence in each of our MSM states, we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-exp-obs}a).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
 
 Using PyEMMA, we can simulate the relaxation of an observable if we had prepared our molecular system in a nonequilibrium initial condition.
 The experimental counterpart of such a prediction could be a temperature or pressure jump experiment or a stopped flow assay.
-To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of $\mathcal{S}_1$ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-analysis}e, lower).
+To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of $\mathcal{S}_1$ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-exp-obs}b).
 We see that the predicted relaxation signal has a much larger amplitude for the nonequilibrium initialization, making it more likely to be experimentally measurable.
 
 \subsection{Summary}
