@@ -95,7 +95,7 @@ Given an appropriate lag time, every pairwise transition at that lag time is cou
 Then, the counts matrix is converted to a row-stochastic transition probability matrix, which is defined for the specified lag time.
 To ensure that the transition probablity matrix has desirable mathematical properties, detailed balance is enforced when converting the counts matrix to the transition probability matrix.
 Detailed balance requires that the probability of transitioning from state $i$ to state $j$, conditioned upon the system being in state $i$, is the same as the probability of transitioning from state $j$ to state $i$ conditioned upon the system being in state $j$.
-The requirement of detailed balance indicates that we assume our system is in equilibrium.
+The requirement of detailed balance indicates that we assume our system is reversible.
 We additionally require that the system is ergodic.
 
 We can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{msm-jhp}.
@@ -105,7 +105,7 @@ The CK property for a Markovian matrix is,
 T(k \tau) = T^k(\tau).
 \end{equation}
 
-\noindent{}whe left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
+\noindent{}where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
 
 Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues,
@@ -118,7 +118,7 @@ T(\tau) \circ \phi_i = \lambda_i \phi_i,
 \noindent{}where the eigenvalues are indexed in decreasing order. The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution of the system.
 The subsequent eigenvalues $\lambda_{i<1}$ are real with absolute values less than $1$ and correspond to dynamical processes within the system.
 The right eigenvectors, conventionally written as $\psi_i$, represent the flux into and out of the states of the MSM.
-The corresponding left eigenvectors contain the same information weighted by the stationary distribution.
+The corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
 
 The timescale of a given dynamical process is a function of the relevant eigenvalue and the lag time at which the model was defined,
 
@@ -134,14 +134,20 @@ The theory described in the previous section required the decomposition of the p
 Starting from the output of an MD simulation of a protein, there are several steps that can be taken to obtain an MSM from the original configuration space:
 
 \begin{itemize}
-	\item Featurization. The Cartesian coordinates characterizing each frame of the MD trajectory are transformed into an intuitive basis such as the protein's dihedral angles or contact distance pairs.
-	\item Dimensionality reduction. Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
+	\item Featurization -- The Cartesian coordinates characterizing each frame of the MD trajectory are transformed into an intuitive basis such as the protein's dihedral angles or contact distance pairs.
+	\item Dimensionality reduction -- Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
 	Frequently, time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps} is used to transform the features into a set of slow coordinates.
-	\item Clustering. This is the step at which the state decomposition occurs. The features or TICs are grouped using a clustering algorithm such as $k$-means into a set of states.
-	\item Transition matrix approximation. At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
+	\item Clustering -- This is the step at which the state decomposition occurs.
+	The features or TICs are grouped using a clustering algorithm such as $k$-means into a set of states.
+	\item Transition matrix approximation -- At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
 \end{itemize}
 
-
+It is apparent that there are many choices involved in MSM construction such as what features should be used and how many states should be chosen.
+In 2013, the variational approach to conformational dynamics (VAC) was derived, which enabled an objective comparison among different state decomposition choices for models built with the same Markovian lag time~\cite{noe-vac}.
+More recently, the more general variational approach to Markov processes (VAMP) has been developed in order to facilitate the approximation and comparison of reversible models for basis sets that are continuous, as opposed to discrete states~\cite{vamp-preprint}.
+The VAMP can thus be used to perform model selection.
+Specifically, we use the VAMP-2 score, which captures the kinetic variance explained by the model.
+However, the MSM lag time cannot be optimized using VAMP, and must be chosen using a separate validation as described previously.
 
 \subsection{Background knowledge and resources}
 \label{sec:background}
