@@ -79,16 +79,78 @@ The lessons start with a showcase of the PyEMMA workflow and follow up with in-d
 
 \section{Prerequisites}
 
-In the following, we summarize the recommended theoretical background knowledge of Markov state modeling for this tutorial.
+In the following, we summarize the recommended theory and background knowledge of Markov state modeling for this tutorial.
 Then, we address the software required to work through the lessons.
 
-\subsection{Background knowledge}
+\subsection{Essential theory}
+\label{sec:theory}
+
+Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high-dimensional MD simulation datasets.
+In its standard formulation, the creation of a Markov state model involves decomposing the phase or configuration space occupied by a system into a set of disjoint, discrete states that adhere to the Markov property.
+The Markov property asserts that these states are ``memoryless'':~in other words, the probability of transitioning from any state $i$ to any other state $j$ is independent of the history of the system before it was in $i$.
+In order to obtain Markovian dynamics, a lag time must be chosen at which the transitions between states are analyzed. This lag time must be sufficiently short to resolve the dynamics of interest, but long enough such that the Markovian approximation is appropriate.
+
+In order to create a Markov state model for a dynamical system, each data point in the time series is assigned to a state.
+Given an appropriate lag time, every pairwise transition at that lag time is counted and stored in a counts matrix.
+Then, the counts matrix is converted to a row-stochastic transition probability matrix, which is defined for the specified lag time.
+To ensure that the transition probablity matrix has desirable mathematical properties, detailed balance is enforced when converting the counts matrix to the transition probability matrix.
+Detailed balance requires that the probability of transitioning from state $i$ to state $j$, conditioned upon the system being in state $i$, is the same as the probability of transitioning from state $j$ to state $i$ conditioned upon the system being in state $j$.
+The requirement of detailed balance indicates that we assume our system is in equilibrium.
+We additionally require that the system is ergodic.
+
+We can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{msm-jhp}.
+The CK property for a Markovian matrix is,
+
+\begin{equation}
+T(k \tau) = T^k(\tau).
+\end{equation}
+
+\noindent{}whe left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
+By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
+
+Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues,
+
+\begin{equation}
+\label{eq:transmat}
+T(\tau) \circ \phi_i = \lambda_i \phi_i,
+\end{equation}
+
+\noindent{}where the eigenvalues are indexed in decreasing order. The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution of the system.
+The subsequent eigenvalues $\lambda_{i<1}$ are real with absolute values less than $1$ and correspond to dynamical processes within the system.
+The right eigenvectors, conventionally written as $\psi_i$, represent the flux into and out of the states of the MSM.
+The corresponding left eigenvectors contain the same information weighted by the stationary distribution.
+
+The timescale of a given dynamical process is a function of the relevant eigenvalue and the lag time at which the model was defined,
+
+\begin{equation}
+\label{eq:timescales}
+t_i \equiv -\frac{\tau}{\log(|\lambda_i|)}.
+\end{equation}
+
+\subsection{MSM construction the variational approach}
+\label{sec:construction}
+
+The theory described in the previous section required the decomposition of the phase or configuration space occupied by a dynamical system into discrete, disjoint states.
+Starting from the output of an MD simulation of a protein, there are several steps that can be taken to obtain an MSM from the original configuration space:
+
+\begin{itemize}
+	\item Featurization. The Cartesian coordinates characterizing each frame of the MD trajectory are transformed into an intuitive basis such as the protein's dihedral angles or contact distance pairs.
+	\item Dimensionality reduction. Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
+	Frequently, time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps} is used to transform the features into a set of slow coordinates.
+	\item Clustering. This is the step at which the state decomposition occurs. The features or TICs are grouped using a clustering algorithm such as $k$-means into a set of states.
+	\item Transition matrix approximation. At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
+\end{itemize}
+
+
+
+\subsection{Background knowledge and resources}
 \label{sec:background}
 
-For those unfamiliar with Markov state modeling, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail. Additionally, two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
+For those seeking further resources, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview, while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail.
+Additionally, two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
 In addition to publications on theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
-we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
+we also recommend the literature on TICA~\cite{tica,tica3,tica2,kinetic-maps}, transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
 hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial}, and variational techniques~\cite{noe-vac,vamp-preprint,gmrq}, as these topics play important roles within the standard MSM workflow.
 
 \subsection{Software/system requirements}
@@ -189,12 +251,13 @@ t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
 A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$; accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty. The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
 In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above $0.5$~ns (Fig.~\ref{fig:io-to-ck}e). Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
 
-To test the validity of our MSM we perform a Chapman-Kolmogorov (CK) test. The CK test compares the right and the left side of the Chapman-Kolmogorov equation
-\begin{equation}
-\label{eq:ck}
-T(k \tau) = T^k(\tau)
-\end{equation}
-where $T$ is the MSM transition matrix. The left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
+To test the validity of our MSM we perform a Chapman-Kolmogorov (CK) test.
+% The CK test compares the right and the left side of the Chapman-Kolmogorov equation
+% \begin{equation}
+% \label{eq:ck}
+% T(k \tau) = T^k(\tau)
+% \end{equation}
+% where $T$ is the MSM transition matrix. The left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
 Visualizing the full transition probability matrix $T$ is difficult; we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
 An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
 For this analysis, we chose 5 metastable states.
