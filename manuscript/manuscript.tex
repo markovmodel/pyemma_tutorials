@@ -102,8 +102,17 @@ hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-
 We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules.
 The user can install all necessary packages in one step using the \texttt{conda} command provided by the Anaconda Python stack (\url{https://anaconda.com}).
 We recommend Anaconda because it resolves and installs dependencies as well as provides pre-compiled versions of common packages.
-
 The tutorial installation contains a launcher command to start the Jupyter notebook server as well as the notebook files.
+
+You can install the tutorial's dependencies in a new conda environment and start the notebook server via
+\begin{verbatim}
+conda create -n pyemma_tutorials
+conda activate pyemma_tutorials
+conda install -c conda-forge pyemma_tutorials
+pyemma_tutorials
+\end{verbatim}
+or refer to \githubrepository{} for more detailed installation and usage instructions.
+
 The data for the demonstrated test systems is downloaded upon the first use and is cached for future invocations of the tutorial.
 
 The underlying software stack for running the tutorial consists of:

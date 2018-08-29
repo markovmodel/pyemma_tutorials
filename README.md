@@ -38,6 +38,8 @@ If you do not have conda, please follow the instructions here:
 
 https://conda.io/miniconda.html
 
+#### Installing the tutorials as a package
+
 After installing miniconda, you can install the tutorial either via
 
 ``` bash
@@ -56,6 +58,35 @@ If you intend to install with pip, for which can not give any support, you feel 
 pip install git+https://github.com/markovmodel/pyemma_tutorials
 ```
 
+#### Manual installation
+
+If you wish to install the tutorial manually, you will need the following packages (including all their dependencies):
+
+- `pyemma`
+- `mdshare`
+- `nglview`
+- `nbexamples`
+- `jupyter_contrib_nbextensions`
+
+This can be done, for example, with conda:
+
+```bash
+conda install -c conda-forge pyemma mdshare nglview nbexamples jupyter_contrib_nbextensions
+```
+
+After installing `jupyter_contrib_nbextensions`, you need to activate the `toc2` and `exercise2` extensions:
+
+```bash
+jupyter nbextension enable toc2/main
+jupyter nbextension enable exercise2/main
+```
+
+Now all remains is to clone the repository to get the tutorial notebooks:
+
+```bash
+git clone https://github.com/markovmodel/pyemma_tutorials.git
+```
+
 ### Usage
 Now we have a fresh conda environment containing the notebooks and the software to run them. We can now just activate the environment and run the notebook server by invoking:
 
@@ -65,6 +96,18 @@ pyemma_tutorials
 ```
 
 The last command will start the notebook server and your browser should pop up pointing to a list of notebooks. You can choose either to preview or to create your own copy of the notebook. The latter will create a copy of the chosen notebook in your home directory, so your changes will not be lost after shutting down the notebook server.
+
+If you have a manual installation, move to the repository's notebook directory...
+
+```bash
+cd path_to_pyemma_tutorials/notebooks
+```
+
+... and start the notebook server there:
+
+```bash
+jupyter notebook
+```
 
 ### Deinstallation
 
@@ -78,4 +121,3 @@ or if you have installed the package directly
 ``` bash
 conda remove pyemma_tutorials
 ```
-
