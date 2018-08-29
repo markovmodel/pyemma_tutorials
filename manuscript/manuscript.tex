@@ -98,10 +98,10 @@ To ensure that the transition probablity matrix has desirable mathematical prope
 
 \begin{equation}
 \label{eq:balance}
-p_t(i)p(i,j) = p_t(j)p(j,i),
+p_t(i) p(i \rightarrow j) = p_t(j)p(j \rightarrow i),
 \end{equation}
 
-\noindent{}where $p_t(i)$ represents the probability of being in state $i$ at time $t$, and $p(i,j)$ is the probability of transitioning from state $i$ to $j$ at the next time step.
+\noindent{}where $p_t(i)$ represents the probability of being in state $i$ at time $t$, and $p(i \rightarrow j)$ is the probability of transitioning from state $i$ to $j$ at the next time step.
 % Detailed balance requires that the probability of transitioning from state $i$ to state $j$, conditioned upon the system being in state $i$, is the same as the probability of transitioning from state $j$ to state $i$ conditioned upon the system being in state $j$.
 The requirement of detailed balance indicates that we assume our system is reversible.
 We additionally require that the system is ergodic.
@@ -114,11 +114,13 @@ The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process
 t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
 \end{equation}
 
+\noindent{}When the ITS become approximately constant with the lag time, we say that our timescales have converged and choose the smallest lag time with the converged timescales in order to maximize the model's temporal resolution.
+
 Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{msm-jhp}.
 The CK property for a Markovian matrix is,
 
 \begin{equation}
-T(k \tau) = T^k(\tau).
+T(k \tau) = T^k(\tau),
 \end{equation}
 
 \noindent{}where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
@@ -132,8 +134,9 @@ T(\tau) \circ \phi_i = \lambda_i \phi_i,
 \end{equation}
 
 \noindent{}where the eigenvalues are indexed in decreasing order. The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution of the system.
+The right eigenvector $\psi_1$ is a vector consisting of $1$'s.
 The subsequent eigenvalues $\lambda_{i>1}$ are real with absolute values less than $1$ and correspond to dynamical processes within the system.
-The right eigenvectors, conventionally written as $\psi_i$, each represent a dynamical process (for $i>1$), and the coefficients of the eigenvectors represent the flux into and out of the MSM states that characterizes that process.
+The right eigenvectors $\psi_i$ each represent a dynamical process (for $i>1$), and the coefficients of the eigenvectors represent the flux into and out of the MSM states that characterizes that process.
 The corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
 
 The timescale of a given dynamical process is a function of the relevant eigenvalue and the lag time at which the model was defined,
