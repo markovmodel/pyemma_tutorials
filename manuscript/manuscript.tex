@@ -87,25 +87,41 @@ Then, we address the software required to work through the lessons.
 
 Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high-dimensional MD simulation datasets.
 In its standard formulation, the creation of a Markov state model involves decomposing the phase or configuration space occupied by a system into a set of disjoint, discrete states that adhere to the Markov property.
-The Markov property asserts that these states are ``memoryless'':~in other words, the probability of transitioning from any state $i$ to any other state $j$ is independent of the history of the system before it was in $i$.
-In order to obtain Markovian dynamics, a lag time must be chosen at which the transitions between states are analyzed. This lag time must be sufficiently short to resolve the dynamics of interest, but long enough such that the Markovian approximation is appropriate.
+The Markov property asserts that the dynamics in the state space is ``memoryless'':~in other words, the probability of transitioning from any state $i$ to any other state $j$ is independent of the history of the system before it was in $i$.
+In order to obtain Markovian dynamics, a lag time must be chosen at which the transitions between states are analyzed.
+%This lag time must be sufficiently short to resolve the dynamics of interest, but long enough such that the Markovian approximation is appropriate.
 
 In order to create a Markov state model for a dynamical system, each data point in the time series is assigned to a state.
-Given an appropriate lag time, every pairwise transition at that lag time is counted and stored in a counts matrix.
-Then, the counts matrix is converted to a row-stochastic transition probability matrix, which is defined for the specified lag time.
-To ensure that the transition probablity matrix has desirable mathematical properties, detailed balance is enforced when converting the counts matrix to the transition probability matrix.
-Detailed balance requires that the probability of transitioning from state $i$ to state $j$, conditioned upon the system being in state $i$, is the same as the probability of transitioning from state $j$ to state $i$ conditioned upon the system being in state $j$.
+Given an appropriate lag time, every pairwise transition at that lag time is counted and stored in a count matrix.
+Then, the count matrix is converted to a row-stochastic transition probability matrix, which is defined for the specified lag time.
+To ensure that the transition probablity matrix has desirable mathematical properties, detailed balance is enforced when converting the count matrix to the transition probability matrix, which requires that,
+
+\begin{equation}
+\label{eq:balance}
+p_t(i)p(i,j) = p_t(j)p(j,i),
+\end{equation}
+
+\noindent{}where $p_t(i)$ represents the probability of being in state $i$ at time $t$, and $p(i,j)$ is the probability of transitioning from state $i$ to $j$ at the next time step.
+% Detailed balance requires that the probability of transitioning from state $i$ to state $j$, conditioned upon the system being in state $i$, is the same as the probability of transitioning from state $j$ to state $i$ conditioned upon the system being in state $j$.
 The requirement of detailed balance indicates that we assume our system is reversible.
 We additionally require that the system is ergodic.
 
-We can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{msm-jhp}.
+When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space, but short enough to resolve the dynamics in which we are interested.
+Plotting the implied timescales (ITS) as a function of $\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}.
+The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via,
+\begin{equation}
+\label{eq:its}
+t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
+\end{equation}
+
+Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{msm-jhp}.
 The CK property for a Markovian matrix is,
 
 \begin{equation}
 T(k \tau) = T^k(\tau).
 \end{equation}
 
-\noindent{}where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
+\noindent{}where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
 
 Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues,
@@ -116,8 +132,8 @@ T(\tau) \circ \phi_i = \lambda_i \phi_i,
 \end{equation}
 
 \noindent{}where the eigenvalues are indexed in decreasing order. The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution of the system.
-The subsequent eigenvalues $\lambda_{i<1}$ are real with absolute values less than $1$ and correspond to dynamical processes within the system.
-The right eigenvectors, conventionally written as $\psi_i$, represent the flux into and out of the states of the MSM.
+The subsequent eigenvalues $\lambda_{i>1}$ are real with absolute values less than $1$ and correspond to dynamical processes within the system.
+The right eigenvectors, conventionally written as $\psi_i$, each represent a dynamical process (for $i>1$), and the coefficients of the eigenvectors represent the flux into and out of the MSM states that characterizes that process.
 The corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
 
 The timescale of a given dynamical process is a function of the relevant eigenvalue and the lag time at which the model was defined,
@@ -138,7 +154,7 @@ Starting from the output of an MD simulation of a protein, there are several ste
 	\item Dimensionality reduction -- Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
 	Frequently, time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps} is used to transform the features into a set of slow coordinates.
 	\item Clustering -- This is the step at which the state decomposition occurs.
-	The features or TICs are grouped using a clustering algorithm such as $k$-means into a set of states.
+	The features or TICs are grouped into a set of states using a clustering algorithm such as $k$-means.
 	\item Transition matrix approximation -- At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
 \end{itemize}
 
@@ -248,12 +264,12 @@ We thus assume that our TICA-transformed backbone torsion features describe one 
 TICA yields a representation of our molecular simulation data with a reduced dimensionality, which can greatly facilitate the decomposition of our system into the discrete Markovian states necessary for MSM estimation. Here, we use the $k$-means algorithm to segment the four dimensional TICA space into $k=75$ cluster centers. The number of cluster centers has been chosen to optimize the VAMP-2 score in a manner identical to how the feature selection was carried out above, which is shown in the showcase notebook (00).
 
 \subsection{MSM estimation and validation}
-When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space, but short enough to resolve the dynamics in which we are interested.
-Plotting the implied timescales (ITS) as a function of $\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}. The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via
-\begin{equation}
-\label{eq:its}
-t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
-\end{equation}
+% When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space, but short enough to resolve the dynamics in which we are interested.
+% Plotting the implied timescales (ITS) as a function of $\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}. The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via
+% \begin{equation}
+% \label{eq:its}
+% t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
+% \end{equation}
 A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$; accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty. The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
 In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above $0.5$~ns (Fig.~\ref{fig:io-to-ck}e). Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
 
