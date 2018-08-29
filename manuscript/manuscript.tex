@@ -291,6 +291,19 @@ In this section, we have summarized how to conduct an MSM-based analysis of biom
 For the full analysis, please refer to the first notebook (00).
 All notebooks as well as detailed installation instructions are available on \githubrepository{}.
 
+\subsection{Markov models of large systems}
+For modeling large systems, challenges arise that are mostly system dependent. 
+One of them is that finding a state space discretization using e.g. $k$-means becomes difficult in very high dimensional spaces. 
+It is thus important to choose a feature space and coordinate transform that yield a low dimensional representation of the slow processes.
+Hidden Markov models might further help to overcome poor discretization to a certain extend. 
+
+In addition, the slowest process in a system as identified by a Markov model might not be the one a modeler is interested in. 
+For instance, there might be a side chain flip that only occured once in a data set but has no biological relevance. 
+This problem can often be mitigated by choosing a more specific set of features. 
+
+We explain how to deal with the technical challenges such as limited memory in the tutorials. 
+More details on how to model complex systems with the techniques presented here are described by e.g. ~\cite{plattner_protein_2015,plattner_complete_2017}.
+
 \subsection{Advanced Methods}
 
 While the present tutorial is intended to cover Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
