@@ -292,16 +292,17 @@ For the full analysis, please refer to the first notebook (00).
 All notebooks as well as detailed installation instructions are available on \githubrepository{}.
 
 \subsection{Markov models of large systems}
-For modeling large systems, challenges arise that are mostly system dependent. 
-One of them is that finding a state space discretization using e.g. $k$-means becomes difficult in very high dimensional spaces. 
-It is thus important to choose a feature space and coordinate transform that yield a low dimensional representation of the slow processes.
-Hidden Markov models might further help to overcome poor discretization to a certain extend. 
+For modeling large systems, challenges may arise that are mostly system dependent. 
+For example, one of them is that finding a state space discretization using e.g.~ $k$-means becomes difficult in very high dimensional spaces. 
+It is thus important to choose a feature space and coordinate transformion that yield a low dimensional representation of the slow processes.
+Hidden Markov models might further help to overcome poor discretization to a certain extend \cite{noe-proj-hid-msm}. 
 
 In addition, the slowest process in a system as identified by a Markov model might not be the one a modeler is interested in. 
-For instance, there might be a side chain flip that only occured once in a data set but has no biological relevance. 
+For instance, there might be a side chain flip that only occurred once in a data set but has no biological relevance. 
 This problem can often be mitigated by choosing a more specific set of features. 
 
-We explain how to deal with the technical challenges such as limited memory in the tutorials. 
+Further, large systems come with technical challenges such as huge memory requirements.
+We explain how to deal with those in the tutorials. 
 More details on how to model complex systems with the techniques presented here are described by e.g. ~\cite{plattner_protein_2015,plattner_complete_2017}.
 
 \subsection{Advanced Methods}
