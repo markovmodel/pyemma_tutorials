@@ -87,14 +87,13 @@ Then, we address the software required to work through the lessons.
 
 Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high-dimensional MD simulation datasets.
 In its standard formulation, the creation of a Markov state model involves decomposing the phase or configuration space occupied by a system into a set of disjoint, discrete states that adhere to the Markov property.
-The Markov property asserts that the dynamics in the state space is ``memoryless'':~in other words, the probability of transitioning from any state $i$ to any other state $j$ is independent of the history of the system before it was in $i$.
-In order to obtain Markovian dynamics, a lag time must be chosen at which the transitions between states are analyzed.
+The Markov property asserts that the dynamics in the state space is ``memoryless'':~in other words, the probability of transitioning from any state $i$ to any other state $j$ after a time $\tau$ is independent of the history of the system before it was in $i$.
 %This lag time must be sufficiently short to resolve the dynamics of interest, but long enough such that the Markovian approximation is appropriate.
 
 In order to create a Markov state model for a dynamical system, each data point in the time series is assigned to a state.
 Given an appropriate lag time, every pairwise transition at that lag time is counted and stored in a count matrix.
 Then, the count matrix is converted to a row-stochastic transition probability matrix, which is defined for the specified lag time.
-To ensure that the transition probablity matrix has desirable mathematical properties, detailed balance is enforced when converting the count matrix to the transition probability matrix, which requires that,
+To ensure that the transition probability matrix has desirable mathematical properties, detailed balance is enforced when converting the count matrix to the transition probability matrix, which requires that,
 
 \begin{equation}
 \label{eq:balance}
@@ -104,9 +103,9 @@ p_t(i) p(i \rightarrow j) = p_t(j)p(j \rightarrow i),
 \noindent{}where $p_t(i)$ represents the probability of being in state $i$ at time $t$, and $p(i \rightarrow j)$ is the probability of transitioning from state $i$ to $j$ at the next time step.
 % Detailed balance requires that the probability of transitioning from state $i$ to state $j$, conditioned upon the system being in state $i$, is the same as the probability of transitioning from state $j$ to state $i$ conditioned upon the system being in state $j$.
 The requirement of detailed balance indicates that we assume our system is reversible.
-We additionally require that the system is ergodic.
+We additionally require that the system is ergodic, which means that every state is accessible from every other state.
 
-When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our reduced space, but short enough to resolve the dynamics in which we are interested.
+When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our state space, but short enough to resolve the dynamics in which we are interested.
 Plotting the implied timescales (ITS) as a function of $\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}.
 The ITS $t_i$ approximates the decorrelation time of the $i^\textrm{th}$ process and is computed from the eigenvalues $\lambda_i$ of the MSM transition matrix via,
 \begin{equation}
