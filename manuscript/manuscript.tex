@@ -236,7 +236,7 @@ In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an 
 	\item coarse-graining the MSM using a hidden Markov model approach (07).
 \end{itemize}
 
-For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide (Fig.~\ref{fig:io-to-ck}a), consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of $0.1$~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
+For the remainder of this manuscript we will walk through the first notebook (00). In notebook 00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide (Fig.~\ref{fig:io-to-tica}a), consisting of $25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of $0.1$~ns. We present the results obtained in the notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
 
 \subsection{Feature selection}
@@ -246,11 +246,19 @@ The figures that will be displayed in the following are created in the showcase 
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
 (c)~The sample density projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$ ns shows multiple density maxima and
-(d)~the time series of the first two ICs show rare transition events.
-(e)~The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for MSM estimation.
-(f) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of five metastable states accurately predicts the kinetic behavior on longer timescales.
-In~(e) and~(f), the shaded areas indicate $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
-\label{fig:io-to-ck}
+(d)~the time series of the first two ICs show rare transition events.}
+\label{fig:io-to-tica}
+\end{figure}
+
+\begin{figure}
+\includegraphics{figure_3}
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
+(a)~The convergence behavior of the first four implied timescales indicates that a lag time of $\tau=0.5$ ns is suitable for MSM estimation.
+(b) A Chapman-Kolmogorov test shows that an MSM estimated at lag time $\tau=0.5$ ns under the assumption of five metastable states accurately predicts the kinetic behavior on longer timescales.
+The solid lines in (a) refer to the maximum likelihood result while the dashed lines show the ensemble mean computed with a Bayesian sampling scheme.
+The black line indicates the timescale cutoff and, thus, all ITS withion the grey-shaded area are not necessarily resolved.
+In both panels, the (non-grey) shaded areas indicate $95\%$ confidence intervals computed with a Bayesian sampling procedure.}
+\label{fig:its-and-ck}
 \end{figure}
 
 In Markov state modeling our objective is to model the slow dynamics of a molecular process. In order to approximate the slow dynamics in a statistically efficient manner, a lower dimensional representation of our simulation data is necessary.
@@ -260,15 +268,15 @@ In particular, we can use a scalar score obtained using VAMP to directly compare
 
 Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
-To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at a lag time of $0.5$~ns and find that backbone torsions contain more kinetic variance than the backbone's heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-ck}b).
+To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at a lag time of $0.5$~ns and find that backbone torsions contain more kinetic variance than the backbone's heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-tica}b).
 
 We note that deep learning approaches for feature selection have recently been developed that may eventually replace the feature selection step~\cite{vampnet,tae,hernandez-vde}.
 
 \subsection{Dimensionality reduction}
 
 Subsequently, we perform TICA~\cite{tica,kinetic-maps} in order to reduce the dimension from the feature space, which typically contains many degrees of freedom, to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency. TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset. Here, performing TICA on the backbone torsions at lag time $0.5$ ns yields a four dimensional subspace using a $95\%$ kinetic variance cutoff (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
-The sample density projected onto the first two independent components (ICs) exhibits several maxima (Fig.~\ref{fig:io-to-ck}c).
-Discrete jumps between the maxima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-ck}d).
+The sample density projected onto the first two independent components (ICs) exhibits several maxima (Fig.~\ref{fig:io-to-tica}c).
+Discrete jumps between the maxima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
 We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
 
 \subsection{Discretization}
@@ -282,7 +290,7 @@ TICA yields a representation of our molecular simulation data with a reduced dim
 % t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
 % \end{equation}
 A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$; accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty. The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with $100$ samples.
-In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above $0.5$~ns (Fig.~\ref{fig:io-to-ck}e). Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
+In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above $0.5$~ns (Fig.~\ref{fig:its-and-ck}a). Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
 
 To test the validity of our MSM we perform a Chapman-Kolmogorov (CK) test.
 % The CK test compares the right and the left side of the Chapman-Kolmogorov equation
@@ -293,8 +301,9 @@ To test the validity of our MSM we perform a Chapman-Kolmogorov (CK) test.
 % where $T$ is the MSM transition matrix. The left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than 1, whereas the right-hand side of the equation is our estimated MSM to the $k^\textrm{th}$ power.
 Visualizing the full transition probability matrix $T$ is difficult; we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
 An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
-For this analysis, we chose 5 metastable states.
-The CK test confirms that this is an appropriate choice and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the long-timescale behavior of our system within error (Fig.~\ref{fig:io-to-ck}f).
+For this analysis, we chose five metastable states.
+The CK test (Fig.~\ref{fig:its-and-ck}b) shows a good agreement between reestimation at higher lagtimes (black/solid lines) and higher powers of the original transition matrix (blue/dashed lines).
+Thus, it confirms that five metastable states is an appropriate choice and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the long-timescale behavior of our system within error (blue/shaded area).
 
 \subsection{Analyzing the MSM}
 
