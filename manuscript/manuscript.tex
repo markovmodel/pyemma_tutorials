@@ -410,6 +410,21 @@ In this section, we have summarized how to conduct an MSM-based analysis of biom
 For the full analysis, please refer to the first notebook (00).
 All notebooks as well as detailed installation instructions are available on \githubrepository{}.
 
+\subsection{Modeling large systems}
+When estimating MSMs for large systems, challenges may arise that are mostly system dependent.
+
+A case in point is the curse of dimensionality:~it is difficult to discretize a high dimensional feature space. While it is somewhat computationally demanding, more importantly, Euclidean distances become less meaningful with increasing dimensionality~\cite{aggarwal_surprising_2001} and thus cluster assignments based on that norm may yield a poor discretization.
+Especially for large systems, it is thus particularly important to first find a suitable set of features, and to further apply dimensionality reduction techniques (e.g.~TICA, VAMP, if applicable) to obtain a low dimensional representation of the slow dynamics.
+Hidden Markov models (HMMs) might further mitigate poor discretization to a certain extent~\cite{noe-proj-hid-msm}.
+
+Furthermore, the slowest process in a system as identified by an MSM or HMM might not be the one a modeler is interested in~\cite{banushkina_nonparametric_2015}.
+For instance, the slowest process might correspond to a biologically irrelevant side chain flip that only occurred once in the data set.
+This problem may be mitigated by choosing a more specific set of features.
+
+Additional technical challenges for large systems include high demands on memory and computation time; we explain how to deal with those in the tutorials.
+
+More details on how to model complex systems with the techniques presented here are described e.g.~by~\cite{plattner_protein_2015,plattner_complete_2017}.
+
 \subsection{Advanced Methods}
 
 While the present tutorial is intended to cover Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
