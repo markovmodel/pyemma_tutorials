@@ -243,6 +243,23 @@ The figures that will be displayed in the following are created in the showcase 
 
 \subsection{Feature selection}
 
+In the workflow there are multiple hyper parameters to be chosen by the modeler. In our approach we try to optimize a 
+parameter at the current stage of the pipeline and continue to the next stage, once a good choice was found. This 
+requires the researcher to understand the consequences of non optimal deciscions for the final result. For instance
+a non converged clustering could result in lumping states together which should be seperated from each other.
+
+There also exists automatized approaches to optimize all hyper parameters of the pipeline using a cross-validation 
+scheme \cite{husic-optimized}. In these approaches the researcher is still required to understand modeling choices like 
+sane ranges for parameters to avoid wasting computational time, which is spent to explore meaningless areas of the 
+hyperparameter space.
+In the sequential approach, one can fall back to the previous step, if one finds a bad result at any following stage. 
+This greatly reduces the computational effort and leads to a better understanding of the final model.
+
+%However one will not be able to find a good model based on partially bad modeling choices. E.g. a hidden Markov state 
+%model could partially correct bad clusterings, but 
+
+\subsection{Feature selection}
+
 \begin{figure}
 \includegraphics{figure_2}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
