@@ -241,20 +241,13 @@ In notebook~00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide (Fig
 We present the results obtained in this notebook, thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
 
-In the workflow there are multiple hyper parameters to be chosen by the modeler. In our approach we try to optimize a 
-parameter at the current stage of the pipeline and continue to the next stage, once a good choice was found. This 
-requires the researcher to understand the consequences of non optimal deciscions for the final result. For instance
-a non converged clustering could result in lumping states together which should be seperated from each other.
+Note that the modeler has to select hyper-parameters at most stages throughout the workflow.
+This selection must be done carefully as poor choices make it hard, or even impossible, to build a good MSM.
 
-There also exists automatized approaches to optimize all hyper parameters of the pipeline using a cross-validation 
-scheme \cite{husic-optimized}. In these approaches the researcher is still required to understand modeling choices like 
-sane ranges for parameters to avoid wasting computational time, which is spent to explore meaningless areas of the 
-hyperparameter space.
-In the sequential approach, one can fall back to the previous step, if one finds a bad result at any following stage. 
-This greatly reduces the computational effort and leads to a better understanding of the final model.
-
-%However one will not be able to find a good model based on partially bad modeling choices. E.g. a hidden Markov state 
-%model could partially correct bad clusterings, but 
+While there exist automated schemes~\cite{husic-optimized} for cross-validated optimization in the full hyper-parameter 
+space, we chose to adopt a sequential approach where only the hyper-parameters of the current stage are optimized. This 
+approach is not only computationally cheaper but allows us to discuss the significance of the necessary modeling 
+choices.
 
 \subsection{Feature selection}
 
