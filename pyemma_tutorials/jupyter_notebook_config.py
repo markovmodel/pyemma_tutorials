@@ -214,9 +214,7 @@ c.Examples.reviewed_example_dir = pyemma_tutorials.notebook_location()
 c.Examples.unreviewed_example_dir = ''
 
 ## The directory to use for notebooks and kernels.
-import os
-run_dir = os.path.expanduser('~/pyemma_tutorials')
-os.makedirs(run_dir, exist_ok=True)
+run_dir = pyemma_tutorials.run_dir()
 c.NotebookApp.notebook_dir = run_dir
 
 ## Whether to open in a browser after starting. The specific browser used is
