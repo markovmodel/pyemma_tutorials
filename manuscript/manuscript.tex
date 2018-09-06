@@ -125,25 +125,41 @@ T(k \tau) = T^k(\tau),
 \noindent{}where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~1, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
 
-Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues,
+Once validated, the transition matrix can be decomposed into left-eigenvectors and eigenvalues,
 
 \begin{equation}
-\label{eq:transmat}
-T(\tau) \circ \phi_i = \lambda_i \phi_i,
+\label{eq:spectral_left}
+\phi_i  T(\tau) = \lambda_i \phi_i,
 \end{equation}
 
-\noindent{}where the eigenvalues are indexed in decreasing order. The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution of the system.
-The right eigenvector $\psi_1$ is a vector consisting of~$1$'s.
-The subsequent eigenvalues $\lambda_{i>1}$ are real with absolute values less than~$1$ and correspond to dynamical processes within the system.
-The right eigenvectors $\psi_i$ each represent a dynamical process (for $i>1$), and the coefficients of the eigenvectors represent the flux into and out of the MSM states that characterizes that process.
-The corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
-
-The timescale of a given dynamical process is a function of the relevant eigenvalue and the lag time at which the model was defined,
+\noindent{}or equivalently into their right eigenvectors and eigenvalues,
 
 \begin{equation}
-\label{eq:timescales}
-t_i \equiv -\frac{\tau}{\log(|\lambda_i|)}.
+\label{eq:spectral_right}
+T(\tau)\psi_i = \lambda_i \psi_i,
 \end{equation}
+	
+
+\noindent{}where the eigenvalue-eigenvector pairs are indexed in decreasing order. The eigenvalues are the same in both cases, however, the left and right eigenvectors are related to each other as
+
+\begin{equation}
+\phi_i = \pi \circ \psi_i,
+\label{eq:left-right-eigenvalue-relation}
+\end{equation}
+\noindent{}where $\pi$ is the \emph{stationary distribution} of the MSM, and $\circ$ corresponds to an element-wise vector product.
+
+The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution, $\pi$.
+From the relationship between the left and right eigevenctors (eq.~\ref{eq:left-right-eigenvalue-relation}) we see that the right eigenvector $\psi_1$ is a vector consisting of~$1$'s.
+
+The subsequent eigenvalues $\lambda_{i>1}$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} time-scales of dynamical processes within the system, through
+\begin{equation}
+	\label{eq:timescales}
+	t_i \equiv -\frac{\tau}{\log|\lambda_i|}.
+\end{equation}
+	
+The right eigenvectors $\psi_i$ each encode a dynamical process (for $i>1$), corresponding to the characteristic time-scale, $t_i$. The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterizes that process.
+Again, as can be seen from (eq.~\ref{eq:left-right-eigenvalue-relation}) the corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
+
 
 \subsection{MSM construction the variational approach}
 \label{sec:construction}
@@ -343,10 +359,9 @@ G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln \sum\limits_{j\in \mathcal{S}_
 \end{equation}
 where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
 
-In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM as they contain information about what configurational changes are happening and their timescales.
+In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM. We here consider the right eigenvectors as they are normalized by the stationary distribution of the MSM. This enables us to dissect dynamic changes with finite time-scales from the equilbrium distribution of states.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue~$1$.
-The second right eigenvector, however, corresponds to the slowest process 
-(the eigenvector components are real because of the detailed balance constraint enforced during MSM estimation).
+The second right eigenvector, on the other hand, corresponds to the slowest process. Note that the eigenvectors are real as detailed balance has been enforced during MSM estimation.
 The minimal and maximal components of the second right eigenvector indicate the microstates between which the process shifts probability density.
 The relaxation timescale of this exchange process is exactly the corresponding implied timescale, which can be computed from its corresponding eigenvalue using~\eqref{eq:its}.
 In the projection onto the first two TICA components, we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system, with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fig:msm-analysis}c).
