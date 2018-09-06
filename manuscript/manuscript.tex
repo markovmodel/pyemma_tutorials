@@ -268,7 +268,7 @@ The figures that will be displayed in the following are created in the showcase 
 \includegraphics{figure_3}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The convergence behavior of the implied timescales associated with the four slowest processes.
-(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 meta-stable states..
+(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 meta-stable states.
 The solid lines in (a) refer to the maximum likelihood result while the dashed lines show the ensemble mean computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.
 The black line indicates where implied timescales are equal to the lag time, whereas the grey area indicates all implied timescales faster than the lag time.
 In both panels, the (non-grey) shaded areas indicate~$95\%$ confidence intervals computed with the aforementioned Bayesian sampling procedure.}
@@ -282,7 +282,7 @@ In particular, we can use a scalar score obtained using VAMP to directly compare
 
 Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
-To choose among three different molecular features relevant to protein structure, we compute the (cross-validated) VAMP-2 score at a lag time of~$0.5$~ns.
+To choose among three different molecular features reflecting protein structure, we compute the (cross-validated) VAMP-2 score (Notebook 00). Although we cannot optimize lag times with a variational score, such as VAMP-2, it is important to ensure that properties that we optimize are robust as a function of lag time. Consequently, we compute the VAMP-2 score at several lag times (Notebook 00). We find that the relative rankings of the different molecular features are highly robust as a function of lag time. We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
 We find that backbone torsions contain more kinetic variance than the backbone heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-tica}b).
 This suggests that backbone torsions are the best of the options evaluated for MSM construction.
 
