@@ -20,8 +20,10 @@ def main():
 
     _nglview_pip_installed_workaround()
 
-    argv = ['--config=%s' % notebook_cfg, '--config=%s' % notebook_cfg_json]
-    print('arguments:', argv)
+    # extend passed arguments with our config files
+    import sys
+    argv = sys.argv[1:] + ['--config=%s' % notebook_cfg, '--config=%s' % notebook_cfg_json]
+    print('invoking notebook server with arguments:', argv)
     main_(argv=argv)
 
 
