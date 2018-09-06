@@ -152,7 +152,7 @@ The eigenvalues are the same in both cases, however, the left and right eigenvec
 The highest eigenvalue, $\lambda_1(\tau)$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution, $\pi$.
 From the relationship between the left and right eigenvectors (eq.~\ref{eq:left-right-eigenvalue-relation}) we see that the right eigenvector $\psi_1$ is a vector consisting of~$1$'s.
 
-The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} time-scales of dynamical processes within the system (eq.~\ref{eq:its}).
+The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} timescales of dynamical processes within the system (eq.~\ref{eq:its}).
 	
 The right eigenvectors $\psi_i$ each encode a dynamical process (for $i>1$), corresponding to the characteristic time-scale, $t_i$.
 The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterizes that process.
@@ -270,7 +270,7 @@ The figures that will be displayed in the following are created in the showcase 
 \includegraphics{figure_3}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The convergence behavior of the implied timescales associated with the four slowest processes.
-(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 meta-stable states.
+(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 metastable states.
 The solid lines in (a) refer to the maximum likelihood result while the dashed lines show the ensemble mean computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.
 The black line indicates where implied timescales are equal to the lag time, whereas the grey area indicates all implied timescales faster than the lag time.
 In both panels, the (non-grey) shaded areas indicate~$95\%$ confidence intervals computed with the aforementioned Bayesian sampling procedure.}
@@ -285,7 +285,7 @@ In particular, we can use a scalar score obtained using VAMP to directly compare
 Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
 To choose among three different molecular features reflecting protein structure, we compute the (cross-validated) VAMP-2 score (Notebook 00).
-Although we cannot optimize lag times with a variational score, such as VAMP-2, it is important to ensure that properties that we optimize are robust as a function of lag time. 
+Although we cannot MSM optimize lag times with a variational score\cite{husic2017note}, such as VAMP-2, it is important to ensure that properties that we optimize are robust as a function of lag time. 
 Consequently, we compute the VAMP-2 score at several lag times (Notebook 00). 
 We find that the relative rankings of the different molecular features are highly robust as a function of lag time. 
 We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
@@ -362,10 +362,10 @@ G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln \sum\limits_{j\in \mathcal{S}_
 where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
 
 In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM.
-We here consider the right eigenvectors as they are normalized by the stationary distribution of the MSM.
-This enables us to dissect dynamic changes with finite time-scales from the equilbrium distribution of states.
+We here chose the right eigenvectors as they are independent of the stationary distribution of the MSM.
+This enables us to specifically study what conformational changes are happening on a particular time scale independently of the equilbrium distribution.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue~$1$.
-The second right eigenvector, on the other hand, corresponds to the slowest process. 
+The second right eigenvector, on the other hand, corresponds to the slowest process in the system. 
 Note that the eigenvectors are real as detailed balance has been enforced during MSM estimation.
 The minimal and maximal components of the second right eigenvector indicate the microstates between which the process shifts probability density.
 The relaxation timescale of this exchange process is exactly the corresponding implied timescale, which can be computed from its corresponding eigenvalue using~\eqref{eq:its}.
@@ -447,17 +447,17 @@ More details on how to model complex systems with the techniques presented here 
 
 \subsection{Advanced Methods}
 
-The present tutorial presents the basics of modern Markov state modelling with PyEMMA. 
-However, recent years have seen many extensions of the methodology -- many of which are available within PyEMMA. 
-We encourage interested readers to look into these methods in the software documentation and to check out the Jupyter notebooks distributed with PyEMMA.
+The present tutorial presents the basics of modern Markov state modeling with PyEMMA. 
+However, recent years have seen many extensions of the methodology --- many of which are available within PyEMMA. 
+We encourage interested readers to look into these methods in the software documentation and to make use of the specific Jupyter notebooks distributed with PyEMMA.
 
-Conventional Markov state modelling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. 
+Conventional Markov state modeling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. 
 In one extension, Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram}, we can integrate unbiased and biased simulations in a systematic manner to speed up the convergence. 
 MEMMs consequently enable users to combine enhanced sampling methods such as umbrella sampling or replica exchange with conventional molecular dynamics simulations to more efficiently study rare event kinetics~\cite{trammbar}. 
 MEMMs are implemented in PyEMMA.
 
-Another issue often faced during Markov state modelling is a lack of quantitative agreement with complementary experimental data. 
-This issue is not intrinsic to the Markov state modelling approach as such, but rather associated with systematic errors in the force field model used to conduct the simulation. 
+Another issue often faced during Markov state modeling is a lack of quantitative agreement with complementary experimental data. 
+This issue is not intrinsic to the Markov state modeling approach as such, but rather associated with systematic errors in the force field model used to conduct the simulation. 
 Nevertheless, using Augmented Markov models (AMM) it is possible to build an integrative MSM which balances experimental and simulation data, taking into account their respective uncertainties~\cite{simon-amm}. 
 AMMs are implemented in PyEMMA.  
 
