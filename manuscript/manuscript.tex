@@ -129,14 +129,14 @@ Once validated, the transition matrix can be decomposed into left-eigenvectors a
 
 \begin{equation}
 \label{eq:spectral_left}
-\phi_i^\top  T(\tau) = \lambda_i \phi_i^\top,
+\phi_i^\top  T(\tau) = \lambda_i(\tau) \phi_i^\top,
 \end{equation}
 
 \noindent{}or equivalently into their right eigenvectors and eigenvalues,
 
 \begin{equation}
 \label{eq:spectral_right}
-T(\tau)\psi_i = \lambda_i \psi_i,
+T(\tau)\psi_i = \lambda_i(\tau) \psi_i,
 \end{equation}
 	
 
@@ -148,14 +148,10 @@ T(\tau)\psi_i = \lambda_i \psi_i,
 \end{equation}
 \noindent{}where $\pi$ is the \emph{stationary distribution} of the MSM, and $\circ$ corresponds to an element-wise vector product.
 
-The highest eigenvalue, $\lambda_1$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution, $\pi$.
-From the relationship between the left and right eigevenctors (eq.~\ref{eq:left-right-eigenvalue-relation}) we see that the right eigenvector $\psi_1$ is a vector consisting of~$1$'s.
+The highest eigenvalue, $\lambda_1(\tau)$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution, $\pi$.
+From the relationship between the left and right eigenvectors (eq.~\ref{eq:left-right-eigenvalue-relation}) we see that the right eigenvector $\psi_1$ is a vector consisting of~$1$'s.
 
-The subsequent eigenvalues $\lambda_{i>1}$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} time-scales of dynamical processes within the system, through
-\begin{equation}
-	\label{eq:timescales}
-	t_i \equiv -\frac{\tau}{\log|\lambda_i|}.
-\end{equation}
+The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} time-scales of dynamical processes within the system~\ref{eq:its}.
 	
 The right eigenvectors $\psi_i$ each encode a dynamical process (for $i>1$), corresponding to the characteristic time-scale, $t_i$. The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterizes that process.
 Again, as can be seen from (eq.~\ref{eq:left-right-eigenvalue-relation}) the corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
