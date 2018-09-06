@@ -125,7 +125,7 @@ T(k \tau) = T^k(\tau),
 \noindent{}where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~1, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
 
-Once validated, the transition matrix can be decomposed into left-eigenvectors and eigenvalues,
+Once validated, the transition matrix can be decomposed into left eigenvectors and eigenvalues,
 
 \begin{equation}
 \label{eq:spectral_left}
@@ -140,7 +140,8 @@ T(\tau)\psi_i = \lambda_i(\tau) \psi_i,
 \end{equation}
 	
 
-\noindent{}where the eigenvalue-eigenvector pairs are indexed in decreasing order. The eigenvalues are the same in both cases, however, the left and right eigenvectors are related to each other as
+\noindent{}where the eigenvalue-eigenvector pairs are indexed in decreasing order. 
+The eigenvalues are the same in both cases, however, the left and right eigenvectors are related to each other as
 
 \begin{equation}
 \phi_i = \pi \circ \psi_i,
@@ -151,9 +152,10 @@ T(\tau)\psi_i = \lambda_i(\tau) \psi_i,
 The highest eigenvalue, $\lambda_1(\tau)$, is unique and is equal to $1$, and its corresponding left eigenvector $\phi_1$ corresponds to the stationary distribution, $\pi$.
 From the relationship between the left and right eigenvectors (eq.~\ref{eq:left-right-eigenvalue-relation}) we see that the right eigenvector $\psi_1$ is a vector consisting of~$1$'s.
 
-The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} time-scales of dynamical processes within the system~\ref{eq:its}.
+The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} time-scales of dynamical processes within the system (eq.~\ref{eq:its}).
 	
-The right eigenvectors $\psi_i$ each encode a dynamical process (for $i>1$), corresponding to the characteristic time-scale, $t_i$. The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterizes that process.
+The right eigenvectors $\psi_i$ each encode a dynamical process (for $i>1$), corresponding to the characteristic time-scale, $t_i$.
+The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterizes that process.
 Again, as can be seen from (eq.~\ref{eq:left-right-eigenvalue-relation}) the corresponding left eigenvectors $\phi_i$ contain the same information weighted by the stationary distribution.
 
 
@@ -282,7 +284,11 @@ In particular, we can use a scalar score obtained using VAMP to directly compare
 
 Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
-To choose among three different molecular features reflecting protein structure, we compute the (cross-validated) VAMP-2 score (Notebook 00). Although we cannot optimize lag times with a variational score, such as VAMP-2, it is important to ensure that properties that we optimize are robust as a function of lag time. Consequently, we compute the VAMP-2 score at several lag times (Notebook 00). We find that the relative rankings of the different molecular features are highly robust as a function of lag time. We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
+To choose among three different molecular features reflecting protein structure, we compute the (cross-validated) VAMP-2 score (Notebook 00).
+Although we cannot optimize lag times with a variational score, such as VAMP-2, it is important to ensure that properties that we optimize are robust as a function of lag time. 
+Consequently, we compute the VAMP-2 score at several lag times (Notebook 00). 
+We find that the relative rankings of the different molecular features are highly robust as a function of lag time. 
+We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
 We find that backbone torsions contain more kinetic variance than the backbone heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-tica}b).
 This suggests that backbone torsions are the best of the options evaluated for MSM construction.
 
@@ -355,9 +361,12 @@ G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln \sum\limits_{j\in \mathcal{S}_
 \end{equation}
 where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
 
-In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM. We here consider the right eigenvectors as they are normalized by the stationary distribution of the MSM. This enables us to dissect dynamic changes with finite time-scales from the equilbrium distribution of states.
+In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors of the MSM.
+We here consider the right eigenvectors as they are normalized by the stationary distribution of the MSM.
+This enables us to dissect dynamic changes with finite time-scales from the equilbrium distribution of states.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue~$1$.
-The second right eigenvector, on the other hand, corresponds to the slowest process. Note that the eigenvectors are real as detailed balance has been enforced during MSM estimation.
+The second right eigenvector, on the other hand, corresponds to the slowest process. 
+Note that the eigenvectors are real as detailed balance has been enforced during MSM estimation.
 The minimal and maximal components of the second right eigenvector indicate the microstates between which the process shifts probability density.
 The relaxation timescale of this exchange process is exactly the corresponding implied timescale, which can be computed from its corresponding eigenvalue using~\eqref{eq:its}.
 In the projection onto the first two TICA components, we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system, with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fig:msm-analysis}c).
@@ -438,11 +447,19 @@ More details on how to model complex systems with the techniques presented here 
 
 \subsection{Advanced Methods}
 
-The present tutorial presents the basics of modern Markov state modelling with PyEMMA. However, recent years have seen many extensions of the methodology -- many of which are available within PyEMMA. We encourage interested readers to look into these methods in the software documentation and to check out the Jupyter notebooks distributed with PyEMMA.
+The present tutorial presents the basics of modern Markov state modelling with PyEMMA. 
+However, recent years have seen many extensions of the methodology -- many of which are available within PyEMMA. 
+We encourage interested readers to look into these methods in the software documentation and to check out the Jupyter notebooks distributed with PyEMMA.
 
-Conventional Markov state modelling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. In one extension, Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram}, we can integrate unbiased and biased simulations in a systematic manner to speed up the convergence. MEMMs consequently enable users to combine enhanced sampling methods such as umbrella sampling or replica exchange with conventional molecular dynamics simulations to more efficiently study rare event kinetics~\cite{trammbar}. MEMMs are implemented in PyEMMA.
+Conventional Markov state modelling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. 
+In one extension, Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram}, we can integrate unbiased and biased simulations in a systematic manner to speed up the convergence. 
+MEMMs consequently enable users to combine enhanced sampling methods such as umbrella sampling or replica exchange with conventional molecular dynamics simulations to more efficiently study rare event kinetics~\cite{trammbar}. 
+MEMMs are implemented in PyEMMA.
 
-Another issue often faced during Markov state modelling is a lack of quantitative agreement with complementary experimental data. This issue is not intrinsic to the Markov state modelling approach as such, but rather associated with systematic errors in the force field model used to conduct the simulation. Nevertheless, using Augmented Markov models (AMM) it is possible to build an integrative MSM which balances experimental and simulation data, taking into account their respective uncertainties~\cite{simon-amm}. AMMs are implemented in PyEMMA.  
+Another issue often faced during Markov state modelling is a lack of quantitative agreement with complementary experimental data. 
+This issue is not intrinsic to the Markov state modelling approach as such, but rather associated with systematic errors in the force field model used to conduct the simulation. 
+Nevertheless, using Augmented Markov models (AMM) it is possible to build an integrative MSM which balances experimental and simulation data, taking into account their respective uncertainties~\cite{simon-amm}. 
+AMMs are implemented in PyEMMA.  
 
 Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
 Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right.
