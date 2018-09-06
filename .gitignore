@@ -102,3 +102,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+#OSX stuff
+*.DS_Store
+manuscript/manuscript.suppinfo
+manuscript/manuscript.pdf

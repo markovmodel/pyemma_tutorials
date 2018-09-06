@@ -427,8 +427,12 @@ More details on how to model complex systems with the techniques presented here 
 
 \subsection{Advanced Methods}
 
-While the present tutorial is intended to cover Markov State Modeling 101, we encourage the user to explore other, more recent extensions of the methodology.
-Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram} can be used to combine unbiased and biased simulations so as to probe kinetics of very rare events~\cite{trammbar}; MEMMs are implemented in PyEMMA.
+The present tutorial presents the basics of modern Markov state modelling with PyEMMA. However, recent years have seen many extensions of the methodology -- many of which are available within PyEMMA. We encourage interested readers to look into these methods in the software documentation and to check out the Jupyter notebooks distributed with PyEMMA.
+
+Conventional Markov state modelling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. In one extension, Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram}, we can integrate unbiased and biased simulations in a systematic manner to speed up the convergence. MEMMs consequently enable users to combine enhanced sampling methods such as umbrella sampling or replica exchange with conventional molecular dynamics simulations to more efficiently study rare event kinetics~\cite{trammbar}. MEMMs are implemented in PyEMMA.
+
+Another issue often faced during Markov state modelling is a lack of quantitative agreement with complementary experimental data. This issue is not intrinsic to the Markov state modelling approach as such, but rather associated with systematic errors in the force field model used to conduct the simulation. Nevertheless, using Augmented Markov models (AMM) it is possible to build an integrative MSM which balances experimental and simulation data, taking into account their respective uncertainties~\cite{simon-amm}. AMMs are implemented in PyEMMA.  
+
 Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing, reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
 Other deep learning methods for performing the dimension reduction~\cite{tae}, finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave}, and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right.
 Implementations of some of these methods are available or are under development in the deeptime package \url{github.com/markovmodel/deeptime}. 
