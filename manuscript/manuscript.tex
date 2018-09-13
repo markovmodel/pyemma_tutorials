@@ -24,7 +24,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\versionnumber}{0.3}
+\newcommand{\versionnumber}{1.0}
 \newcommand{\githubrepository}{\url{github.com/markovmodel/pyemma_tutorials}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -133,9 +133,9 @@ Then, the count matrix is converted to a row-stochastic transition probability m
 For MD simulations in equilibrium, $P$ should obey detailed balance which is enforced by constraining the estimation of $P$ to the following equations:
 \begin{equation}
 \label{eq:balance}
-\pi_i P_{ij} = \pi_j P_{ji},
+\pi_i p_{ij} = \pi_j p_{ji},
 \end{equation}
-where $\pi_i$ is the stationary probability of state $i$ and $P_{ij}$ is the probability of transitioning to state $j$ conditional on being in state $i$.
+where $\pi_i$ is the stationary probability of state $i$ and $p_{ij}$ is the probability of transitioning to state $j$ conditional on being in state $i$.
 The constraints (\ref{eq:balance}) are omitted if MD simulations are not conducted in equilibrium, e.g.,
 for systems experiencing a pulling force or an external potential---see~\cite{Koltai2018} for a recent review on nonequilibrium MSMs.
 For the remainder of this section we will simplify the matter by assuming the more common scenario of MD simulations without external forces and (\ref{eq:balance}) to hold.
@@ -152,9 +152,9 @@ When the ITS become approximately constant with the lag time, we say that our ti
 Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{noe-folding-pathways}.
 The CK property for a Markovian matrix is,
 \begin{equation}
-T(k \tau) = T^k(\tau),
+P(k \tau) = P^k(\tau),
 \end{equation}
-where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~1, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
+where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~$1$, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
 
 Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues.
@@ -271,16 +271,16 @@ The figures that will be displayed in the following are created in the showcase 
 Note that the modeler has to select hyper-parameters at most stages throughout the workflow.
 This selection must be done carefully as poor choices make it hard, or even impossible, to build a good MSM.
 
-While there exist automated schemes~\cite{husic-optimized} for cross-validated optimization in the full hyper-parameter 
-space, we chose to adopt a sequential approach where only the hyper-parameters of the current stage are optimized. This 
-approach is not only computationally cheaper but allows us to discuss the significance of the necessary modeling 
-choices.
+While there exist automated schemes~\cite{husic-optimized} for cross-validated optimization in the full hyper-parameter space,
+we chose to adopt a sequential approach where only the hyper-parameters of the current stage are optimized.
+This approach is not only computationally cheaper but allows us to discuss the significance of the necessary modeling choices.
 
 \subsection{Feature selection}
 
 \begin{figure}
 \includegraphics{figure_2}
-\caption{Example analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
+(a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
 (c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple minima and
 (d)~the time series of the first two ICs of the first trajectory show rare jumps.}
@@ -500,7 +500,7 @@ This problem may be mitigated by choosing a more specific set of features.
 Additional technical challenges for large systems include high demands on memory and computation time;
 we explain how to deal with those in the tutorials.
 
-More details on how to model complex systems with the techniques presented here are described e.g.~by~\cite{plattner_protein_2015,plattner_complete_2017}.
+More details on how to model complex systems with the techniques presented here are described, e.g., by~\cite{plattner_protein_2015,plattner_complete_2017}.
 
 \subsection{Advanced Methods}
 
