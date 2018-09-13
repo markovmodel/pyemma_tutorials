@@ -282,8 +282,8 @@ choices.
 \includegraphics{figure_2}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone: (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
-(c)~The sample density projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple density maxima and
-(d)~the time series of the first two ICs of the first trajectory.}
+(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple minima and
+(d)~the time series of the first two ICs of the first trajectory show rare jumps.}
 \label{fig:io-to-tica}
 \end{figure}
 
@@ -299,7 +299,7 @@ In both panels, the (non-grey) shaded areas indicate~$95\%$ confidence intervals
 \label{fig:its-and-ck}
 \end{figure}
 
-In Markov state modeling our objective is to model the slow dynamics of a molecular process.
+In Markov state modeling, our objective is to model the slow dynamics of a molecular process.
 In order to approximate the slow dynamics in a statistically efficient manner,
 a lower dimensional representation of our simulation data is necessary.
 However, the features (e.g. torsion angles, distances or contacts) which best represent the slow dynamical modes of a given molecular system are unknown a priori~\cite{NoeClementiReview}.
@@ -330,8 +330,8 @@ to a lower dimensional space that can be discretized with higher resolution and 
 TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset.
 Here, performing TICA on the backbone torsions at lag time~$0.5$~ns yields a four dimensional subspace using a~$95\%$ kinetic variance cutoff
 (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
-The sample density projected onto the first two independent components (ICs) exhibits several maxima (Fig.~\ref{fig:io-to-tica}c).
-Discrete jumps between the maxima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
+The sample free energy projected onto the first two independent components (ICs) exhibits several minima (Fig.~\ref{fig:io-to-tica}c).
+Discrete jumps between the minima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
 We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
 
 \subsection{Discretization}
