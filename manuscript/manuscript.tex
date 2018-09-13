@@ -112,7 +112,7 @@ Then, we address the software required to work through the lessons.
 
 Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high-dimensional MD simulation datasets.
 In its standard formulation, the creation of a Markov state model involves decomposing the phase or configuration space occupied by a system into a set of disjoint, discrete states,
-and a transition matrix $P(\tau) = [p_{ij}(\tau)]$ denoting the conditional probability of finding the system in state $j$ at time $t+\tau$ given that it was in state $i$ at time $t$.
+and a transition matrix $\mathbf{P}(\tau) = [p_{ij}(\tau)]$ denoting the conditional probability of finding the system in state $j$ at time $t+\tau$ given that it was in state $i$ at time $t$.
 Let us make two remarks to avoid common misconceptions:
 \begin{enumerate}
 \item Equilibrium:
@@ -129,8 +129,8 @@ which is true for cooperative systems such as most proteins, but not for highly 
 
 In order to create a Markov state model for a dynamical system, each data point in the time series is assigned to a state.
 Given an appropriate lag time, every pairwise transition at that lag time is counted and stored in a count matrix.
-Then, the count matrix is converted to a row-stochastic transition probability matrix $P$, which is defined for the specified lag time.
-For MD simulations in equilibrium, $P$ should obey detailed balance which is enforced by constraining the estimation of $P$ to the following equations:
+Then, the count matrix is converted to a row-stochastic transition probability matrix $\mathbf{P}$, which is defined for the specified lag time.
+For MD simulations in equilibrium, $\mathbf{P}$ should obey detailed balance which is enforced by constraining the estimation of $\mathbf{P}$ to the following equations:
 \begin{equation}
 \label{eq:balance}
 \pi_i p_{ij} = \pi_j p_{ji},
@@ -149,10 +149,10 @@ t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
 \end{equation}
 When the ITS become approximately constant with the lag time, we say that our timescales have converged and choose the smallest lag time with the converged timescales in order to maximize the model's temporal resolution.
 
-Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $T(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{noe-folding-pathways}.
+Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $\mathbf{P}(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{noe-folding-pathways}.
 The CK property for a Markovian matrix is,
 \begin{equation}
-P(k \tau) = P^k(\tau),
+\mathbf{P}(k \tau) = \mathbf{P}^k(\tau),
 \end{equation}
 where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~$1$, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model.
@@ -161,13 +161,13 @@ Once validated, the transition matrix can be decomposed into eigenvectors and ei
 The highest eigenvalue, $\lambda_1(\tau)$, is unique and equal to $1$.
 Its corresponding left eigenvector is the stationary distribution, $\bm{\pi}$:
 \begin{equation}
-\bm{\pi}^\top  P(\tau) = \bm{\pi}^\top.
+\bm{\pi}^\top  \mathbf{P}(\tau) = \bm{\pi}^\top.
 \end{equation}
 
 The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} timescales of dynamical processes within the system (eq.~\ref{eq:its}).
 The dynamical process themself (for $i>1$) are encoded by the right eigenvectors $\bm{\psi}_i$,
 \begin{equation}
-P(\tau)\bm{\psi}_i = \lambda_i(\tau) \bm{\psi}_i,
+\mathbf{P}(\tau)\bm{\psi}_i = \lambda_i(\tau) \bm{\psi}_i,
 \end{equation}
 where the eigenvalue-eigenvector pairs are indexed in decreasing order.
 The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterize the corresponding process.
@@ -196,6 +196,31 @@ The VAMP can thus be used to perform model selection.
 Specifically, we use the VAMP-2 score, which captures the kinetic variance explained by the model.
 However, the MSM lag time cannot be optimized using VAMP,
 and must be chosen using a separate validation as described above~\cite{husic2017note}.
+
+Our recommended method for dimensionality reduction, TICA, is a particular implementation of the VAC.
+To apply TICA, we need to compute instantaneous ($\mathbf{C}(0)$) and time-lagged ($\mathbf{C}(\tau)$) covariance matrices with elements
+\begin{eqnarray}
+c_{ij}(0) & = & \left\langle \tilde{x}_i(t) \; \tilde{x}_j(t) \right\rangle_t \\
+c_{ij}(\tau) & = & \left\langle \tilde{x}_i(t) \; \tilde{x}_j(t + \tau) \right\rangle_t,
+\end{eqnarray}
+where $\tilde{x}_i(t)$ denotes the $i^\textrm{th}$ feature at time $t$ after the mean has been removed.
+Then, we can solve the generalized eigenvalue problem
+\begin{equation}
+\mathbf{C}(\tau) \, \mathbf{u}_i = \mathbf{C}(0) \, \lambda_i(\tau) \, \mathbf{u}_i
+\end{equation}
+to obtain independent component directions $\mathbf{u}_i$ which approximate the reaction coordinates of the system,
+where the pairs of eigenvalues and independent components are in descending order.
+
+Dimensionality reduction is achieved by projecting the (mean free) features $\tilde{\mathbf{x}}(t)$
+onto the leading $d$ independent components $\mathbf{U}=[\mathbf{u}_1 \dots \mathbf{u}_d]$,
+\begin{equation}
+\mathbf{y}(t) = \mathbf{U}_d^\top \tilde{\mathbf{x}}(t),
+\end{equation}
+while retaining the kinetic variance
+\begin{equation}
+\textrm{KV}_d = \sum\limits_{i=1}^d \lambda_i^2(\tau);
+\end{equation}
+the total kinetic variance is the sum of the squares of all eigenvalues.
 
 \subsection{Software and installation}
 
