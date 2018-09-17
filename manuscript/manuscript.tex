@@ -84,15 +84,15 @@ The package is written in Python (\url{http://python.org}), relies heavily on Nu
 
 \subsection{Scope}
 
-In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances. (see [7] for a review).
+In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances. (see~\cite{dror2012biomolecular} for a review).
 
 We further assume that the reader is familiar with the basic ideas and theory underlying Markov modeling and will only give a brief reminder of the basic concepts in Section 2.
 
 For those seeking further resources, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview,
 while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail.
-Additionally, two textbooks exist that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
+Additionally, two textbooks have been published that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
-In addition to publications on theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
+In addition to publications on the theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
 we also recommend the literature on TICA~\cite{tica,tica3,tica2,kinetic-maps},
 transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
 hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial},
@@ -111,14 +111,14 @@ Then, we address the software required to work through the lessons.
 \label{sec:theory}
 
 Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high-dimensional MD simulation datasets.
-In its standard formulation, the creation of a Markov state model involves decomposing the phase or configuration space occupied by a system into a set of disjoint, discrete states,
+In its standard formulation, the creation of an MSM involves decomposing the phase or configuration space occupied by a dynamical system into a set of disjoint, discrete states,
 and a transition matrix $\mathbf{P}(\tau) = [p_{ij}(\tau)]$ denoting the conditional probability of finding the system in state $j$ at time $t+\tau$ given that it was in state $i$ at time $t$.
 Let us make two remarks to avoid common misconceptions:
 \begin{enumerate}
 \item Equilibrium:
 While most analysis techniques require simulation trajectories to be long enough to sample from the equilibrium distribution, this is not required for MSMs.
 Because MSMs are using the \emph{conditional} probability $p_{ij}(\tau)$,
-they are useful to analyze short simulation trajectories with arbitrary starting points---see~\cite{oom-feliks} for restrictions.
+they are useful for the analysis of short simulation trajectories with arbitrary starting points---see~\cite{oom-feliks} for restrictions.
 \item Markovianity:
 An MSM is a memoryless model.
 Early MSM papers have argued that accurate MSMs can be found if a few states with high barriers are captured by the MSM states so as to achieve a Mori-Zwanzig projection with fast-decaying memory~\cite{swope-its,noe2007jcp,chodera2007jcp}.
@@ -425,8 +425,8 @@ G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln \sum\limits_{j\in \mathcal{S}_
 where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
 
 In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors,
-as they are independent of the stationary distribution.
-This enables us to specifically study what conformational changes are happening on a particular time scale independently of the equilbrium distribution.
+as they are independent of the stationary distribution (see Section~\ref{sec:theory)}.
+This enables us to specifically study what conformational changes are happening on a particular timescale independently of the equilbrium distribution.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue~$1$.
 The second right eigenvector, on the other hand, corresponds to the slowest process in the system. 
 Note that the eigenvectors are real as detailed balance has been enforced during MSM estimation.
@@ -487,7 +487,7 @@ since this terminal tryptophan is a realistic experimental observable for our pe
 In order to compute the fluorescence correlation functions we require a microscopic,
 instantaneous value of the tryptophan fluorescence for each of the original~$75$ MSM microstates.
 To approximate the fluorescence signal in our pentapeptide system,
-we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA) of Trp-1.
+we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA)~\cite{sasa-calculation} of Trp-1.
 Now that we have an approximation of the fluorescence in each of our MSM states,
 we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-exp-obs}a).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
@@ -542,7 +542,7 @@ MEMMs are implemented in PyEMMA.
 
 Another issue often faced during Markov state modeling is a lack of quantitative agreement with complementary experimental data. 
 This issue is not intrinsic to the Markov state modeling approach as such,
-but rather associated with systematic errors in the force field model used to conduct the simulation. 
+but rather is associated with systematic errors in the force field model used to conduct the simulation. 
 Nevertheless, using Augmented Markov models (AMM) it is possible to build an integrative MSM which balances experimental and simulation data,
 taking into account their respective uncertainties~\cite{simon-amm}. 
 AMMs are implemented in PyEMMA.  
@@ -551,7 +551,7 @@ Recently, there have been steps towards replacing the traditional user-directed 
 reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
 Other deep learning methods for performing the dimension reduction~\cite{tae},
 finding reaction coordinates for enhanced sampling~\cite{hernandez-vde,Sultan2018-vde-enhanced-sampling,Ribeiro2018-rave},
-and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research on its own right.
+and generative MSMs~\cite{deep-gen-msm-preprint} have been put forward and are likely to spawn an active field of research in its own right.
 Implementations of some of these methods are available or are under development in the deeptime package \url{github.com/markovmodel/deeptime}. 
 
 \section{Author Contributions}
