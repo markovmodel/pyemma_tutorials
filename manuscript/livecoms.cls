@@ -45,6 +45,10 @@
 \newif\if@lessons
 \DeclareOption{lessons}{\@lessonstrue}
 
+%Publication Information
+\newif\if@pubversion
+\DeclareOption{pubversion}{\@pubversiontrue}
+
 %% Linespacing.
 \newif\if@onehalfspacing
 \newif\if@doublespacing
@@ -226,8 +230,49 @@
 }
 \fi
 
+% Publication information in document footer
+% *ONLY INCLUDED IF "pubversion" CLASS OPTION IS INVOKED*
+\def\@publishedDOI{}
+\def\@publishedvolume{}
+\def\@publishedyear{}
+\def\@publishedarticlenum{}
+\def\@publisheddatereceived{}
+\def\@publisheddateaccepted{}
+\def \DOIprefix{10.XXXX} %May be able to use this later
+\newcommand{\pubDOI}[1]{%
+  \appto{\@publishedDOI}{#1}{}{}
+}
+\newcommand{\pubvolume}[1]{%
+  \appto{\@publishedvolume}{#1}{}{}
+}
+\newcommand{\pubyear}[1]{%
+  \appto{\@publishedyear}{#1}{}{}
+}
+\newcommand{\articlenum}[1]{%
+  \appto{\@publishedarticlenum}{#1}{}{}
+}
+\newcommand{\datereceived}[1]{%
+  \appto{\@publisheddatereceived}{#1}{}{}
+}
+\newcommand{\dateaccepted}[1]{%
+  \appto{\@publisheddateaccepted}{#1}{}{}
+}
+
 % Footers
-\rfoot{\small\color{LiveCoMSMediumGrey}\thepage\space of\space\pageref{LastPage}}%
+\if@pubversion
+\lfoot{\ifthenelse{\value{page}=1}
+  {\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\ Accepted: \@publisheddateaccepted}
+  {~\\~}
+}%
+%\lfoot{\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\
+%  Accepted: \@publisheddateaccepted}%
+\cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%
+\rfoot{\small\color{LiveCoMSMediumGrey}DOI: \href{https://dx.doi.org/\@publishedDOI}{\@publishedDOI}\\
+  {\it Living J. Comp. Mol. Sci.} \@publishedyear, \@publishedvolume, \@publishedarticlenum }%
+\else
+\cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%
+%\rfoot{\small\color{LiveCoMSMediumGrey}Page \thepage\space of\space\pageref{LastPage}}%
+\fi
 \preto{\footrule}{\color{LiveCoMSMediumGrey}}
 \renewcommand{\headrulewidth}{0pt}% % No header rule
 \renewcommand{\footrulewidth}{0.4pt}% % No footer rule
