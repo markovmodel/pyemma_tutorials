@@ -66,6 +66,8 @@
 %%% ARTICLE START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\hyphenation{val-i-dat-ed}
+
 \begin{document}
 
 \begin{frontmatter}
@@ -232,10 +234,10 @@ it might be hard or even impossible to meet this requirement (as we will see in 
 
 An alternative, which is much less sensitive to poor discretization,
 is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,bhmm-preprint}.
-HMMs require the dynamics in some hidden (unobserved) state space to be Markovian.
+HMMs require the dynamics in some hidden (i.e., unobserved) state space to be Markovian.
 
 To estimate an HMM, we need a spectral gap after the $m^\textrm{th}$ eigenvalue;
-in practice, a timescale separation $t_m \geq 2t_{m+1}$ is sufficient~\cite{pyemma}.
+in practice, a timescale separation of $t_m \geq 2t_{m+1}$ is sufficient~\cite{pyemma}.
 Then, we can approximate the dynamics in the observed microstates ($\mathbf{P}$) at any lag time $k\tau$ via
 \begin{equation}
 \mathbf{P}(k\tau) \approx \bm{\Pi}^{-1} \bm{\chi}^\top \tilde{\bm{\Pi}} \tilde{\mathbf{P}}^k(\tau) \, \bm{\chi}.
@@ -246,21 +248,13 @@ $\tilde{\mathbf{P}}(\tau)$ is a (small) transition matrix between the $m$ hidden
 and $\bm{\chi}$ is an $m\times n$-dimensional row-stochastic matrix
 where each row encodes the probabilities of the $n$ microstates to appear in the corresponding hidden state~\cite{noe-proj-hid-msm}.
 
-An HMM estimation usually yields a small model where each hidden state is considered to be metastable and,
-thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully.
+An HMM estimation usually yields a model with a small number of (hidden) states
+where each state is considered to be metastable and,
+thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see Notebook~07).
 Given that an HMM is a generalization of an MSM,
 we can compute all physico-chemically relevant quantities available for MSMs, too.
 
 \subsection{Software and installation}
-
-\begin{figure}
-\includegraphics[width=0.48\textwidth]{figure_1}
-\caption{The PyEMMA workflow: MD trajectories are processed and discretized (first row).
-A Markov state model is estimated from the resulting discrete trajectories and validated (middle row).
-By iterating between data processing and MSM estimation/validation,
-a dynamical model is obtained that can be analyzed (last row).}
-\label{fig:workflowchart}
-\end{figure}
 
 We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules.
 The user can install all necessary packages in one step using the \texttt{conda} command provided by the Anaconda Python stack (\url{https://anaconda.com}).
@@ -292,6 +286,15 @@ The tutorial software is currently supported for Python versions~$3.5$ and~$3.6$
 Should the user prefer not to use Anaconda, a manual installation via the pip installer is possible.
 Alternatively, one can use the Binder service (\url{https://mybinder.org}) to view and run the tutorials online in any browser.
 
+\begin{figure}
+\includegraphics[width=0.48\textwidth]{figure_1}
+\caption{The PyEMMA workflow: MD trajectories are processed and discretized (first row).
+A Markov state model is estimated from the resulting discrete trajectories and validated (middle row).
+By iterating between data processing and MSM estimation/validation,
+a dynamical model is obtained that can be analyzed (last row).}
+\label{fig:workflowchart}
+\end{figure}
+
 \section{PyEMMA tutorials}
 
 This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA.
@@ -322,13 +325,6 @@ We present the results obtained in this notebook,
 thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
 
-Note that the modeler has to select hyper-parameters at most stages throughout the workflow.
-This selection must be done carefully as poor choices make it hard, or even impossible, to build a good MSM.
-
-While there exist automated schemes~\cite{husic-optimized} for cross-val\-\-i\-dat\-ed optimization in the full hyper-parameter space,
-we chose to adopt a sequential approach where only the hyper-pa\-ra\-me\-ters of the current stage are optimized.
-This approach is not only computationally cheaper but allows us to discuss the significance of the necessary modeling choices.
-
 \begin{figure}
 \includegraphics{figure_2}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
@@ -338,6 +334,13 @@ This approach is not only computationally cheaper but allows us to discuss the s
 (d)~the time series of the first two ICs of the first trajectory show rare jumps.}
 \label{fig:io-to-tica}
 \end{figure}
+
+Note that the modeler has to select hyper-parameters at most stages throughout the workflow.
+This selection must be done carefully as poor choices make it hard, or even impossible, to build a good MSM.
+
+While there exist automated schemes~\cite{husic-optimized} for cross-validated optimization in the full hyper-parameter space,
+we chose to adopt a sequential approach where only the hyper-parameters of the current stage are optimized.
+This approach is not only computationally cheaper but allows us to discuss the significance of the necessary modeling choices.
 
 \subsection{Feature selection}
 
@@ -455,6 +458,17 @@ In the projection onto the first two TICA components,
 we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system,
 with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fig:msm-analysis}c).
 
+\begin{figure}
+\includegraphics{figure_4}
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
+(a)~The reweighted free energy surface projected onto the first two independent components exhibits five minima which
+(b)~PCCA++ identifies as five metastable states.
+(c)~The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states,
+in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
+(d)~the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.}
+\label{fig:msm-analysis}
+\end{figure}
+
 The mean first passage times (MFPTs) out of and into the macrostate $\mathcal{S}_1$ compute to
 \[ \begin{array}{crcr}
 \textrm{direction} & \textrm{mean / ns} && \textrm{std / ns} \\
@@ -474,17 +488,6 @@ The transition network can be additionally visualized by plotting representative
 It is easy to see from this depiction that the dominant pathway from $\mathcal{S}_2$ to $\mathcal{S}_4$ proceeds through $\mathcal{S}_5$.
 
 \begin{figure}
-\includegraphics{figure_4}
-\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
-(a)~The reweighted free energy surface projected onto the first two independent components exhibits five minima which
-(b)~PCCA++ identifies as five metastable states.
-(c)~The second right eigenvector shows that the slowest process shifts probability between the least probable state ($\mathcal{S}_1$) and the other states,
-in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
-(d)~the committor $\mathcal{S}_2\to\mathcal{S}_4$ indicates that states $\mathcal{S}_{(1,3,5)}$ act as a transition region between states $\mathcal{S}_2$ and $\mathcal{S}_4$.}
-\label{fig:msm-analysis}
-\end{figure}
-
-\begin{figure}
 \includegraphics{figure_5}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$.
@@ -500,7 +503,7 @@ The dominant pathway proceeds through $\mathcal{S}_5$.}
 \includegraphics{figure_6}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~the Trp-1 SASA autocorrelation function yields a weak signal which, however,
-(b)~can be enhanced if the system is prepared in the non\-equi\-lib\-ri\-um condition $\mathcal{S}_1$.
+(b)~can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$.
 The solid/orange lines denote the maximum likelihood MSM result;
 the dashed/blue lines and the the shaded areas indicate sample means and~$95\%$ confidence intervals computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.}
 \label{fig:msm-exp-obs}
