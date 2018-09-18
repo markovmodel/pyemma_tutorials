@@ -95,7 +95,7 @@ Additionally, two textbooks have been published that focus on computational meth
 In addition to publications on the theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
 we also recommend the literature on TICA~\cite{tica,tica3,tica2,kinetic-maps},
 transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
-hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial},
+hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,bhmm-preprint},
 and variational techniques~\cite{noe-vac,vamp-preprint,gmrq},
 as these topics play important roles within the standard MSM workflow.
 
@@ -221,6 +221,33 @@ while retaining the kinetic variance
 \textrm{KV}_d = \sum\limits_{i=1}^d \lambda_i^2(\tau);
 \end{equation}
 the total kinetic variance is the sum of the squares of all eigenvalues.
+
+\subsection*{Hidden Markov state models}
+
+The estimation of an MSM requires the dynamics between microstates to be Markovian.
+However, in case of a poor discretization or short trajectories,
+it might be hard or even impossible to meet this requirement (as we will see in Notebook~07).
+
+An alternative, which is much less sensitive to poor discretization,
+is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,bhmm-preprint}.
+HMMs require the dynamics in some hidden (unobserved) state space to be Markovian.
+
+To estimate an HMM, we need a spectral gap after the $m^\textrm{th}$ eigenvalue;
+in practice, a timescale separation $t_m \geq 2t_{m+1}$ is sufficient~\cite{pyemma}.
+Then, we can approximate the dynamics in the observed microstates ($\mathbf{P}$) at any lag time $k\tau$ via
+\begin{equation}
+\mathbf{P}(k\tau) \approx \bm{\Pi}^{-1} \bm{\chi}^\top \tilde{\bm{\Pi}} \tilde{\mathbf{P}}^k(\tau) \, \bm{\chi}.
+\end{equation}
+Here, the $\bm{\Pi}=\left[ \pi_1,\dots,\pi_n \right]$ is a diagonal matrix of the $n$ microstates' stationary probabilities,
+$\tilde{\bm{\Pi}}=\left[ \tilde{\pi}_1,\dots,\tilde{\pi}_m \right]$ is a diagonal matrix of the $m$ hidden states' stationary probabilities,
+$\tilde{\mathbf{P}}(\tau)$ is a (small) transition matrix between the $m$ hidden states at lag time $\tau$,
+and $\bm{\chi}$ is an $m\times n$-dimensional row stochastic matrix
+where each row encodes the probabilities of the $n$ microstates to appear in the corresponding hidden state~\cite{noe-proj-hid-msm}.
+
+An HMM estimation usually yields a small model where each hidden state is considered to be metastable and,
+thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully.
+Given that an HMM is a generalization of an MSM,
+we can compute all physico-chemically relevant quantities available for MSMs, too.
 
 \subsection{Software and installation}
 
