@@ -290,7 +290,7 @@ Should the user prefer not to use Anaconda, a manual installation via the pip in
 Alternatively, one can use the Binder service (\url{https://mybinder.org}) to view and run the tutorials online in any browser.
 
 \begin{figure}
-\includegraphics[width=0.48\textwidth]{figure_1}
+\includegraphics[width=0.48\textwidth]{figure_2}
 \caption{The PyEMMA workflow: MD trajectories are processed and discretized (first row).
 A Markov state model is estimated from the resulting discrete trajectories and validated (middle row).
 By iterating between data processing and MSM estimation/validation,
@@ -329,7 +329,7 @@ thereby providing an example of how results generated using PyEMMA can be integr
 The figures that will be displayed in the following are created in the showcase notebook (00) and can be easily reproduced.
 
 \begin{figure}
-\includegraphics{figure_2}
+\includegraphics{figure_3}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
@@ -393,7 +393,7 @@ which is shown in the showcase notebook (00).
 \subsection{MSM estimation and validation}
 
 \begin{figure}
-\includegraphics{figure_3}
+\includegraphics{figure_4}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The convergence behavior of the implied timescales associated with the four slowest processes.
 (b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 metastable states.
@@ -462,7 +462,7 @@ we identify the slowest MSM process as a probability shift between macrostate $\
 with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fig:msm-analysis}c).
 
 \begin{figure}
-\includegraphics{figure_4}
+\includegraphics{figure_5}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The reweighted free energy surface projected onto the first two independent components exhibits five minima which
 (b)~PCCA++ identifies as five metastable states.
@@ -491,7 +491,7 @@ The transition network can be additionally visualized by plotting representative
 It is easy to see from this depiction that the dominant pathway from $\mathcal{S}_2$ to $\mathcal{S}_4$ proceeds through $\mathcal{S}_5$.
 
 \begin{figure}
-\includegraphics{figure_5}
+\includegraphics{figure_6}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$.
 Metastable states $\mathcal{S}_{(1-5)}$ are represented by an ensemble of representative structures and are arranged along the horizonal axis according to their committor probabilities.
@@ -503,7 +503,7 @@ The dominant pathway proceeds through $\mathcal{S}_5$.}
 \subsection{Connecting the MSM with experimental data}
 
 \begin{figure}
-\includegraphics{figure_6}
+\includegraphics{figure_7}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~the Trp-1 SASA autocorrelation function yields a weak signal which, however,
 (b)~can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$.
