@@ -226,6 +226,12 @@ the total kinetic variance is the sum of the squares of all eigenvalues.
 
 \subsection{Hidden Markov state models}
 
+\begin{figure}
+\includegraphics[width=0.48\textwidth]{figure_1}
+\caption{The HMM transition matrix $\tilde{\mathbf{P}}(\tau)$ propagates the hidden state trajectory $\tilde{s}(t)$ (orange circles) and, at each time step $t$, the emission into the observable state $s(t)$ is governed by the emission probability $\bm{\chi}\left( s(t) \middle| \tilde{s}(t) \right)$.}
+\label{fig:hmm-scheme}
+\end{figure}
+
 The estimation of an MSM requires the dynamics between microstates to be Markovian.
 However, in case of a poor dimension reduction and/or discretization or short trajectories,
 we cannot anticipate this to be the case.
