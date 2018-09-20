@@ -199,7 +199,7 @@ Specifically, we use the VAMP-2 score, which captures the kinetic variance expla
 However, the MSM lag time cannot be optimized using VAMP,
 and must be chosen using a separate validation as described above~\cite{husic2017note}.
 
-Our recommended method for dimensionality reduction, TICA, is a particular implementation of the VAC.
+A commonly used method for dimensionality reduction, TICA, is a particular implementation of the VAC.
 To apply TICA, we need to compute instantaneous ($\mathbf{C}(0)$) and time-lagged ($\mathbf{C}(\tau)$) covariance matrices with elements
 \begin{eqnarray}
 c_{ij}(0) & = & \left\langle \tilde{x}_i(t) \; \tilde{x}_j(t) \right\rangle_t \\
@@ -208,21 +208,35 @@ c_{ij}(\tau) & = & \left\langle \tilde{x}_i(t) \; \tilde{x}_j(t + \tau) \right\r
 where $\tilde{x}_i(t)$ denotes the $i^\textrm{th}$ feature at time $t$ after the mean has been removed.
 Then, we can solve the generalized eigenvalue problem
 \begin{equation}
-\mathbf{C}(\tau) \, \mathbf{u}_i = \mathbf{C}(0) \, \lambda_i(\tau) \, \mathbf{u}_i
+\mathbf{C}(\tau) \, \mathbf{u}_i = \mathbf{C}(0) \, \lambda_i(\tau) \, \mathbf{u}_i \,, \quad i=1,\dots,n,
 \end{equation}
 to obtain independent component directions $\mathbf{u}_i$ which approximate the reaction coordinates of the system,
-where the pairs of eigenvalues and independent components are in descending order.
+where the pairs of eigenvalues and independent components are sorted in descending order,
+and we define a cumulative kinetic variance fraction
+\begin{equation}
+c_d = \frac{\sum_{i=2}^d \lambda_i^2(\tau)}{\textrm{TKV}},
+\end{equation}
+where
+\begin{equation}
+\textrm{TKV} = \sum\limits_{i=2}^n \lambda_i^2(\tau)
+\end{equation}
+is the total kinetic variance explained by all $n$ features.
 
-Dimensionality reduction is achieved by projecting the (mean free) features $\tilde{\mathbf{x}}(t)$
-onto the leading $d$ independent components $\mathbf{U}=[\mathbf{u}_1 \dots \mathbf{u}_d]$,
+If we further scale the independent components $\mathbf{u}_i$ by the corresponding eigenvectors $\lambda_i(\tau)$,
+we obtain a \emph{kinetic map} which is the default behavior in PyEMMA.
+
+Note, though, that TICA requires the data to be in equilibrium.
+To use TICA with nonequilibrium data, we can either symmetrize the time-lagged covariance matrix $\mathbf{C}(\tau)$
+or apply a Koopman reweighting~\cite{vamp-preprint}.
+For short trajectories and nonequilibrium data we generally recommend to use VAMP~\cite{vamp-preprint}.
+
+For all these approaches,
+dimensionality reduction is performed by projecting the (mean free) features $\tilde{\mathbf{x}}(t)$
+onto the leading $d$ independent components $\mathbf{U}_d=\left[\mathbf{u}_1 \dots \mathbf{u}_d\right]$,
 \begin{equation}
 \mathbf{y}(t) = \mathbf{U}_d^\top \tilde{\mathbf{x}}(t),
 \end{equation}
-while retaining the kinetic variance
-\begin{equation}
-\textrm{KV}_d = \sum\limits_{i=1}^d \lambda_i^2(\tau);
-\end{equation}
-the total kinetic variance is the sum of the squares of all eigenvalues.
+where, in practice, $d$ is chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., $95\%$).
 
 \subsection{Hidden Markov state models}
 
@@ -241,7 +255,7 @@ An alternative, which is much less sensitive to poor discretization,
 is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,bhmm-preprint}.
 HMMs are less sensitive to the discretization error as they sidestep the assumption of Markovian dynamics in the discretized space.
 Instead, HMMs assume that there is an underlying (hidden) dynamic process which is Markovian
-and gives rise to our observed data, e.g., the discretized trajectories.
+and gives rise to our observed data, e.g., the discretized trajectories (see Fig.~\ref{fig:hmm-scheme}).
 This is a powerful principle as we know that there is indeed an underlying process which is Markovian:
 our molecular dynamics trajectories.
 
@@ -255,13 +269,13 @@ Here, the $\bm{\Pi}=\left[ \pi_1,\dots,\pi_n \right]$ is a diagonal matrix of th
 $\tilde{\bm{\Pi}}=\left[ \tilde{\pi}_1,\dots,\tilde{\pi}_m \right]$ is a diagonal matrix of the $m<n$ hidden states' stationary probabilities,
 $\tilde{\mathbf{P}}(\tau)$ is a transition matrix between the $m<n$ hidden states at lag time $\tau$,
 and $\bm{\chi}$ is an $m\times n$-dimensional row-stochastic matrix
-where each row encodes the probabilities of the $n$ microstates to appear in the corresponding hidden state~\cite{noe-proj-hid-msm}.
+where each row encodes the emission probabilities into the $n$ microstates conditioned on being in the corresponding hidden state~\cite{noe-proj-hid-msm}.
 
 An HMM estimation always yields a model with a small number of (hidden) states
 where each state is considered to be metastable and,
 thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see Notebook~07).
 As the HMMs---like MSMs---approximate the full phase-space dynamics,
-we can similarly compute physical observables from directly.
+we can similarly compute the metastable kinetics, apply TPT, visualize the network, and obtain physical observables.
 
 \subsection{Software and installation}
 
