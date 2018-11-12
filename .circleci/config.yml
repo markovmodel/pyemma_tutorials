@@ -14,14 +14,13 @@ jobs:
       - run:
           name: conda_config
           command: |
-            conda config --add channels conda-forge
             conda config --set always_yes true
             conda config --set quiet true
       - run: conda install conda-build
       - run: mkdir $NBVAL_OUTPUT
       - run:
           name: build_test
-          command: conda build .
+          command: conda build -c conda-forge .
           no_output_timeout: 20m
       - store_test_results:
           path: ~/junit
