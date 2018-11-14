@@ -259,7 +259,7 @@ we cannot anticipate this to be the case.
 We illustrate this point in notebook~07.
 
 An alternative, which is much less sensitive to poor discretization,
-is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,noe-proj-hid-msm,bhmm-preprint}.
+is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,jhp-spectral-rate-theory,noe-proj-hid-msm,bhmm-preprint}.
 HMMs are less sensitive to the discretization error as they sidestep the assumption of Markovian dynamics in the discretized space (illustrated in Fig.~\ref{fig:hmm-scheme}).
 Instead, HMMs assume that there is an underlying (hidden) dynamic process which is Markovian
 and gives rise to our observed data, e.g., the ($n$~states) discretized trajectories $s(t)$.
@@ -271,11 +271,7 @@ in practice, a timescale separation of $t_m \geq 2t_{m+1}$ is sufficient~\cite{p
 The HMM then consists of a transition matrix $\tilde{\mathbf{P}}(\tau)$ between $m<n$ hidden states
 and a row-stochastic matrix ($\bm{\chi}$) of probabilities $\chi\left( s \middle| \tilde{s} \right)$
 to emit the discrete state $s$ conditional on being in the hidden state $\tilde{s}$.
-
-We can further compute a reversal of the emission matrix $\bm{\chi}\in\mathbb{R}^{m \times n}$:
-the membership matrix $\mathbf{M}\in\mathbb{R}^{n \times m}$ which encodes
-a fuzzy assignment of each of the $n$ observable microstates $s$ to the $m$ hidden states $\tilde{s}$ and,
-thus, defines the \emph{coarse graining} of microstate.
+For more details about HMM properties and the estimation algorithm, we suggest Ref.~\cite{hmm-tutorial}.
 
 An HMM estimation always yields a model with a small number of (hidden) states
 where each state is considered to be metastable and,
