@@ -86,7 +86,7 @@ The package is written in Python (\url{http://python.org}), relies heavily on Nu
 
 \subsection{Scope}
 
-In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances. (see~\cite{dror2012biomolecular} for a review).
+In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances (see~\cite{dror2012biomolecular} for a review).
 
 We further assume that the reader is familiar with the basic ideas and theory underlying Markov modeling and will only give a brief reminder of the basic concepts in Section 2.
 
@@ -256,7 +256,7 @@ where, in practice, $d$ is chosen such that a specific fraction of kinetic varia
 The estimation of an MSM requires the dynamics between microstates to be Markovian.
 However, in case of a poor dimension reduction and/or discretization or short trajectories,
 we cannot anticipate this to be the case.
-We illustrate this point in Notebook~07.
+We illustrate this point in notebook~07.
 
 An alternative, which is much less sensitive to poor discretization,
 is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,noe-proj-hid-msm,bhmm-preprint}.
@@ -279,7 +279,7 @@ thus, defines the \emph{coarse graining} of microstate.
 
 An HMM estimation always yields a model with a small number of (hidden) states
 where each state is considered to be metastable and,
-thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see Notebook~07).
+thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see notebook~07).
 As the HMMs---like MSMs---approximate the full phase-space dynamics,
 we can similarly compute the metastable kinetics, apply TPT, visualize the network, and obtain physical observables.
 
@@ -376,10 +376,10 @@ In Notebook (01), we present in detail how to extract features from MD datasets 
 Throughout this tutorial, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
 To choose among three different molecular features reflecting protein structure,
-we compute the (cross-validated) VAMP-2 score (Notebook 00).
+we compute the (cross-validated) VAMP-2 score (notebook 00).
 Although we cannot MSM optimize lag times with a variational score\cite{husic2017note}, such as VAMP-2,
 it is important to ensure that properties that we optimize are robust as a function of lag time. 
-Consequently, we compute the VAMP-2 score at several lag times (Notebook 00). 
+Consequently, we compute the VAMP-2 score at several lag times (notebook 00). 
 We find that the relative rankings of the different molecular features are highly robust as a function of lag time. 
 We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
 We find that backbone torsions contain more kinetic variance than the backbone heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-tica}b).
@@ -594,7 +594,7 @@ For instance, the slowest process might correspond to a biologically irrelevant 
 This problem may be mitigated by choosing a more specific set of features.
 
 Additional technical challenges for large systems include high demands on memory and computation time;
-we explain how to deal with those in the tutorials (Notebook 00 and 02).
+we explain how to deal with those in the tutorials (notebook~01).
 
 More details on how to model complex systems with the techniques presented here are described, e.g., by~\cite{plattner_protein_2015,plattner_complete_2017}.
 We further examine some symptoms that may indicate problematic or difficult datasets, and demonstrate how to deal with them in Notebook (08).
@@ -603,7 +603,8 @@ We further examine some symptoms that may indicate problematic or difficult data
 
 The present tutorial presents the basics of modern Markov state modeling with PyEMMA. 
 However, recent years have seen many extensions of the methodology---many of which are available within PyEMMA. 
-We encourage interested readers to look into these methods in the software documentation and to make use of the specific Jupyter notebooks distributed with PyEMMA.
+We encourage interested readers to look into these methods in the software documentation
+and to make use of the specific Jupyter notebooks distributed with PyEMMA (\url{http://emma-project.org}).
 
 Conventional Markov state modeling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. 
 In one extension, Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram},
@@ -669,7 +670,10 @@ The authors declare no conflicting interests.
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
 %%%%%%%
-TH acknowledges financial support by SFB/TRR 186. SO acknowledges a postdoctoral fellowship from the Alexander von Humboldt Foundation.
+TH acknowledges financial support from Deutsche Forschungsgemeinschaft (SFB/TRR 186, Project A12).
+FN and BEH acknowledge funding from European Commission (ERC CoG 772230 "ScaleCell").
+FN acknowledges funding from Deutsche Forschungsgemeinschaft (SFB 1114, Projects A04 and C03, NO 825/2-2).
+SO acknowledges a postdoctoral fellowship from the Alexander von Humboldt Foundation.
 
 \bibliography{literature}
 
