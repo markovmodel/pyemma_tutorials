@@ -371,8 +371,9 @@ Fortunately, the variational principle of conformational dynamics~\cite{noe-vac,
 and the more general variational approach for Markov processes (VAMP)~\cite{vamp-preprint}
 provide a systematic means to quantitatively compare multiple representations of the simulation data.
 In particular, we can use a scalar score obtained using VAMP to directly compare the ability of certain features to capture slow dynamical modes in a particular molecular system.
+In Notebook (01), we present in detail how to extract features from MD datasets and how to systematically compare them.
 
-Here, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
+Throughout this tutorial, we utilize the VAMP-2 score, which maximizes the kinetic variance contained in the features~\cite{kinetic-maps}.
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
 To choose among three different molecular features reflecting protein structure,
 we compute the (cross-validated) VAMP-2 score (Notebook 00).
@@ -398,6 +399,8 @@ The sample free energy projected onto the first two independent components (ICs)
 Discrete jumps between the minima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
 We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
 
+We demonstrate how to apply TICA, suggest how to interpret the projected coordinates, and compare the results to other dimension reduction techniques in Notebook (02).
+
 \begin{figure}
 \includegraphics{figure_3}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
@@ -414,7 +417,8 @@ TICA yields a representation of our molecular simulation data with a reduced dim
 which can greatly facilitate the decomposition of our system into the discrete Markovian states necessary for MSM estimation.
 Here, we use the $k$-means algorithm to segment the four dimensional TICA space into $k=75$ cluster centers.
 The number of cluster centers has been chosen to optimize the VAMP-2 score in a manner identical to how the feature selection was carried out above,
-which is shown in the showcase notebook (00).
+which is shown in the showcase Notebook (00).
+A detailed comparison between different clustering techniques is provided in Notebook (02).
 
 \subsection{MSM estimation and validation}
 
@@ -446,6 +450,8 @@ agrees well with MSMs estimated with longer lag times (black-solid lines)
 Thus, the CK test confirms that five metastable states is an appropriate choice
 and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the
 long-timescale behavior of our system within error (blue/shaded area).
+
+In Notebook (03), we demonstrate in detail how to estimate and validate MSMs with PyEMMA.
 
 \subsection{Analyzing the MSM}
 
@@ -526,6 +532,8 @@ Transition regions (macrostates $\mathcal{S}_{(1,3,5)}$) can be identified by co
 The transition network can be additionally visualized by plotting representative structures of the five metastable states $\mathcal{S}_{(1-5)}$ according to their committor probability (Fig.~\ref{fig:tpt-network}).
 It is easy to see from this depiction that the dominant pathway from $\mathcal{S}_2$ to $\mathcal{S}_4$ proceeds through $\mathcal{S}_5$.
 
+More details about (spectral) properties of MSMs and how to analyze them with PyEMMA are discussed in Notebook (04) and Notebook (05).
+
 \subsection{Connecting the MSM with experimental data}
 
 \begin{figure}
@@ -560,6 +568,8 @@ and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{
 We see that the predicted relaxation signal has a much larger amplitude for the nonequilibrium initialization,
 making it more likely to be experimentally measurable.
 
+In addition to a detailed demonstration of the above, Notebook (06) demonstrates how to compute J-couplings and dynamic fingerprints from MSMs.
+
 \subsection{Summary}
 
 In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA.
@@ -587,6 +597,7 @@ Additional technical challenges for large systems include high demands on memory
 we explain how to deal with those in the tutorials (Notebook 00 and 02).
 
 More details on how to model complex systems with the techniques presented here are described, e.g., by~\cite{plattner_protein_2015,plattner_complete_2017}.
+We further examine some symptoms that may indicate problematic or difficult datasets, and demonstrate how to deal with them in Notebook (08).
 
 \subsection{Advanced Methods}
 
