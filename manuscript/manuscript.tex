@@ -86,16 +86,16 @@ The package is written in Python (\url{http://python.org}), relies heavily on Nu
 
 \subsection{Scope}
 
-In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances (see~\cite{dror2012biomolecular} for a review).
+In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances (see Ref.~\cite{dror2012biomolecular} for a review on the MD simulation of biomolecules, and Ref.~\cite{mdtutorial} for a tutorial on MD simulations).
 
 We further assume that the reader is familiar with the basic ideas and theory underlying Markov modeling and will only give a brief reminder of the basic concepts in Section 2.
 
-For those seeking further resources, ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a recent overview,
-while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology in detail.
+For those seeking further resources, the recent perspective ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a timeline of methods advances with relevant citations,
+while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology and provides the underlying mathematics in detail.
 Additionally, two textbooks have been published that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
 In addition to publications on the theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
-we also recommend the literature on TICA~\cite{tica,tica3,tica2,kinetic-maps},
+we also recommend the literature on TICA~\cite{tica,tica3,kinetic-maps,mdtutorial},
 transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
 hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,jhp-spectral-rate-theory,bhmm-preprint},
 and variational techniques~\cite{noe-vac,vamp-preprint,gmrq},
@@ -183,7 +183,7 @@ Starting from the output of an MD simulation of a protein, there are several ste
 \begin{itemize}
 	\item Featurization -- The Cartesian coordinates characterizing each frame of the MD trajectory are transformed into an intuitive basis such as the protein's dihedral angles or contact distance pairs.
 	\item Dimensionality reduction -- Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
-	Frequently, time-lagged independent component analysis (TICA)~\cite{tica,tica3,tica2,kinetic-maps} is used to transform the features into a set of slow coordinates.
+	Frequently, time-lagged independent component analysis (TICA)~\cite{tica,tica3,kinetic-maps} is used to transform the features into a set of slow coordinates.
 	\item Clustering -- This is the step at which the state decomposition occurs.
 	The features or TICs are grouped into a set of states using a clustering algorithm such as $k$-means.
 	\item Transition matrix approximation -- At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
@@ -387,7 +387,7 @@ We note that deep learning approaches for feature selection have recently been d
 
 \subsection{Dimensionality reduction}
 
-Subsequently, we perform TICA~\cite{tica,kinetic-maps} in order to reduce the dimension from the feature space,
+Subsequently, we perform TICA~\cite{tica,tica3,kinetic-maps} in order to reduce the dimension from the feature space,
 which typically contains many degrees of freedom,
 to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency.
 TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset.
@@ -593,7 +593,6 @@ This problem may be mitigated by choosing a more specific set of features.
 
 Additional technical challenges for large systems include high demands on memory and computation time;
 we explain how to deal with those in the tutorials (notebook~01).
-
 More details on how to model complex systems with the techniques presented here are described, e.g., by~\cite{plattner_protein_2015,plattner_complete_2017}.
 We further examine some symptoms that may indicate problematic or difficult datasets, and demonstrate how to deal with them in notebook~08.
 
@@ -610,6 +609,7 @@ we can integrate unbiased and biased simulations in a systematic manner to speed
 MEMMs consequently enable users to combine enhanced sampling methods such as umbrella sampling or replica exchange
 with conventional molecular dynamics simulations to more efficiently study rare event kinetics~\cite{trammbar}. 
 MEMMs are implemented in PyEMMA.
+Since the many publications associated with the development of these methods are beyond the scope of this tutorial, we refer the reader to Sec.~8.3 of Ref.~\cite{msm-brooke} and the references therein.
 
 Another issue often faced during Markov state modeling is a lack of quantitative agreement with complementary experimental data. 
 This issue is not intrinsic to the Markov state modeling approach as such,
