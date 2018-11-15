@@ -21,6 +21,7 @@ requirements:
     - pip
   run:
     - pyemma
+    - numpy >=1.13
     - mdshare
     - notebook
     - nglview
