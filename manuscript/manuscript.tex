@@ -97,7 +97,7 @@ Additionally, two textbooks have been published that focus on computational meth
 In addition to publications on the theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
 we also recommend the literature on TICA~\cite{tica,tica3,tica2,kinetic-maps},
 transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
-hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,hmm-baum-welch-alg,hmm-tutorial,jhp-spectral-rate-theory,bhmm-preprint},
+hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,jhp-spectral-rate-theory,bhmm-preprint},
 and variational techniques~\cite{noe-vac,vamp-preprint,gmrq},
 as these topics play important roles within the standard MSM workflow.
 
@@ -271,13 +271,15 @@ in practice, a timescale separation of $t_m \geq 2t_{m+1}$ is sufficient~\cite{p
 The HMM then consists of a transition matrix $\tilde{\mathbf{P}}(\tau)$ between $m<n$ hidden states
 and a row-stochastic matrix ($\bm{\chi}$) of probabilities $\chi\left( s \middle| \tilde{s} \right)$
 to emit the discrete state $s$ conditional on being in the hidden state $\tilde{s}$.
-For more details about HMM properties and the estimation algorithm, we suggest Ref.~\cite{hmm-tutorial}.
 
 An HMM estimation always yields a model with a small number of (hidden) states
 where each state is considered to be metastable and,
 thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see notebook~07).
 As the HMMs---like MSMs---approximate the full phase-space dynamics,
 we can similarly compute the metastable kinetics, apply TPT, visualize the network, and obtain physical observables.
+
+For an extensive discussion of details about HMM properties and the estimation algorithm in general, we suggest Ref.~\cite{hmm-tutorial}.
+For its specific application to the discretization of MSMs using HMMs, we suggest Ref.~\cite{noe-proj-hid-msm}. A generalized extension for estimating this type of low-dimensional projection from the data is given in Ref.~\cite{wu2015projected}.
 
 \subsection{Software and installation}
 
