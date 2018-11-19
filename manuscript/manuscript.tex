@@ -152,13 +152,13 @@ t_i = \frac{-\tau}{\ln\left|\lambda_i(\tau)\right|}.
 \end{equation}
 When the ITS become approximately constant with the lag time, we say that our timescales have converged and choose the smallest lag time with the converged timescales in order to maximize the model's temporal resolution.
 
-Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $\mathbf{P}(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{noe-folding-pathways}.
+Once we have used the ITS to choose the lag time, we can check whether a given transition probability matrix $\mathbf{P}(\tau)$ is approximately Markovian using the Chapman-Kolmogorov (CK) test~\cite{noe-folding-pathways,msm-jhp}.
 The CK property for a Markovian matrix is,
 \begin{equation}
 \mathbf{P}(k \tau) = \mathbf{P}^k(\tau),
 \end{equation}
 where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~$1$, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
-By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model~\cite{msm-jhp,noe-folding-pathways}.
+By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model (see Sec.~IV.F in~\cite{msm-jhp}).
 
 Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues.
 The highest eigenvalue, $\lambda_1(\tau)$, is unique and equal to $1$.
