@@ -248,7 +248,7 @@ where, in practice, $d$ is chosen such that a specific fraction of kinetic varia
 
 \subsection{Hidden Markov state models}
 
-\begin{figure}
+\begin{figure}[ht]
 \includegraphics[width=0.48\textwidth]{figure_1}
 \caption{The HMM transition matrix $\tilde{\mathbf{P}}(\tau)$ propagates the hidden state trajectory $\tilde{s}(t)$ (orange circles) and, at each time step $t$, the emission into the observable state $s(t)$ (cyan circles) is governed by the emission probabilities $\bm{\chi}\left( s(t) \middle| \tilde{s}(t) \right)$.}
 \label{fig:hmm-scheme}
@@ -325,6 +325,15 @@ and the last notebook~08 contains guidelines on how to deal with common problems
 
 \subsection{The PyEMMA workflow}
 
+\begin{figure}[ht]
+\includegraphics[width=0.48\textwidth]{figure_2}
+\caption{The PyEMMA workflow: MD trajectories are processed and discretized (first row).
+A Markov state model is estimated from the resulting discrete trajectories and validated (middle row).
+By iterating between data processing and MSM estimation/validation,
+a dynamical model is obtained that can be analyzed (last row).}
+\label{fig:workflowchart}
+\end{figure}
+
 In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an MD dataset might consist of,
 \begin{itemize}
 	\item extracting molecular features from the raw data (01),
@@ -351,16 +360,17 @@ While there exist automated schemes~\cite{husic-optimized} for cross-val\-i\-dat
 we chose to adopt a sequential approach where only the hyper-parameters of the current stage are optimized.
 This approach is not only computationally cheaper but allows us to discuss the significance of the necessary modeling choices.
 
-\begin{figure}[bt]
-\includegraphics[width=0.48\textwidth]{figure_2}
-\caption{The PyEMMA workflow: MD trajectories are processed and discretized (first row).
-A Markov state model is estimated from the resulting discrete trajectories and validated (middle row).
-By iterating between data processing and MSM estimation/validation,
-a dynamical model is obtained that can be analyzed (last row).}
-\label{fig:workflowchart}
-\end{figure}
-
 \subsection{Feature selection}
+
+\begin{figure}[bht]
+\includegraphics{figure_3}
+\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
+(a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
+(b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
+(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple minima and
+(d)~the time series of the first two ICs of the first trajectory show rare jumps.}
+\label{fig:io-to-tica}
+\end{figure}
 
 In Markov state modeling, our objective is to model the slow dynamics of a molecular process.
 In order to approximate the slow dynamics in a statistically efficient manner,
@@ -400,16 +410,6 @@ We thus assume that our TICA-transformed backbone torsion features describe one 
 
 We demonstrate how to apply TICA, suggest how to interpret the projected coordinates, and compare the results to other dimension reduction techniques in notebook~02.
 
-\begin{figure}
-\includegraphics{figure_3}
-\caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
-(a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
-(b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
-(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple minima and
-(d)~the time series of the first two ICs of the first trajectory show rare jumps.}
-\label{fig:io-to-tica}
-\end{figure}
-
 \subsection{Discretization}
 
 TICA yields a representation of our molecular simulation data with a reduced dimensionality,
@@ -421,7 +421,7 @@ A detailed comparison between different clustering techniques is provided in not
 
 \subsection{MSM estimation and validation}
 
-\begin{figure}
+\begin{figure}[ht]
 \includegraphics{figure_4}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The convergence behavior of the implied timescales associated with the four slowest processes.
@@ -456,7 +456,7 @@ In notebook~03, we demonstrate in detail how to estimate and validate MSMs with 
 
 \subsection{Analyzing the MSM}
 
-\begin{figure}
+\begin{figure}[ht]
 \includegraphics{figure_5}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The reweighted free energy surface projected onto the first two independent components exhibits five minima which
@@ -467,7 +467,7 @@ in particular states ($\mathcal{S}_4$, $\mathcal{S}_5$), whereas
 \label{fig:msm-analysis}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
 \includegraphics{figure_6}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 visualization of the transition paths from $\mathcal{S}_2$ to $\mathcal{S}_4$.
@@ -537,7 +537,7 @@ More details about (spectral) properties of MSMs and how to analyze them with Py
 
 \subsection{Connecting the MSM with experimental data}
 
-\begin{figure}
+\begin{figure}[ht]
 \includegraphics{figure_7}
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~the Trp-1 SASA autocorrelation function yields a weak signal which, however,
