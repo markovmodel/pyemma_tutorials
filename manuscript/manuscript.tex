@@ -248,7 +248,7 @@ onto the leading $d$ independent components $\mathbf{U}_d=\left[\mathbf{u}_1 \do
 \begin{equation}
 \mathbf{y}(t) = \mathbf{U}_d^\top \tilde{\mathbf{x}}(t),
 \end{equation}
-where, in practice, $d$ is chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., $95\%$).
+where, in practice, $d$ is chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., \SI{95}{\percent}).
 
 \subsection{Hidden Markov state models}
 
@@ -356,7 +356,7 @@ In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an 
 
 For the remainder of this manuscript we will walk through the first notebook~00.
 In notebook~00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide (Fig.~\ref{fig:io-to-tica}a),
-consisting of~$25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of~$0.1$~ns.
+consisting of~$25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of~\SI{0.1}{\nano\second}.
 We present the results obtained in this notebook,
 thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
 The figures that will be displayed in the following are created in the showcase notebook~00 and can be easily reproduced.
@@ -375,7 +375,7 @@ This approach is not only computationally cheaper but allows us to discuss the s
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
-(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple minima and
+(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=\SI{0.5}{\nano\second}$ shows multiple minima and
 (d)~the time series of the first two ICs of the first trajectory show rare jumps.}
 \label{fig:io-to-tica}
 \end{figure}
@@ -398,7 +398,7 @@ Although we cannot MSM optimize lag times with a variational score\cite{husic201
 it is important to ensure that properties that we optimize are robust as a function of lag time. 
 Consequently, we compute the VAMP-2 score at several lag times (notebook~00). 
 We find that the relative rankings of the different molecular features are highly robust as a function of lag time. 
-We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
+We show one example of this ranking and the absolute VAMP-2 scores for lag time~\SI{0.5}{\nano\second} in Fig.~\ref{fig:io-to-tica}b. 
 We find that backbone torsions contain more kinetic variance than the backbone heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-tica}b).
 This suggests that backbone torsions are the best of the options evaluated for MSM construction.
 
@@ -410,7 +410,7 @@ Subsequently, we perform TICA~\cite{tica,tica3,kinetic-maps} in order to reduce 
 which typically contains many degrees of freedom,
 to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency.
 TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset.
-Here, performing TICA on the backbone torsions at lag time~$0.5$~ns yields a four dimensional subspace using a~$95\%$ kinetic variance cutoff
+Here, performing TICA on the backbone torsions at lag time~\SI{0.5}{\nano\second} yields a four dimensional subspace using a~\SI{95}{\percent} kinetic variance cutoff
 (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
 The sample free energy projected onto the first two independent components (ICs) exhibits several minima (Fig.~\ref{fig:io-to-tica}c).
 Discrete jumps between the minima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
@@ -435,19 +435,19 @@ A detailed comparison between different clustering techniques is provided in not
 (a)~The convergence behavior of the implied timescales associated with the four slowest processes.
 The solid lines refer to the maximum likelihood result while the dashed lines show the ensemble mean computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.
 The black line (marking equality of timescale and lag time) with grey area indicates the timescale horizon below which the MSM cannot resolve processes.
-As implied timescales are well-converged at $\tau=0.5$~ns, this lag time is chosen for subsequent MSM estimation.
-(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 metastable states.
+As implied timescales are well-converged at $\tau=\SI{0.5}{\nano\second}$, this lag time is chosen for subsequent MSM estimation.
+(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=\SI{0.5}{\nano\second}$ assuming~5 metastable states.
 Predictions from this model agree with higher lag time estimates within confidence intervals.
 Implied timescales convergence as well as a passing Chapman-Kolmogorov test are a necessary condition in MSM validation.
-In both panels, the (non-grey) shaded areas indicate~$95\%$ confidence intervals computed with the aforementioned Bayesian sampling procedure.}
+In both panels, the (non-grey) shaded areas indicate~\SI{95}{\percent} confidence intervals computed with the aforementioned Bayesian sampling procedure.}
 \label{fig:its-and-ck}
 \end{figure}
 
 A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$;
 accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty.
 The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with~$100$ samples.
-In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above~$0.5$~ns (Fig.~\ref{fig:its-and-ck}a).
-Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
+In our example, we find that the four slowest ITS converge quickly and are constant within a \SI{95}{\percent} confidence interval for lag times above~\SI{0.5}{\nano\second} (Fig.~\ref{fig:its-and-ck}a).
+Using this lag time we can now estimate a (Bayesian) MSM with $\tau=\SI{0.5}{\nano\second}$. 
 
 To test the validity of our MSM, we perform a Chapman-Kolmogorov (CK) test.
 Visualizing the full transition probability matrix $T$ is difficult;
@@ -457,7 +457,7 @@ For this analysis, we chose five metastable states.
 The CK test (Fig.~\ref{fig:its-and-ck}b) shows that predictions from our MSM (blue-dashed lines)
 agrees well with MSMs estimated with longer lag times (black-solid lines)
 Thus, the CK test confirms that five metastable states is an appropriate choice
-and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the
+and shows that the MSM we have estimated at lag time $\tau=\SI{0.5}{\nano\second}$ indeed predicts the
 long-timescale behavior of our system within error (blue/shaded area).
 
 In notebook~03, we demonstrate in detail how to estimate and validate MSMs with PyEMMA.
@@ -525,7 +525,7 @@ with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fi
 
 The mean first passage times (MFPTs) out of and into the macrostate $\mathcal{S}_1$ compute to
 \[ \begin{array}{crcr}
-\textrm{direction} & \textrm{mean / ns} && \textrm{std / ns} \\
+\textrm{direction} & \textrm{mean / \si{\nano\second}} && \textrm{std / \si{\nano\second}} \\
 \hline
 \mathcal{S}_1 \to \mathcal{S}_{(2,3,4,5)} & 9.0 & \pm & 1.9 \\
 \mathcal{S}_{(2,3,4,5)} \to \mathcal{S}_1 & 2496.4 & \pm &  470.0
@@ -551,7 +551,7 @@ More details about (spectral) properties of MSMs and how to analyze them with Py
 (a)~the Trp-1 SASA autocorrelation function yields a weak signal which, however,
 (b)~can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$.
 The solid/orange lines denote the maximum likelihood MSM result;
-the dashed/blue lines and the the shaded areas indicate sample means and~$95\%$ confidence intervals computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.}
+the dashed/blue lines and the the shaded areas indicate sample means and~\SI{95}{\percent} confidence intervals computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.}
 \label{fig:msm-exp-obs}
 \end{figure}
 
