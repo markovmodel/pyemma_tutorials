@@ -160,7 +160,8 @@ The CK property for a Markovian matrix is,
 \begin{equation}
 \mathbf{P}(k \tau) = \mathbf{P}^k(\tau),
 \end{equation}
-where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~$1$, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
+where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~$1$,
+whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
 By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model (see Sec.~IV.F in~\cite{msm-jhp}).
 
 Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues.
@@ -283,7 +284,8 @@ As the HMMs---like MSMs---approximate the full phase-space dynamics,
 we can similarly compute the metastable kinetics, apply TPT, visualize the network, and obtain physical observables.
 
 For an extensive discussion of details about HMM properties and the estimation algorithm in general, we suggest Ref.~\cite{hmm-tutorial}.
-For its specific application to the discretization of MSMs using HMMs, we suggest Ref.~\cite{noe-proj-hid-msm}. A generalized extension for estimating this type of low-dimensional projection from the data is given in Ref.~\cite{wu2015projected}.
+For its specific application to the discretization of MSMs using HMMs, we suggest Ref.~\cite{noe-proj-hid-msm}.
+A generalized extension for estimating this type of low-dimensional projection from the data is given in Ref.~\cite{wu2015projected}.
 
 \subsection{Software and installation}
 
@@ -306,11 +308,11 @@ The data for the demonstrated test systems is downloaded upon the first use and 
 
 The underlying software stack for running the tutorial consists of:
 \begin{itemize}
-\item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
-\item mdshare -- A downloader for MD data from a public server
-\item notebook -- The Jupyter~\cite{jupyter} notebook tool used for running the tutorials, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
-\item matplotlib -- A plotting library~\cite{matplotlib}
-\item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nglview}
+    \item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
+    \item mdshare -- A downloader for MD data from a public server
+    \item notebook -- The Jupyter~\cite{jupyter} notebook tool used for running the tutorials, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
+    \item matplotlib -- A plotting library~\cite{matplotlib}
+    \item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nglview}
 \end{itemize}
 
 The tutorial software is currently supported for Python versions~$3.5$ and~$3.6$ on the operating systems Linux, OSX, and Windows.
