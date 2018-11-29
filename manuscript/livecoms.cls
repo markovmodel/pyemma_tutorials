@@ -90,6 +90,8 @@
 \if@onehalfspacing\linespread{1.5}\fi
 \if@doublespacing\linespread{2.0}\fi
 
+\emergencystretch 3em
+
 \RequirePackage{graphicx,xcolor}
 \definecolor{LiveCoMSDarkBlue}{HTML}{273B81}
 \definecolor{LiveCoMSLightBlue}{HTML}{0A9DD9}
@@ -267,7 +269,7 @@
 %\lfoot{\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\
 %  Accepted: \@publisheddateaccepted}%
 \cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%
-\rfoot{\small\color{LiveCoMSMediumGrey}DOI: \href{https://dx.doi.org/\@publishedDOI}{\@publishedDOI}\\
+\rfoot{\small\color{LiveCoMSMediumGrey}\href{https://doi.org/\@publishedDOI}{https://doi.org/\@publishedDOI}\\
   {\it Living J. Comp. Mol. Sci.} \@publishedyear, \@publishedvolume, \@publishedarticlenum }%
 \else
 \cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%

@@ -31,7 +31,7 @@
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Introduction to Markov state modeling with the PyEMMA software --- v\versionnumber}
+\title{Introduction to Markov state modeling with the PyEMMA software [Article v\versionnumber]}
 
 \author[1\authfn{1}*]{Christoph Wehmeyer}
 \author[1\authfn{1}]{Martin K. Scherer}
@@ -55,13 +55,12 @@
 %%% Fill out these parameters when available
 %%% These are used when the "pubversion" option is invoked
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \pubDOI{10.XXXX/YYYYYYY}
 \pubvolume{<volume>}
 \pubyear{<year>}
 \articlenum{<number>}
-\datereceived{July, 27, 2018}
-\dateaccepted{Month, Day, Year}
+\datereceived{Day Month Year}
+\dateaccepted{Day Month Year}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE START
@@ -85,21 +84,21 @@ Short exercises to self check the learning progress and a notebook on troublesho
 
 \section{Introduction}
 
-PyEMMA~\cite{pyemma} (\url{http://emma-project.org}) is a software for the analysis of molecular dynamics (MD) simulations using Markov state models~\cite{schuette-msm,singhal-msm-naming,noe2007jcp,chodera2007jcp,buchete-msm-2008} (MSMs).
+PyEMMA~\cite{pyemma} (\url{http://emma-project.org}) is a software for the analysis of molecular dynamics (MD) simulations using Markov state models (MSMs)~\cite{schuette-msm,singhal-msm-naming,noe2007jcp,chodera2007jcp,buchete-msm-2008}.
 The package is written in Python (\url{http://python.org}), relies heavily on NumPy/SciPy~\cite{numpy,scipy}, and is compatible with the scikit-learn~\cite{sklearn} framework for machine learning.
 
 \subsection{Scope}
 
-In this tutorial, we assume that the reader is familiar with MD simulation and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances (see Ref.~\cite{dror2012biomolecular} for a review on the MD simulation of biomolecules, and Ref.~\cite{mdtutorial} for a tutorial on MD simulations).
+In this tutorial, we assume that the reader is familiar with MD and standard analysis of MD simulations of peptides and proteins, such as computation of torsion angles and distances (see Ref.~\cite{dror2012biomolecular} for a review on the MD simulation of biomolecules, and Ref.~\cite{mdtutorial} for a tutorial on MD simulations).
 
-We further assume that the reader is familiar with the basic ideas and theory underlying Markov modeling and will only give a brief reminder of the basic concepts in Section 2.
+We further assume that the reader is familiar with the basic ideas and theory underlying Markov state modeling and will only give a brief reminder of the basic concepts in Sec.~\ref{sec:prereq}.
 
 For those seeking further resources, the recent perspective ``\emph{Markov State Models: From an Art to a Science}''~\cite{msm-brooke} provides a timeline of methods advances with relevant citations,
-while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology and provides the underlying mathematics in detail.
+while ``\emph{Markov models of molecular kinetics: Generation and validation}''~\cite{msm-jhp} describes the basic MSM theory and methodology and details the underlying mathematics.
 Additionally, two textbooks have been published that focus on computational methods and applications~\cite{msm-book} and mathematical theory~\cite{schuette-sarich-book}.
 
 In addition to publications on the theory and application of Markov state modeling~\cite{schuette-msm,buchete-msm-2008,noe-tmat-sampling,bowman-msm-2009,noe-folding-pathways,sarich-msm-quality,noe-fingerprints,noe-dy-neut-scatt,Chodera2014,ben-rev-msm,simon-mech-mod-nmr,oom-feliks,simon-amm},
-we also recommend the literature on TICA~\cite{tica,tica3,kinetic-maps,tica2},
+we also recommend the literature on time-lagged independent component analysis (TICA)~\cite{tica,tica3,kinetic-maps,tica2},
 transition path theory (TPT)~\cite{weinan-tpt,metzner-msm-tpt},
 hidden Markov state models (HMMs)~\cite{noe-proj-hid-msm,jhp-spectral-rate-theory,bhmm-preprint},
 and variational techniques~\cite{noe-vac,vamp-preprint,gmrq},
@@ -109,6 +108,7 @@ The tutorial is divided into lessons on specific topics, each accompanied by a J
 The lessons start with a showcase of the PyEMMA workflow and follow up with in-depth lessons on specific topics.
 
 \section{Prerequisites}
+\label{sec:prereq}
 
 In the following, we summarize the recommended theory and background knowledge of Markov state modeling for this tutorial.
 Then, we address the software required to work through the lessons.
@@ -116,35 +116,35 @@ Then, we address the software required to work through the lessons.
 \subsection{Markov state models}
 \label{sec:theory}
 
-Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high-dimensional MD simulation datasets.
+Markov state modeling is a mathematical framework for the analysis of time-series data, often but not limited to high dimensional MD simulation datasets.
 In its standard formulation, the creation of an MSM involves decomposing the phase or configuration space occupied by a dynamical system into a set of disjoint, discrete states,
 and a transition matrix $\mathbf{P}(\tau) = [p_{ij}(\tau)]$ denoting the conditional probability of finding the system in state $j$ at time $t+\tau$ given that it was in state $i$ at time $t$.
 Let us make two remarks to avoid common misconceptions:
 \begin{enumerate}
-\item Equilibrium:
-While most analysis techniques require simulation trajectories to be long enough to sample from the equilibrium distribution, this is not required for MSMs.
-Because MSMs are using the \emph{conditional} probability $p_{ij}(\tau)$,
-they are useful for the analysis of short simulation trajectories with arbitrary starting points---see~\cite{oom-feliks} for restrictions.
-\item Markovianity:
-An MSM is a memoryless model.
-Early MSM papers have argued that accurate MSMs can be found if a few states with high barriers are captured by the MSM states so as to achieve a Mori-Zwanzig projection with fast-decaying memory~\cite{swope-its,noe2007jcp,chodera2007jcp}.
-The modern view, however, is that MSMs can be highly accurate if the MSM states discretize the collective coordinates of the slowest processes well~\cite{msm-jhp}.
-This mainly requires that the system is characterized by only a few slow processes at lag time $\tau$,
-which is true for cooperative systems such as most proteins, but not for highly frustrated systems such as glasses.
+    \item Equilibrium:
+    While most analysis techniques require simulation trajectories to be long enough to sample from the equilibrium distribution, this is not required for MSMs.
+    Because MSMs use the \emph{conditional} probability $p_{ij}(\tau)$,
+    they are useful for the analysis of short simulation trajectories with arbitrary starting points---see Ref.~\cite{oom-feliks} for restrictions.
+    \item Markovianity:
+    An MSM is a memoryless model.
+    Early MSM papers have argued that accurate MSMs can be found if a few states with high barriers are captured by the MSM states so as to achieve a Mori-Zwanzig projection with fast-decaying memory~\cite{swope-its,noe2007jcp,chodera2007jcp}.
+    The modern view, however, is that MSMs can be highly accurate if the MSM states discretize the collective coordinates of the slowest processes well~\cite{msm-jhp}.
+    This mainly requires that the system is characterized by only a few slow processes at lag time $\tau$,
+    which is true for cooperative systems such as most proteins, but not for highly frustrated systems such as glasses.
 \end{enumerate}
 
 In order to create a Markov state model for a dynamical system, each data point in the time series is assigned to a state.
 Given an appropriate lag time, every pairwise transition at that lag time is counted and stored in a count matrix.
-Then, the count matrix is converted to a row-stochastic transition probability matrix $\mathbf{P}$, which is defined for the specified lag time.
-For MD simulations in equilibrium, $\mathbf{P}$ should obey detailed balance which is enforced by constraining the estimation of $\mathbf{P}$ to the following equations:
+Then, the count matrix is converted to a row-stochastic transition probability matrix $\mathbf{P}(\tau)$, which is defined for the specified lag time.
+For MD simulations in equilibrium, $\mathbf{P}(\tau)$ should obey detailed balance which is enforced by constraining the estimation of $\mathbf{P}(\tau)$ to the following equations:
 \begin{equation}
 \label{eq:balance}
 \pi_i p_{ij} = \pi_j p_{ji},
 \end{equation}
 where $\pi_i$ is the stationary probability of state $i$ and $p_{ij}$ is the probability of transitioning to state $j$ conditional on being in state $i$.
 The constraints (\ref{eq:balance}) are omitted if MD simulations are not conducted in equilibrium, e.g.,
-for systems experiencing a pulling force or an external potential---see~\cite{Koltai2018} for a recent review on nonequilibrium MSMs.
-For the remainder of this section we will simplify the matter by assuming the more common scenario of MD simulations without external forces and (\ref{eq:balance}) to hold.
+for systems experiencing a pulling force or an external potential (see Ref.~\cite{Koltai2018} for a recent review on nonequilibrium MSMs).
+For the remainder of this section we will simplify the matter by assuming the more common scenario of MD simulations without external forces, such that Eqn.~(\ref{eq:balance}) is assumed to hold.
 
 When estimating an MSM it is critical to choose a lag time, $\tau$, which is long enough to ensure Markovian dynamics in our state space, but short enough to resolve the dynamics in which we are interested.
 Plotting the implied timescales (ITS) as a function of~$\tau$ can be a helpful diagnostic when selecting the MSM lag time~\cite{swope-its}.
@@ -160,8 +160,9 @@ The CK property for a Markovian matrix is,
 \begin{equation}
 \mathbf{P}(k \tau) = \mathbf{P}^k(\tau),
 \end{equation}
-where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$, where $k$ is an integer larger than~$1$, whereas the right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
-By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model (see Sec.~IV.F in~\cite{msm-jhp}).
+where the left-hand side of the equation corresponds to an MSM estimated at lag time $k\tau$ and $k$ is an integer larger than~$1$.
+The right-hand side of the equation is our estimated MSM transition probability matrix to the $k^\textrm{th}$ power.
+By assessing how well the approximated transition probability matrix adheres to the CK property, we can validate the appropriateness of the Markovian assumption for the model (see Sec.~IV.F in Ref.~\cite{msm-jhp}).
 
 Once validated, the transition matrix can be decomposed into eigenvectors and eigenvalues.
 The highest eigenvalue, $\lambda_1(\tau)$, is unique and equal to $1$.
@@ -171,11 +172,11 @@ Its corresponding left eigenvector is the stationary distribution, $\bm{\pi}$:
 \end{equation}
 
 The subsequent eigenvalues $\lambda_{i>1}(\tau)$ are real with absolute values less than~$1$ and are related to the \emph{characteristic} or \emph{implied} timescales of dynamical processes within the system (eq.~\ref{eq:its}).
-The dynamical process themself (for $i>1$) are encoded by the right eigenvectors $\bm{\psi}_i$,
+The dynamical processes themselves (for $i>1$) are encoded by the right eigenvectors $\bm{\psi}_i$,
 \begin{equation}
 \mathbf{P}(\tau)\bm{\psi}_i = \lambda_i(\tau) \bm{\psi}_i,
 \end{equation}
-where the eigenvalue-eigenvector pairs are indexed in decreasing order.
+where the eigenvalue-eigenvector pairs are indexed in decreasing order according to the eigenvalues.
 The coefficients of the eigenvectors represent the flux into and out of the Markov states that characterize the corresponding process.
 The right eigenvector $\bm{\psi}_1$ is a vector consisting of~$1$'s.
 
@@ -185,12 +186,12 @@ The theory described in the previous section required the decomposition of the p
 Starting from the output of an MD simulation of a protein, there are several steps that can be taken to obtain an MSM from the original configuration space:
 
 \begin{itemize}
-	\item Featurization -- The Cartesian coordinates characterizing each frame of the MD trajectory are transformed into an intuitive basis such as the protein's dihedral angles or contact distance pairs.
-	\item Dimensionality reduction -- Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
-	Frequently, time-lagged independent component analysis (TICA)~\cite{tica,tica3,kinetic-maps} is used to transform the features into a set of slow coordinates.
-	\item Clustering -- This is the step at which the state decomposition occurs.
+	\item Featurization: The Cartesian coordinates characterizing each frame of the MD trajectory are transformed into an intuitive basis such as the protein's dihedral angles or contact distance pairs.
+	\item Dimensionality reduction: Optionally, a basis set transformation can be performed that produces a linear (or nonlinear) combination of the features in the previous step.
+	Frequently, TICA~\cite{tica,tica3,kinetic-maps} is used to transform the features into a set of slow coordinates.
+	\item Clustering: This is the step at which the state decomposition occurs.
 	The features or TICs are grouped into a set of states using a clustering algorithm such as $k$-means.
-	\item Transition matrix approximation -- At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
+	\item Transition matrix approximation: At this stage, transitions are counted at a pre-specified lag time, and the estimation and validation described in the previous section are performed.
 \end{itemize}
 
 It is apparent that there are many choices involved in MSM construction such as what features should be used and how many states should be chosen.
@@ -199,25 +200,25 @@ which enabled an objective comparison among different state decomposition choice
 More recently, the more general variational approach to Markov processes (VAMP) has been developed in order to facilitate the approximation and comparison of reversible models for basis sets that are continuous,
 as opposed to discrete states~\cite{vamp-preprint}.
 The VAMP can thus be used to perform model selection.
-Specifically, we use the VAMP-2 score, which captures the kinetic variance explained by the model.
+Specifically, we use the VAMP-2 score, which captures the kinetic variance explained by the model~\cite{kinetic-maps}.
 However, the MSM lag time cannot be optimized using VAMP,
 and must be chosen using a separate validation as described above~\cite{husic2017note}.
 
-A commonly used method for dimensionality reduction, TICA, is a particular implementation of the VAC.
+A commonly used method for dimensionality reduction, TICA, is a particular implementation of the VAC~\cite{tica}.
 To apply TICA, we need to compute instantaneous ($\mathbf{C}(0)$) and time-lagged ($\mathbf{C}(\tau)$) covariance matrices with elements
 \begin{eqnarray}
 c_{ij}(0) & = & \left\langle \tilde{x}_i(t) \; \tilde{x}_j(t) \right\rangle_t \label{eq:c0}\\
 c_{ij}(\tau) & = & \left\langle \tilde{x}_i(t) \; \tilde{x}_j(t + \tau) \right\rangle_t, \label{eq:ct}
 \end{eqnarray}
 where $\tilde{x}_i(t)$ denotes the $i^\textrm{th}$ feature at time $t$ after the mean has been removed.
-By default, PyEMMA estimates (\ref{eq:c0},\ref{eq:ct}) using symmetrization~\cite{tica}.
-This symmetrization induces a significant bias when using non-equilibrium data from short trajectories~\cite{hao-variational-koopman-models}.
+By default, PyEMMA estimates Eqns.~(\ref{eq:c0}) and~(\ref{eq:ct}) using symmetrization~\cite{tica}.
+This symmetrization induces a significant bias when using nonequilibrium data from short trajectories~\cite{hao-variational-koopman-models}.
 As an alternative, the so-called Koopman reweighting estimator is available which avoids this bias,
 but comes at the cost of a large variance~\cite{hao-variational-koopman-models}.
 
 After estimating the covariance matrices, TICA solves the generalized eigenvalue problem
 \begin{equation}
-\mathbf{C}(\tau) \, \mathbf{u}_i = \mathbf{C}(0) \, \lambda_i(\tau) \, \mathbf{u}_i \,, \quad i=1,\dots,n,
+\mathbf{C}(\tau) \, \mathbf{u}_i = \mathbf{C}(0) \, \lambda_i(\tau) \, \mathbf{u}_i \,, \quad i=1,\dots,n
 \end{equation}
 to obtain independent component directions $\mathbf{u}_i$ which approximate the reaction coordinates of the system,
 where the pairs of eigenvalues and independent components are sorted in descending order.
@@ -239,15 +240,15 @@ we obtain a \emph{kinetic map}~\cite{kinetic-maps} which is the default behavior
 Note, though, that TICA requires the dynamics to be simulated at equilibrium conditions.
 To use TICA with nonequilibrium MD, e.g., subject to external forces,
 or simply to perform dimension reduction on short trajectory data without worrying about reweighting,
-we recommend to use VAMP~\cite{vamp-preprint}.
+we recommend to use VAMP, which does not require reversible dynamics~\cite{vamp-preprint}.
 
-For all these approaches,
+For all of these approaches,
 dimensionality reduction is performed by projecting the (mean free) features $\tilde{\mathbf{x}}(t)$
 onto the leading $d$ independent components $\mathbf{U}_d=\left[\mathbf{u}_1 \dots \mathbf{u}_d\right]$,
 \begin{equation}
 \mathbf{y}(t) = \mathbf{U}_d^\top \tilde{\mathbf{x}}(t),
 \end{equation}
-where, in practice, $d$ is chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., $95\%$).
+where, in practice, $d$ is preferably chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., \SI{95}{\percent}).
 
 \subsection{Hidden Markov state models}
 
@@ -260,14 +261,13 @@ where, in practice, $d$ is chosen such that a specific fraction of kinetic varia
 The estimation of an MSM requires the dynamics between microstates to be Markovian.
 However, in case of a poor dimension reduction and/or discretization or short trajectories,
 we cannot anticipate this to be the case.
-We illustrate this point in notebook~07.
 
 An alternative, which is much less sensitive to poor discretization,
 is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,jhp-spectral-rate-theory,noe-proj-hid-msm,bhmm-preprint}.
 HMMs are less sensitive to the discretization error as they sidestep the assumption of Markovian dynamics in the discretized space (illustrated in Fig.~\ref{fig:hmm-scheme}).
-Instead, HMMs assume that there is an underlying (hidden) dynamic process which is Markovian
-and gives rise to our observed data, e.g., the ($n$~states) discretized trajectories $s(t)$.
-This is a powerful principle as we know that there is indeed an underlying process which is Markovian:
+Instead, HMMs assume that there is an underlying (hidden) dynamic process that is Markovian
+and gives rise to our observed data, i.e., the ($n$~states) discretized trajectories $s(t)$.
+This is a powerful principle as we know that there is indeed an underlying process that is Markovian:
 our molecular dynamics trajectories.
 
 To estimate an HMM, we need a spectral gap after the $m^\textrm{th}$ timescale;
@@ -277,23 +277,24 @@ and a row-stochastic matrix ($\bm{\chi}$) of probabilities $\chi\left( s \middle
 to emit the discrete state $s$ conditional on being in the hidden state $\tilde{s}$.
 
 An HMM estimation always yields a model with a small number of (hidden) states
-where each state is considered to be metastable and,
-thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see notebook~07).
+in which each state is considered to be metastable and,
+thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully.
 As the HMMs---like MSMs---approximate the full phase-space dynamics,
 we can similarly compute the metastable kinetics, apply TPT, visualize the network, and obtain physical observables.
 
 For an extensive discussion of details about HMM properties and the estimation algorithm in general, we suggest Ref.~\cite{hmm-tutorial}.
-For its specific application to the discretization of MSMs using HMMs, we suggest Ref.~\cite{noe-proj-hid-msm}. A generalized extension for estimating this type of low-dimensional projection from the data is given in Ref.~\cite{wu2015projected}.
+For its specific application to the discretization of MSMs using HMMs, we suggest Ref.~\cite{noe-proj-hid-msm}.
+A generalized extension for estimating this type of low dimensional projection from the data is given in Ref.~\cite{wu2015projected}. One of our tutorial notebooks, to be discussed in the next section, provides an example of HMM analysis.
 
 \subsection{Software and installation}
 
 We utilize Jupyter~\cite{jupyter} notebooks to show code examples along with figures and interactive widgets to display molecules.
 The user can install all necessary packages in one step using the \texttt{conda} command provided by the Anaconda Python 
 stack (\url{https://conda.io/miniconda.html}).
-We recommend Anaconda because it resolves and installs dependencies as well as provides pre-compiled versions of common packages.
+We recommend Anaconda because it resolves and installs dependencies and provides pre-compiled versions of common packages.
 The tutorial installation contains a launcher command to start the Jupyter notebook server as well as the notebook files.
 
-You can install the tutorial's dependencies in a new conda environment and start the notebook server via
+The user can install the tutorial's dependencies in a new conda environment and start the notebook server via
 \begin{verbatim}
 conda create -n pyemma_tutorials
 conda activate pyemma_tutorials
@@ -306,11 +307,11 @@ The data for the demonstrated test systems is downloaded upon the first use and 
 
 The underlying software stack for running the tutorial consists of:
 \begin{itemize}
-\item \textbf{PyEMMA} -- MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
-\item mdshare -- A downloader for MD data from a public server
-\item notebook -- The Jupyter~\cite{jupyter} notebook tool used for running the tutorials, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
-\item matplotlib -- A plotting library~\cite{matplotlib}
-\item nglview -- Widget for active viewing of molecular structures in Jupyter environments~\cite{nglview}
+    \item \textbf{PyEMMA}: MSM/HMM estimation, validation, analysis, and visualization, and its dependencies~\cite{pyemma}
+    \item mdshare: A downloader for MD data from a public server
+    \item notebook: The Jupyter~\cite{jupyter} notebook tool used for running the tutorials, along with extension packages jupyter\_contrib\_nbextensions and nbexamples
+    \item matplotlib: A plotting library~\cite{matplotlib}
+    \item nglview: Widget for active viewing of molecular structures in Jupyter environments~\cite{nglview}
 \end{itemize}
 
 The tutorial software is currently supported for Python versions~$3.5$ and~$3.6$ on the operating systems Linux, OSX, and Windows.
@@ -323,11 +324,11 @@ and run the tutorials online in any browser.
 \section{PyEMMA tutorials}
 
 This tutorial consists of nine Jupyter notebooks which introduce the basic features of PyEMMA.
-The first notebook~00, which we will summarize in the following, showcases the entire estimation,
+The first notebook~(00), which we will summarize in the following, showcases the entire estimation,
 validation, and analysis workflow for a small example system.
-The goal of this introductory notebook~00 is to provide the user with the typical steps required to obtain a validated MSM analysis of protein or peptide simulation data.
-The seven subsequent notebooks~01--07 provide in-depth lessons on specific topics,
-and the last notebook~08 contains guidelines on how to deal with common problems during MSM estimation.
+The goal of this introductory notebook is to provide the user with the typical steps required to obtain a validated MSM analysis of protein or peptide simulation data.
+The seven subsequent notebooks~(01--07) provide in-depth lessons on specific topics,
+and the last notebook~(08) contains guidelines on how to deal with common problems during MSM estimation.
 
 \subsection{The PyEMMA workflow}
 
@@ -340,7 +341,7 @@ a dynamical model is obtained that can be analyzed (last row).}
 \label{fig:workflowchart}
 \end{figure}
 
-In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an MD dataset might consist of,
+In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an MD dataset might consist of
 \begin{itemize}
 	\item extracting molecular features from the raw data (01),
 	\item transforming those features into a suitable, low dimensional subspace (02),
@@ -352,12 +353,12 @@ In short, the workflow (Fig.~\ref{fig:workflowchart}) for a full analysis of an 
 	\item coarse-graining the MSM using a hidden Markov model approach (07).
 \end{itemize}
 
-For the remainder of this manuscript we will walk through the first notebook~00.
+For the remainder of this manuscript we will walk through the first notebook~(00).
 In notebook~00 we analyze a dataset of the Trp-Leu-Ala-Leu-Leu pentapeptide (Fig.~\ref{fig:io-to-tica}a),
-consisting of~$25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of~$0.1$~ns.
+consisting of~$25$ independent MD trajectories conducted in implicit solvent with frames saved at an interval of~\SI{0.1}{\nano\second}.
 We present the results obtained in this notebook,
 thereby providing an example of how results generated using PyEMMA can be integrated into research publications.
-The figures that will be displayed in the following are created in the showcase notebook~00 and can be easily reproduced.
+The figures that will be displayed in the following sections are created in the showcase notebook~00 and can be easily reproduced.
 
 Note that the modeler has to select hyper-parameters at most stages throughout the workflow.
 This selection must be done carefully as poor choices make it hard, or even impossible, to build a good MSM.
@@ -373,8 +374,8 @@ This approach is not only computationally cheaper but allows us to discuss the s
 \caption{Example analysis of the conformational dynamics of a pentapeptide backbone:
 (a)~The Trp-Leu-Ala-Leu-Leu pentapeptide in licorice representation~\cite{vmd}.
 (b)~The VAMP-2 score indicates which of the tested featurizations contains the highest kinetic variance.
-(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=0.5$~ns shows multiple minima and
-(d)~the time series of the first two ICs of the first trajectory show rare jumps.}
+(c)~The sample free energy projected onto the first two time-lagged independent components (ICs) at lag time $\tau=\SI{0.5}{\nano\second}$ shows multiple minima and
+(d)~the time series of the first two ICs of the first trajectory show rare transitions.}
 \label{fig:io-to-tica}
 \end{figure}
 
@@ -383,7 +384,7 @@ In order to approximate the slow dynamics in a statistically efficient manner,
 a lower dimensional representation of our simulation data is necessary.
 However, the features (e.g. torsion angles, distances or contacts) which best represent the slow dynamical modes of a given molecular system are unknown a priori~\cite{NoeClementiReview}.
 Fortunately, the variational principle of conformational dynamics~\cite{noe-vac,nueske-vamk}
-and the more general variational approach for Markov processes (VAMP)~\cite{vamp-preprint}
+and the more general VAMP~\cite{vamp-preprint}
 provide a systematic means to quantitatively compare multiple representations of the simulation data.
 In particular, we can use a scalar score obtained using VAMP to directly compare the ability of certain features to capture slow dynamical modes in a particular molecular system.
 In notebook~01, we present in detail how to extract features from MD datasets and how to systematically compare them.
@@ -392,11 +393,11 @@ Throughout this tutorial, we utilize the VAMP-2 score, which maximizes the kinet
 We should always evaluate the score in a cross-validated manner to ensure that we neither include too few features (under-fitting) or too many features (over-fitting)~\cite{gmrq,vamp-preprint}.
 To choose among three different molecular features reflecting protein structure,
 we compute the (cross-validated) VAMP-2 score (notebook~00).
-Although we cannot MSM optimize lag times with a variational score\cite{husic2017note}, such as VAMP-2,
-it is important to ensure that properties that we optimize are robust as a function of lag time. 
+Although we cannot optimize MSM lag times with a variational score\cite{husic2017note}, such as VAMP-2,
+it is important to ensure that the properties we optimize are robust as a function of lag time. 
 Consequently, we compute the VAMP-2 score at several lag times (notebook~00). 
 We find that the relative rankings of the different molecular features are highly robust as a function of lag time. 
-We show one example of this ranking and the absolute VAMP-2 scores for lag time~$0.5$~ns in Fig.~\ref{fig:io-to-tica}b. 
+We show one example of this ranking and the absolute VAMP-2 scores for lag time~\SI{0.5}{\nano\second} in Fig.~\ref{fig:io-to-tica}b. 
 We find that backbone torsions contain more kinetic variance than the backbone heavy atom positions or the distances between them (Fig.~\ref{fig:io-to-tica}b).
 This suggests that backbone torsions are the best of the options evaluated for MSM construction.
 
@@ -408,10 +409,10 @@ Subsequently, we perform TICA~\cite{tica,tica3,kinetic-maps} in order to reduce 
 which typically contains many degrees of freedom,
 to a lower dimensional space that can be discretized with higher resolution and better statistical efficiency.
 TICA is a special case of the variational principle~\cite{noe-vac,nueske-vamk} and is designed to find a projection preserving the long-timescale dynamics in the dataset.
-Here, performing TICA on the backbone torsions at lag time~$0.5$~ns yields a four dimensional subspace using a~$95\%$ kinetic variance cutoff
+Here, performing TICA on the backbone torsions at lag time~\SI{0.5}{\nano\second} yields a four dimensional subspace using a~\SI{95}{\percent} kinetic variance cutoff
 (note that we perform a $\cos/\sin$-transformation of the torsions before TICA in order to preserve their periodicity).
 The sample free energy projected onto the first two independent components (ICs) exhibits several minima (Fig.~\ref{fig:io-to-tica}c).
-Discrete jumps between the minima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
+Discrete transitions between the minima can be observed by visualizing the transformation of the first trajectory into these ICs (Fig.~\ref{fig:io-to-tica}d).
 We thus assume that our TICA-transformed backbone torsion features describe one or more metastable processes.
 
 We demonstrate how to apply TICA, suggest how to interpret the projected coordinates, and compare the results to other dimension reduction techniques in notebook~02.
@@ -433,21 +434,21 @@ A detailed comparison between different clustering techniques is provided in not
 (a)~The convergence behavior of the implied timescales associated with the four slowest processes.
 The solid lines refer to the maximum likelihood result while the dashed lines show the ensemble mean computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.
 The black line (marking equality of timescale and lag time) with grey area indicates the timescale horizon below which the MSM cannot resolve processes.
-As implied timescales are well-converged at $\tau=0.5$~ns, this lag time is chosen for subsequent MSM estimation.
-(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=0.5$~ns assuming~5 metastable states.
+As implied timescales are well-converged at $\tau=\SI{0.5}{\nano\second}$, this lag time is chosen for subsequent MSM estimation.
+(b)~CK test computed using an MSM estimated with lag time $\tau=\SI{0.5}{\nano\second}$ assuming~5 metastable states.
 Predictions from this model agree with higher lag time estimates within confidence intervals.
-Implied timescales convergence as well as a passing Chapman-Kolmogorov test are a necessary condition in MSM validation.
-In both panels, the (non-grey) shaded areas indicate~$95\%$ confidence intervals computed with the aforementioned Bayesian sampling procedure.}
+Implied timescales convergence as well as a passing CK test are a necessary condition in MSM validation.
+In both panels, the (non-grey) shaded areas indicate~\SI{95}{\percent} confidence intervals computed with the aforementioned Bayesian sampling procedure.}
 \label{fig:its-and-ck}
 \end{figure}
 
 A necessary condition for Markovian dynamics in our reduced space is that the ITS are approximately constant as a function of $\tau$;
 accordingly, we chose the smallest possible $\tau$ which fulfills this condition within the model uncertainty.
 The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,noe-tmat-sampling} with~$100$ samples.
-In our example, we find that the four slowest ITS converge quickly and are constant within a $95\%$ confidence interval for lag times above~$0.5$~ns (Fig.~\ref{fig:its-and-ck}a).
-Using this lag time we can now estimate a (Bayesian) MSM with $\tau=0.5$~ns. 
+In our example, we find that the four slowest ITS converge quickly and are constant within a \SI{95}{\percent} confidence interval for lag times above~\SI{0.5}{\nano\second} (Fig.~\ref{fig:its-and-ck}a).
+Using this lag time we can now estimate a (Bayesian) MSM with $\tau=\SI{0.5}{\nano\second}$. 
 
-To test the validity of our MSM, we perform a Chapman-Kolmogorov (CK) test.
+To test the validity of our MSM, we perform a CK test.
 Visualizing the full transition probability matrix $T$ is difficult;
 we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
 An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
@@ -455,12 +456,12 @@ For this analysis, we chose five metastable states.
 The CK test (Fig.~\ref{fig:its-and-ck}b) shows that predictions from our MSM (blue-dashed lines)
 agrees well with MSMs estimated with longer lag times (black-solid lines)
 Thus, the CK test confirms that five metastable states is an appropriate choice
-and shows that the MSM we have estimated at lag time $\tau=0.5$~ns indeed predicts the
+and shows that the MSM we have estimated at lag time $\tau=\SI{0.5}{\nano\second}$ indeed predicts the
 long-timescale behavior of our system within error (blue/shaded area).
 
 In notebook~03, we demonstrate in detail how to estimate and validate MSMs with PyEMMA.
 
-\subsection{Analyzing the MSM}
+\subsection{MSM Analysis}
 
 \begin{figure}[ht]
 \includegraphics{figure_5}
@@ -509,21 +510,21 @@ G_{\mathcal{S}_i} = - \textrm{k}_\textrm{B} T \ln \sum\limits_{j\in \mathcal{S}_
 where $\pi_j$ denotes the MSM stationary weight of the $j^\textrm{th}$ microstate.
 
 In order to interpret the slowest relaxation timescales, we refer to the (right) eigenvectors,
-as they are independent of the stationary distribution (see Section~\ref{sec:theory}).
+as they are independent of the stationary distribution (see Sec.~\ref{sec:theory}).
 This enables us to specifically study what conformational changes are happening on a particular timescale independently of the equilbrium distribution.
 The first right eigenvector corresponds to the stationary process and its eigenvalue is the Perron eigenvalue~$1$.
 The second right eigenvector, on the other hand, corresponds to the slowest process in the system. 
-Note that the eigenvectors are real as detailed balance has been enforced during MSM estimation.
+Note that the eigenvectors are real because detailed balance has been enforced during MSM estimation.
 The minimal and maximal components of the second right eigenvector indicate the microstates between which the process shifts probability density.
 The relaxation timescale of this exchange process is exactly the corresponding implied timescale,
-which can be computed from its corresponding eigenvalue using~\eqref{eq:its}.
+which can be computed from its corresponding eigenvalue using Eqn.~(\ref{eq:its}).
 In the projection onto the first two TICA components,
 we identify the slowest MSM process as a probability shift between macrostate $\mathcal{S}_1$ and the rest of the system,
 with macrostates $\mathcal{S}_4$ and $\mathcal{S}_5$ in particular (Fig.~\ref{fig:msm-analysis}c).
 
 The mean first passage times (MFPTs) out of and into the macrostate $\mathcal{S}_1$ compute to
 \[ \begin{array}{crcr}
-\textrm{direction} & \textrm{mean / ns} && \textrm{std / ns} \\
+\textrm{direction} & \textrm{mean / \si{\nano\second}} && \textrm{std / \si{\nano\second}} \\
 \hline
 \mathcal{S}_1 \to \mathcal{S}_{(2,3,4,5)} & 9.0 & \pm & 1.9 \\
 \mathcal{S}_{(2,3,4,5)} \to \mathcal{S}_1 & 2496.4 & \pm &  470.0
@@ -531,7 +532,7 @@ The mean first passage times (MFPTs) out of and into the macrostate $\mathcal{S}
 using the Bayesian MSM.
 
 TPT~\cite{weinan-tpt,metzner-msm-tpt} is a method used to analyze the statistics of transition pathways.
-The TPT version of~\cite{noe-folding-pathways} can be conveniently applied to the estimated MSM.
+TPT as implemented in Ref.~\cite{noe-folding-pathways} can be conveniently applied to the estimated MSM.
 Here, we compute the TPT flux between macrostates $\mathcal{S}_2$ and $\mathcal{S}_4$ (Fig.~\ref{fig:msm-analysis}d).
 The committor projection onto the first two TICA components shows that it is constant within the metastable states defined above.
 Transition regions (macrostates $\mathcal{S}_{(1,3,5)}$) can be identified by committor values $\approx \frac{1}{2}$.
@@ -549,7 +550,7 @@ More details about (spectral) properties of MSMs and how to analyze them with Py
 (a)~the Trp-1 SASA autocorrelation function yields a weak signal which, however,
 (b)~can be enhanced if the system is prepared in the nonequilibrium condition $\mathcal{S}_1$.
 The solid/orange lines denote the maximum likelihood MSM result;
-the dashed/blue lines and the the shaded areas indicate sample means and~$95\%$ confidence intervals computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.}
+the dashed/blue lines and the the shaded areas indicate sample means and~\SI{95}{\percent} confidence intervals computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.}
 \label{fig:msm-exp-obs}
 \end{figure}
 
@@ -558,29 +559,29 @@ Connecting MSM analysis to experimental data can both serve as an accuracy test 
 Since we have both the stationary and dynamic properties of the molecular system encoded in the MSM transition probability matrix,
 we can compute observables that involve both stationary ensemble averages as well as correlation functions.
 
-As an example, here we look at the fluorescence correlation of Trp-1,
+As an example, we look at the fluorescence correlation of Trp-1,
 since this terminal tryptophan is a realistic experimental observable for our pentapeptide system.
 In order to compute the fluorescence correlation functions we require a microscopic,
 instantaneous value of the tryptophan fluorescence for each of the original~$75$ MSM microstates.
 To approximate the fluorescence signal in our pentapeptide system,
 we use the mdtraj library~\cite{mdtraj} to compute the solvent accessible surface area (SASA)~\cite{sasa-calculation} of Trp-1.
 Now that we have an approximation of the fluorescence in each of our MSM states,
-we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (\ref{fig:msm-exp-obs}a).
+we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (Fig.~\ref{fig:msm-exp-obs}a).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
 
-Using PyEMMA, we can simulate the relaxation of an observable if we had prepared our molecular system in a nonequilibrium initial condition.
+Using PyEMMA, we can simulate the relaxation of an observable from a nonequilibrium initial condition.
 The experimental counterpart of such a prediction could be a temperature or pressure jump experiment or a stopped flow assay.
 To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of~$\mathcal{S}_1$
-and follow the predicted fluorescence signal as it relaxes to equilibrium (\ref{fig:msm-exp-obs}b).
+and follow the predicted fluorescence signal as it relaxes to equilibrium (Fig.~\ref{fig:msm-exp-obs}b).
 We see that the predicted relaxation signal has a much larger amplitude for the nonequilibrium initialization,
 making it more likely to be experimentally measurable.
 
 In addition to a detailed demonstration of the above, notebook~06 demonstrates how to compute J-couplings and dynamic fingerprints from MSMs.
 
-\subsection{Summary}
+\subsection{Summary of the showcase notebook}
 
 In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA.
-For the full analysis, please refer to the first notebook~00.
+For the full analysis, please refer to the first notebook~(00).
 All notebooks as well as detailed installation instructions are available on \githubrepository{}.
 
 \subsection{Modeling large systems}
@@ -591,7 +592,7 @@ A case in point is the curse of dimensionality:~it is difficult to discretize a 
 While it is somewhat computationally demanding, more importantly,
 Euclidean distances become less meaningful with increasing dimensionality~\cite{aggarwal_surprising_2001}
 and thus cluster assignments based on that norm may yield a poor discretization.
-Especially for large systems, it is thus particularly important to first find a suitable set of features,
+Especially for large systems, it is particularly important to first find a suitable set of features,
 and to further apply dimensionality reduction techniques (e.g., TICA, VAMP, if applicable)
 to obtain a low dimensional representation of the slow dynamics.
 Hidden Markov models (HMMs) might further mitigate poor discretization to a certain extent~\cite{noe-proj-hid-msm}.
@@ -602,18 +603,18 @@ This problem may be mitigated by choosing a more specific set of features.
 
 Additional technical challenges for large systems include high demands on memory and computation time;
 we explain how to deal with those in the tutorials (notebook~01).
-More details on how to model complex systems with the techniques presented here are described, e.g., by~\cite{plattner_protein_2015,plattner_complete_2017}.
+More details on how to model complex systems with the techniques presented here are described, e.g., by Refs.~\cite{plattner_protein_2015,plattner_complete_2017}.
 We further examine some symptoms that may indicate problematic or difficult datasets, and demonstrate how to deal with them in notebook~08.
 
 \subsection{Advanced Methods}
 
 The present tutorial presents the basics of modern Markov state modeling with PyEMMA. 
-However, recent years have seen many extensions of the methodology---many of which are available within PyEMMA. 
+However, recent years have seen many extensions of the methodology, many of which are available within PyEMMA. 
 We encourage interested readers to look into these methods in the software documentation
 and to make use of the specific Jupyter notebooks distributed with PyEMMA (\url{http://emma-project.org}).
 
 Conventional Markov state modeling often relies on large simulation datasets to ensure proper convergence of thermodynamic and kinetic properties. 
-In one extension, Multi-ensemble Markov models (MEMMs)~\cite{dtram,tram},
+In one extension, multi-ensemble Markov models (MEMMs)~\cite{dtram,tram},
 we can integrate unbiased and biased simulations in a systematic manner to speed up the convergence. 
 MEMMs consequently enable users to combine enhanced sampling methods such as umbrella sampling or replica exchange
 with conventional molecular dynamics simulations to more efficiently study rare event kinetics~\cite{trammbar}. 
@@ -625,7 +626,7 @@ This issue is not intrinsic to the Markov state modeling approach as such,
 but rather is associated with systematic errors in the force field model used to conduct the simulation. 
 Nevertheless, using Augmented Markov models (AMM) it is possible to build an integrative MSM which balances experimental and simulation data,
 taking into account their respective uncertainties~\cite{simon-amm}. 
-AMMs are implemented in PyEMMA.  
+AMMs are also implemented in PyEMMA.  
 
 Recently, there have been steps towards replacing the traditional user-directed pipeline (involving featurizing,
 reducing dimension, discretizing, MSM estimation and coarse-graining) by a single end-to-end deep learning method such as VAMPnets~\cite{vampnet}.
@@ -651,7 +652,8 @@ CW, MKS, TH, BEH, and SO developed and tested notebooks.
 MKS developed the software infrastructure, test, and install environment.
 CW, MKS, TH, BEH, SO, and FN wrote the manuscript.
 
-For a more detailed description of author contributions, see the GitHub issue tracking and changelog at \githubrepository{}.
+For a more detailed description of author contributions,
+see the GitHub issue tracking and changelog at \githubrepository.
 
 \section{Other Contributions}
 %%%%%%%%%%%%%%%
@@ -665,7 +667,8 @@ For a more detailed description of author contributions, see the GitHub issue tr
 %%%%%%%%%%%%%%%
 We are grateful to Nuria Plattner for providing the pentapeptide simulation data and Camilla Ventura Santos as well as the entire computational molecular biology group for valuable discussion and feedback.
 
-For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository{}.
+For a more detailed description of contributions from the community and others,
+see the GitHub issue tracking and changelog at \githubrepository.
 
 \section{Potentially Conflicting Interests}
 %%%%%%%
@@ -677,10 +680,11 @@ The authors declare no conflicting interests.
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
 %%%%%%%
+MKS acknowledges financial support from European Commission (ERC StG 307494 "pcCell").
 TH acknowledges financial support from Deutsche Forschungsgemeinschaft (SFB/TRR 186, Project A12).
-FN and BEH acknowledge funding from European Commission (ERC CoG 772230 "ScaleCell").
-FN acknowledges funding from Deutsche Forschungsgemeinschaft (SFB 1114, Projects A04 and C03, NO 825/2-2).
 SO acknowledges a postdoctoral fellowship from the Alexander von Humboldt Foundation.
+FN and MKS acknowledge funding from Deutsche Forschungsgemeinschaft (SFB 1114, Projects A04 and C03, NO 825/2-2).
+FN and BEH acknowledge funding from European Commission (ERC CoG 772230 "ScaleCell").
 
 \bibliography{literature}
 
