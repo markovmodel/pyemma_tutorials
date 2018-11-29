@@ -121,16 +121,16 @@ In its standard formulation, the creation of an MSM involves decomposing the pha
 and a transition matrix $\mathbf{P}(\tau) = [p_{ij}(\tau)]$ denoting the conditional probability of finding the system in state $j$ at time $t+\tau$ given that it was in state $i$ at time $t$.
 Let us make two remarks to avoid common misconceptions:
 \begin{enumerate}
-\item Equilibrium:
-While most analysis techniques require simulation trajectories to be long enough to sample from the equilibrium distribution, this is not required for MSMs.
-Because MSMs use the \emph{conditional} probability $p_{ij}(\tau)$,
-they are useful for the analysis of short simulation trajectories with arbitrary starting points---see Ref.~\cite{oom-feliks} for restrictions.
-\item Markovianity:
-An MSM is a memoryless model.
-Early MSM papers have argued that accurate MSMs can be found if a few states with high barriers are captured by the MSM states so as to achieve a Mori-Zwanzig projection with fast-decaying memory~\cite{swope-its,noe2007jcp,chodera2007jcp}.
-The modern view, however, is that MSMs can be highly accurate if the MSM states discretize the collective coordinates of the slowest processes well~\cite{msm-jhp}.
-This mainly requires that the system is characterized by only a few slow processes at lag time $\tau$,
-which is true for cooperative systems such as most proteins, but not for highly frustrated systems such as glasses.
+    \item Equilibrium:
+    While most analysis techniques require simulation trajectories to be long enough to sample from the equilibrium distribution, this is not required for MSMs.
+    Because MSMs use the \emph{conditional} probability $p_{ij}(\tau)$,
+    they are useful for the analysis of short simulation trajectories with arbitrary starting points---see Ref.~\cite{oom-feliks} for restrictions.
+    \item Markovianity:
+    An MSM is a memoryless model.
+    Early MSM papers have argued that accurate MSMs can be found if a few states with high barriers are captured by the MSM states so as to achieve a Mori-Zwanzig projection with fast-decaying memory~\cite{swope-its,noe2007jcp,chodera2007jcp}.
+    The modern view, however, is that MSMs can be highly accurate if the MSM states discretize the collective coordinates of the slowest processes well~\cite{msm-jhp}.
+    This mainly requires that the system is characterized by only a few slow processes at lag time $\tau$,
+    which is true for cooperative systems such as most proteins, but not for highly frustrated systems such as glasses.
 \end{enumerate}
 
 In order to create a Markov state model for a dynamical system, each data point in the time series is assigned to a state.
@@ -200,7 +200,7 @@ which enabled an objective comparison among different state decomposition choice
 More recently, the more general variational approach to Markov processes (VAMP) has been developed in order to facilitate the approximation and comparison of reversible models for basis sets that are continuous,
 as opposed to discrete states~\cite{vamp-preprint}.
 The VAMP can thus be used to perform model selection.
-Specifically, we use the VAMP-2 score, which captures the kinetic variance explained by the model.
+Specifically, we use the VAMP-2 score, which captures the kinetic variance explained by the model~\cite{kinetic-maps}.
 However, the MSM lag time cannot be optimized using VAMP,
 and must be chosen using a separate validation as described above~\cite{husic2017note}.
 
@@ -248,7 +248,7 @@ onto the leading $d$ independent components $\mathbf{U}_d=\left[\mathbf{u}_1 \do
 \begin{equation}
 \mathbf{y}(t) = \mathbf{U}_d^\top \tilde{\mathbf{x}}(t),
 \end{equation}
-where, in practice, $d$ is chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., \SI{95}{\percent}).
+where, in practice, $d$ is preferably chosen such that a specific fraction of kinetic variance $c_d$ is retained (e.g., \SI{95}{\percent}).
 
 \subsection{Hidden Markov state models}
 
@@ -261,13 +261,12 @@ where, in practice, $d$ is chosen such that a specific fraction of kinetic varia
 The estimation of an MSM requires the dynamics between microstates to be Markovian.
 However, in case of a poor dimension reduction and/or discretization or short trajectories,
 we cannot anticipate this to be the case.
-We illustrate this point in notebook~07.
 
 An alternative, which is much less sensitive to poor discretization,
 is to estimate a hidden Markov model (HMM)~\cite{hmm-baum-welch-alg,jhp-spectral-rate-theory,noe-proj-hid-msm,bhmm-preprint}.
 HMMs are less sensitive to the discretization error as they sidestep the assumption of Markovian dynamics in the discretized space (illustrated in Fig.~\ref{fig:hmm-scheme}).
 Instead, HMMs assume that there is an underlying (hidden) dynamic process that is Markovian
-and gives rise to our observed data, e.g., the ($n$~states) discretized trajectories $s(t)$.
+and gives rise to our observed data, i.e., the ($n$~states) discretized trajectories $s(t)$.
 This is a powerful principle as we know that there is indeed an underlying process that is Markovian:
 our molecular dynamics trajectories.
 
@@ -279,13 +278,13 @@ to emit the discrete state $s$ conditional on being in the hidden state $\tilde{
 
 An HMM estimation always yields a model with a small number of (hidden) states
 in which each state is considered to be metastable and,
-thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully (see notebook~07).
+thus, the number of hidden states is a new hyper-parameter which needs to be chosen carefully.
 As the HMMs---like MSMs---approximate the full phase-space dynamics,
 we can similarly compute the metastable kinetics, apply TPT, visualize the network, and obtain physical observables.
 
 For an extensive discussion of details about HMM properties and the estimation algorithm in general, we suggest Ref.~\cite{hmm-tutorial}.
 For its specific application to the discretization of MSMs using HMMs, we suggest Ref.~\cite{noe-proj-hid-msm}.
-A generalized extension for estimating this type of low dimensional projection from the data is given in Ref.~\cite{wu2015projected}.
+A generalized extension for estimating this type of low dimensional projection from the data is given in Ref.~\cite{wu2015projected}. One of our tutorial notebooks, to be discussed in the next section, provides an example of HMM analysis.
 
 \subsection{Software and installation}
 
@@ -570,7 +569,7 @@ Now that we have an approximation of the fluorescence in each of our MSM states,
 we can use PyEMMA to compute the fluorescence autocorrelation function (ACF) from our MSM (Fig.~\ref{fig:msm-exp-obs}a).
 Note how the computed ACF has a very small response (i.e., signal amplitude).
 
-Using PyEMMA, we can simulate the relaxation of an observable if we had prepared our molecular system in a nonequilibrium initial condition.
+Using PyEMMA, we can simulate the relaxation of an observable from a nonequilibrium initial condition.
 The experimental counterpart of such a prediction could be a temperature or pressure jump experiment or a stopped flow assay.
 To illustrate such an experiment, we initialize our molecular ensemble as the metastable distribution of~$\mathcal{S}_1$
 and follow the predicted fluorescence signal as it relaxes to equilibrium (Fig.~\ref{fig:msm-exp-obs}b).
@@ -579,7 +578,7 @@ making it more likely to be experimentally measurable.
 
 In addition to a detailed demonstration of the above, notebook~06 demonstrates how to compute J-couplings and dynamic fingerprints from MSMs.
 
-\subsection{Summary}
+\subsection{Summary of the showcase notebook}
 
 In this section, we have summarized how to conduct an MSM-based analysis of biomolecular dynamics data using PyEMMA.
 For the full analysis, please refer to the first notebook~(00).
@@ -681,10 +680,11 @@ The authors declare no conflicting interests.
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
 %%%%%%%
+MKS acknowledges financial support from European Commission (ERC StG 307494 "pcCell").
 TH acknowledges financial support from Deutsche Forschungsgemeinschaft (SFB/TRR 186, Project A12).
-FN and BEH acknowledge funding from European Commission (ERC CoG 772230 "ScaleCell").
-FN acknowledges funding from Deutsche Forschungsgemeinschaft (SFB 1114, Projects A04 and C03, NO 825/2-2).
 SO acknowledges a postdoctoral fellowship from the Alexander von Humboldt Foundation.
+FN and MKS acknowledge funding from Deutsche Forschungsgemeinschaft (SFB 1114, Projects A04 and C03, NO 825/2-2).
+FN and BEH acknowledge funding from European Commission (ERC CoG 772230 "ScaleCell").
 
 \bibliography{literature}
 
