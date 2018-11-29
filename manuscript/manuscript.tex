@@ -436,9 +436,9 @@ A detailed comparison between different clustering techniques is provided in not
 The solid lines refer to the maximum likelihood result while the dashed lines show the ensemble mean computed with a Bayesian sampling procedure~\cite{ben-rev-msm}.
 The black line (marking equality of timescale and lag time) with grey area indicates the timescale horizon below which the MSM cannot resolve processes.
 As implied timescales are well-converged at $\tau=\SI{0.5}{\nano\second}$, this lag time is chosen for subsequent MSM estimation.
-(b)~Chapman-Kolmogorov test computed using an MSM estimated with lag time $\tau=\SI{0.5}{\nano\second}$ assuming~5 metastable states.
+(b)~CK test computed using an MSM estimated with lag time $\tau=\SI{0.5}{\nano\second}$ assuming~5 metastable states.
 Predictions from this model agree with higher lag time estimates within confidence intervals.
-Implied timescales convergence as well as a passing Chapman-Kolmogorov test are a necessary condition in MSM validation.
+Implied timescales convergence as well as a passing CK test are a necessary condition in MSM validation.
 In both panels, the (non-grey) shaded areas indicate~\SI{95}{\percent} confidence intervals computed with the aforementioned Bayesian sampling procedure.}
 \label{fig:its-and-ck}
 \end{figure}
@@ -449,7 +449,7 @@ The uncertainty bounds are computed using a Bayesian scheme~\cite{ben-rev-msm,no
 In our example, we find that the four slowest ITS converge quickly and are constant within a \SI{95}{\percent} confidence interval for lag times above~\SI{0.5}{\nano\second} (Fig.~\ref{fig:its-and-ck}a).
 Using this lag time we can now estimate a (Bayesian) MSM with $\tau=\SI{0.5}{\nano\second}$. 
 
-To test the validity of our MSM, we perform a Chapman-Kolmogorov (CK) test.
+To test the validity of our MSM, we perform a CK test.
 Visualizing the full transition probability matrix $T$ is difficult;
 we therefore coarse-grain $T$ into a smaller number of metastable states before performing the test.
 An appropriate number of metastable states can be chosen by identifying a relatively large gap in the ITS plot.
